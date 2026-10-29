@@ -8,6 +8,7 @@ enum class NavigationScreen {
     THEME_PANDEL,
     FEEDBACK,
     SETTINGS,
+    CHECK_UPDATES,
     PROFILE,
     APP_DETAILS,
     DEVELOPER_CREDITS,

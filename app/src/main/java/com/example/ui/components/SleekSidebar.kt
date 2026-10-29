@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
@@ -38,6 +39,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.SystemUpdate
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -81,6 +83,7 @@ enum class SidebarNavItem(
     HELPLINE("Helpline", Icons.Filled.Call, Icons.Outlined.Call, "sidebar_item_helpline"),
     THEME_PANDEL("Theme Pandel", Icons.Filled.Palette, Icons.Outlined.Palette, "sidebar_item_theme_pandel"),
     APP_INFO_CREDIT("App Info & Developer Credit", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_app_info_credit"),
+    CHECK_UPDATES("Check Updates", Icons.Filled.SystemUpdate, Icons.Outlined.SystemUpdate, "sidebar_item_check_updates"),
     DEVELOPER_CREDITS("Developer Credits", Icons.Filled.Verified, Icons.Outlined.Verified, "sidebar_item_developer_credits"),
     SETTINGS("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, "sidebar_item_settings"),
     REPORT_FEEDBACK("Report & Feedback", Icons.Filled.ChatBubble, Icons.Outlined.ChatBubbleOutline, "sidebar_item_report_feedback");
@@ -88,7 +91,7 @@ enum class SidebarNavItem(
     companion object {
         val primaryItems = listOf(ROUTE, RESTAURANT, HELPLINE)
         val themeItems = listOf(THEME_PANDEL)
-        val utilityItems = listOf(APP_INFO_CREDIT, SETTINGS, REPORT_FEEDBACK)
+        val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS, REPORT_FEEDBACK)
         val developerItems = listOf(DEVELOPER_CREDITS)
     }
 }
@@ -100,6 +103,7 @@ fun SleekSidebar(
     selectedItem: SidebarNavItem?,
     onSelectItem: (SidebarNavItem) -> Unit,
     onToggleExpand: () -> Unit,
+    hasUpdate: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     // Exact palette extracted from reference:
@@ -235,6 +239,7 @@ fun SleekSidebar(
                 activePillBg = activePillBg,
                 activeContentColor = activeContentColor,
                 unselectedColor = unselectedColor,
+                hasUpdate = hasUpdate,
                 onSelectItem = onSelectItem
             )
 
@@ -361,7 +366,8 @@ private fun SidebarItemGroup(
     activePillBg: Color,
     activeContentColor: Color,
     unselectedColor: Color,
-    onSelectItem: (SidebarNavItem) -> Unit
+    onSelectItem: (SidebarNavItem) -> Unit,
+    hasUpdate: Boolean = false
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -376,6 +382,7 @@ private fun SidebarItemGroup(
                 activePillBg = activePillBg,
                 activeContentColor = activeContentColor,
                 unselectedColor = unselectedColor,
+                showUpdateDot = hasUpdate && item == SidebarNavItem.CHECK_UPDATES,
                 onClick = { onSelectItem(item) }
             )
         }
@@ -390,7 +397,8 @@ private fun SidebarButton(
     activePillBg: Color,
     activeContentColor: Color,
     unselectedColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    showUpdateDot: Boolean = false
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -422,6 +430,17 @@ private fun SidebarButton(
                 modifier = Modifier.size(20.dp)
             )
 
+            if (showUpdateDot) {
+                Box(
+                    modifier = Modifier
+                        .padding(start = 3.dp)
+                        .size(7.dp)
+                        .clip(CircleShape)
+                        .background(LocalAppPalette.current.accentBright)
+                        .testTag("sidebar_update_dot")
+                )
+            }
+
             if (isExpanded) {
                 Spacer(modifier = Modifier.width(14.dp))
                 Text(
@@ -433,6 +452,21 @@ private fun SidebarButton(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (showUpdateDot) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "NEW",
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 8.sp,
+                        letterSpacing = 0.6.sp,
+                        color = LocalAppPalette.current.accentBright,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(LocalAppPalette.current.accentSoft)
+                            .padding(horizontal = 5.dp, vertical = 2.dp)
+                    )
+                }
             }
         }
     }

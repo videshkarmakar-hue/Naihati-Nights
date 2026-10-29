@@ -149,7 +149,16 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { runUpdateCheck(manual = true) }
     }
 
-    private suspend fun runUpdateCheck(manual: Boolean) {
+    /**
+     * Entry point of the Check Updates screen. It refreshes quietly: the screen already renders the
+     * full state and the Update button, so a remembered "Later" must not re-open the popup.
+     */
+    fun refreshAppUpdate() {
+        if (isUiTestRun) return
+        viewModelScope.launch { runUpdateCheck(manual = true, forcePrompt = false) }
+    }
+
+    private suspend fun runUpdateCheck(manual: Boolean, forcePrompt: Boolean = manual) {
         if (_appUpdate.value is AppUpdateState.Checking) return
         _updatePromptVisible.value = false
         _updateNotice.value = null
@@ -175,7 +184,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val state = _appUpdate.value
         if (state is AppUpdateState.Available) {
             val dismissed = settingsDataStore.dismissedUpdateVersion()
-            if (manual || !dismissed.equals(state.info.versionName, ignoreCase = true)) {
+            if (forcePrompt || !dismissed.equals(state.info.versionName, ignoreCase = true)) {
                 _updatePromptVisible.value = true
             }
         } else if (manual) {

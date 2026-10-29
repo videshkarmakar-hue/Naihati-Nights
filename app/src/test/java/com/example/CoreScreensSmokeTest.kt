@@ -27,6 +27,8 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.unit.dp
 import com.example.data.NaihatiDataProvider
+import com.example.data.update.AppUpdateState
+import com.example.data.update.ReleaseInfo
 import com.example.model.AppSettings
 import com.example.ui.NavigationScreen
 import com.example.ui.components.AppBrandHeader
@@ -34,6 +36,7 @@ import com.example.ui.components.CapsuleBottomBar
 import com.example.ui.components.SidebarNavItem
 import com.example.ui.components.SleekSidebar
 import com.example.ui.screens.AppDetailsScreen
+import com.example.ui.screens.CheckUpdatesScreen
 import com.example.ui.screens.DeveloperCreditsScreen
 import com.example.ui.screens.DeveloperProfileScreen
 import com.example.ui.screens.FeedbackScreen
@@ -59,6 +62,16 @@ class CoreScreensSmokeTest {
 
     @get:Rule
     val composeRule = createComposeRule()
+
+    private val availableRelease = ReleaseInfo(
+        tagName = "v3.0.11",
+        versionName = "3.0.11",
+        notes = "### What's new\n- Check Updates screen in the sidebar\n- Faster release lookup",
+        releaseUrl = "https://github.com/videshkarmakar-hue/Naihati-Nights/releases/tag/v3.0.11",
+        apkUrl = "https://example.com/NaihatiNights-3.0.11.apk",
+        apkSizeBytes = 29_500_000L,
+        publishedAt = "2026-10-30T00:00:00Z"
+    )
 
     @Test
     fun introScreen_rendersSacredLandingAndContinues() {
@@ -666,12 +679,16 @@ class CoreScreensSmokeTest {
             "sidebar_item_helpline" to "Helpline",
             "sidebar_item_theme_pandel" to "Theme Pandel",
             "sidebar_item_app_info_credit" to "App Info & Developer Credit",
+            "sidebar_item_check_updates" to "Check Updates",
             "sidebar_item_settings" to "Settings",
             "sidebar_item_report_feedback" to "Report & Feedback"
         ).forEach { (tag, label) ->
             composeRule.onNodeWithTag(tag).assertIsDisplayed()
             composeRule.onNodeWithText(label).assertIsDisplayed()
         }
+
+        // No update dot until the release channel reports something newer.
+        composeRule.onAllNodesWithTag("sidebar_update_dot").assertCountEquals(0)
 
         composeRule.onNodeWithText("©Videsh Karmakar Project").assertIsDisplayed()
 
@@ -715,6 +732,10 @@ class CoreScreensSmokeTest {
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.REPORT_FEEDBACK, selected)
 
+        composeRule.onNodeWithTag("sidebar_item_check_updates").performClick()
+        composeRule.waitForIdle()
+        assertEquals(SidebarNavItem.CHECK_UPDATES, selected)
+
         composeRule.onNodeWithTag("sidebar_item_settings").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.SETTINGS, selected)
@@ -722,6 +743,101 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("sidebar_item_developer_credits").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.DEVELOPER_CREDITS, selected)
+    }
+
+    @Test
+    fun sidebar_flagsCheckUpdatesWhenReleaseIsAvailable() {
+        composeRule.setContent {
+            MyApplicationTheme {
+                SleekSidebar(
+                    isExpanded = true,
+                    isDarkMode = true,
+                    selectedItem = SidebarNavItem.SETTINGS,
+                    hasUpdate = true,
+                    onSelectItem = {},
+                    onToggleExpand = {}
+                )
+            }
+        }
+
+        composeRule.onAllNodesWithTag("sidebar_update_dot", useUnmergedTree = true)
+            .assertCountEquals(1)
+        composeRule.onNodeWithText("NEW").assertIsDisplayed()
+    }
+
+    @Test
+    fun checkUpdatesScreen_promotesUpdateWhenReleaseHasApk() {
+        var checked = 0
+        var updated = 0
+        var releaseOpened = 0
+        var screenOpened = 0
+
+        composeRule.setContent {
+            MyApplicationTheme {
+                CheckUpdatesScreen(
+                    installedVersion = "3.0.10",
+                    installedBuild = 30010000,
+                    state = AppUpdateState.Available(availableRelease),
+                    notice = null,
+                    autoCheckEnabled = true,
+                    onScreenOpen = { screenOpened++ },
+                    onCheck = { checked++ },
+                    onUpdate = { updated++ },
+                    onOpenRelease = { releaseOpened++ },
+                    onAutoCheckChange = {},
+                    onBack = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("check_updates_screen").assertIsDisplayed()
+        composeRule.onNodeWithText("v3.0.11 is available").assertIsDisplayed()
+        composeRule.onNodeWithText("UPDATE NOW").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("check_updates_button").performClick()
+        composeRule.waitForIdle()
+
+        assertEquals(1, updated)
+        assertEquals(0, checked)
+        assertEquals(0, releaseOpened)
+        assertEquals(1, screenOpened)
+
+        composeRule.onNodeWithTag("check_updates_screen")
+            .performScrollToNode(hasTestTag("check_updates_notes"))
+        composeRule.onNodeWithTag("check_updates_notes").assertIsDisplayed()
+    }
+
+    @Test
+    fun checkUpdatesScreen_offersCheckWhenAlreadyCurrent() {
+        var checked = 0
+        var updated = 0
+
+        composeRule.setContent {
+            MyApplicationTheme {
+                CheckUpdatesScreen(
+                    installedVersion = "3.0.11",
+                    installedBuild = 30011000,
+                    state = AppUpdateState.UpToDate("3.0.11", 0L),
+                    notice = null,
+                    autoCheckEnabled = false,
+                    onScreenOpen = {},
+                    onCheck = { checked++ },
+                    onUpdate = { updated++ },
+                    onOpenRelease = {},
+                    onAutoCheckChange = {},
+                    onBack = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("You're up to date").assertIsDisplayed()
+        composeRule.onNodeWithText("CHECK FOR UPDATES").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("check_updates_button").performClick()
+        composeRule.waitForIdle()
+
+        assertEquals(1, checked)
+        assertEquals(0, updated)
     }
 
     @Test

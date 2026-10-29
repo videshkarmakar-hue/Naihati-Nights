@@ -23,10 +23,15 @@ View your app in AI Studio: https://ai.studio/apps/8a392362-3207-4c15-baa4-86b32
 
 ## Publishing an update (GitHub Releases)
 
-The app updates itself from **GitHub Releases**, not the Play Store. On launch it asks
+The app updates itself from **GitHub Releases**, not the Play Store. On launch (and whenever it
+returns to the foreground) it asks
 `https://api.github.com/repos/videshkarmakar-hue/Naihati-Nights/releases/latest`, compares the
 release tag with the installed `versionName`, and shows an **Update available** dialog. Tapping
 **Update now** downloads the attached APK and hands it to the system installer.
+
+The same channel is reachable by hand: **Sidebar -> Check Updates** runs the lookup immediately,
+marks the entry with a `NEW` badge while a newer build exists, and keeps the big
+**Update now / Install update** button in one place.
 
 To ship a new version, tag it and push the tag:
 
@@ -43,7 +48,7 @@ That is the whole release process:
 3. It publishes a GitHub release named `Naihati Nights v3.0.10` with
    `NaihatiNights-3.0.10.apk` attached.
 4. Every installed copy sees the newer tag on its next check (throttled to once every 6 hours,
-   toggleable in **Settings -> App Updates -> Auto-check on launch**) and offers the update.
+   toggleable in **Sidebar -> Check Updates -> Auto-check on launch**) and offers the update.
 
 You can also run the workflow manually from **Actions -> Release APK -> Run workflow** and type a
 version number.

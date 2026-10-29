@@ -23,10 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,12 +36,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
+import com.example.data.update.AppUpdateState
 import com.example.ui.components.AppUpdateDialog
 import com.example.ui.components.CapsuleBottomBar
 import com.example.ui.components.SidebarNavItem
 import com.example.ui.components.SleekSidebar
 import com.example.ui.screens.AppDetailsScreen
+import com.example.ui.screens.CheckUpdatesScreen
 import com.example.ui.screens.DeveloperCreditsScreen
 import com.example.ui.screens.DeveloperProfileScreen
 import com.example.ui.screens.FeedbackScreen
@@ -82,8 +86,16 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     val updatePromptVisible by viewModel.updatePromptVisible.collectAsState()
     val updateNotice by viewModel.updateNotice.collectAsState()
 
-    // Throttled GitHub release check: prompts once per launch when a newer APK is published.
-    LaunchedEffect(Unit) { viewModel.autoCheckForAppUpdate() }
+    // GitHub release channel: check on every resume (throttled inside the view model), so a
+    // release published while the app was open still raises the popup when the user returns.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) viewModel.autoCheckForAppUpdate()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     // The branded Continue gate is the entry point for every fresh launch.
     // The branded Continue gate is the entry point for every fresh launch.
@@ -112,6 +124,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
         currentScreen in listOf(
             NavigationScreen.PROFILE,
             NavigationScreen.SETTINGS,
+            NavigationScreen.CHECK_UPDATES,
             NavigationScreen.FEEDBACK,
             NavigationScreen.HELPLINE,
             NavigationScreen.THEME_PANDEL,
@@ -133,6 +146,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.PROFILE -> SidebarNavItem.APP_INFO_CREDIT
             NavigationScreen.DEVELOPER_CREDITS -> SidebarNavItem.DEVELOPER_CREDITS
             NavigationScreen.SETTINGS -> SidebarNavItem.SETTINGS
+            NavigationScreen.CHECK_UPDATES -> SidebarNavItem.CHECK_UPDATES
             NavigationScreen.FEEDBACK -> SidebarNavItem.REPORT_FEEDBACK
             else -> null
         }
@@ -246,6 +260,26 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                     )
                 }
 
+                NavigationScreen.CHECK_UPDATES -> {
+                    CheckUpdatesScreen(
+                        installedVersion = viewModel.installedVersionName,
+                        installedBuild = BuildConfig.VERSION_CODE,
+                        state = appUpdate,
+                        notice = updateNotice,
+                        autoCheckEnabled = appSettings.autoUpdateCheck,
+                        onScreenOpen = { viewModel.refreshAppUpdate() },
+                        onCheck = { viewModel.checkForAppUpdate() },
+                        onUpdate = { viewModel.downloadAndInstallUpdate() },
+                        onOpenRelease = { viewModel.openReleasesPage() },
+                        onAutoCheckChange = {
+                            viewModel.updateSettings(appSettings.copy(autoUpdateCheck = it))
+                        },
+                        onBack = { currentScreen = NavigationScreen.HOME },
+                        onOpenSidebar = openSidebar,
+                        onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
+                    )
+                }
+
                 NavigationScreen.PROFILE -> {
                     DeveloperProfileScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
@@ -331,6 +365,8 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                     isExpanded = isDrawerExpanded,
                     isDarkMode = isDrawerDarkMode,
                     selectedItem = activeSidebarItem,
+                    hasUpdate = appUpdate is AppUpdateState.Available ||
+                        appUpdate is AppUpdateState.Ready,
                     onSelectItem = { item ->
                         activeSidebarItem = item
                         when (item) {
@@ -357,6 +393,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             }
                             SidebarNavItem.SETTINGS -> {
                                 currentScreen = NavigationScreen.SETTINGS
+                                isDrawerOpen = false
+                            }
+                            SidebarNavItem.CHECK_UPDATES -> {
+                                currentScreen = NavigationScreen.CHECK_UPDATES
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.REPORT_FEEDBACK -> {

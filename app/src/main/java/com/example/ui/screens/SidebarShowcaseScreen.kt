@@ -552,6 +552,20 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
+            SidebarNavItem.CHECK_UPDATES -> {
+                Text(
+                    text = "Check Updates",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = LocalAppPalette.current.accentBright
+                )
+                Text(
+                    text = "Ask GitHub Releases for a newer Naihati Nights build, read the release notes, and install the update without leaving the app.",
+                    fontSize = 11.5.sp,
+                    color = TextSoftZinc,
+                    lineHeight = 16.sp
+                )
+            }
             SidebarNavItem.REPORT_FEEDBACK -> {
                 Text(
                     text = "Report & Feedback",
