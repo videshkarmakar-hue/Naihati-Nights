@@ -27,7 +27,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
@@ -400,33 +399,6 @@ fun CheckUpdatesScreen(
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable(onClick = onOpenRelease)
-                            .padding(horizontal = 6.dp, vertical = 8.dp)
-                            .testTag("check_updates_open_release"),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.OpenInNew,
-                            contentDescription = null,
-                            tint = palette.accentBright,
-                            modifier = Modifier.size(13.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "View release on GitHub",
-                            fontFamily = PlusJakartaSans,
-                            fontSize = 11.sp,
-                            lineHeight = 15.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = palette.accentBright
-                        )
-                    }
                 }
             }
 

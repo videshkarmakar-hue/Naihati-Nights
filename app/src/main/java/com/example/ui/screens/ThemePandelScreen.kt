@@ -446,6 +446,10 @@ private fun ThemePandelCard(
                     )
                     Spacer(modifier = Modifier.width(7.dp))
                     EditionPill(text = item.edition)
+                    if (item.isNew) {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        NewEntryChip()
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -589,6 +593,28 @@ private fun EditionPill(text: String) {
             fontSize = 8.5.sp,
             fontWeight = FontWeight.SemiBold,
             color = LocalAppPalette.current.accentBright,
+            maxLines = 1
+        )
+    }
+}
+
+@Composable
+private fun NewEntryChip() {
+    Box(
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(LocalAppPalette.current.accentBright)
+            .padding(horizontal = 7.dp, vertical = 2.dp)
+            .testTag("theme_pandel_new_badge"),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "NEW",
+            fontFamily = PlusJakartaSans,
+            fontSize = 8.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 0.5.sp,
+            color = Color(0xFF0B0B10),
             maxLines = 1
         )
     }

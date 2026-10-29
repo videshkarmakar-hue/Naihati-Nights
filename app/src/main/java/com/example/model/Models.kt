@@ -275,9 +275,16 @@ object ThemePandelData {
             committeeBengali = "নৈহাটি গৌরীপুর মীরাবাগান মাঠ",
             pandal = "Operation Sindoor",
             pandalBengali = "অপারেশন সিঁদুর",
-            deity = "Operation Sindoor"
+            deity = "Operation Sindoor",
+            isNew = true
         )
     )
+
+    /** The latest addition, used to raise NEW badges in the bottom bar and sidebar. */
+    val newest: ThemePandel? = items.firstOrNull { it.isNew }
+
+    /** 1-based position of [item] in the published list, matching the number printed on its card. */
+    fun displayNumber(item: ThemePandel): Int = items.indexOf(item) + 1
 }
 
 /**
@@ -319,9 +326,6 @@ object BormaPujoScheduleData {
     )
 }
 
-/**
- * Festival edition detail card shown in the Theme Pandel slot.
- */
 enum class NavigationMode(val label: String) {
     IN_APP("In-App Kali Puja Radar"),
     GOOGLE_MAPS("Deep-link to Google Maps"),
@@ -390,6 +394,12 @@ enum class ThemeStyle(
     AZURE_SIGNAL("Azure Signal", "Crisp sky blue on deep ink", 0xFF38BDF8, 0xFF0C4A6E, 0xFF04202E, 0xFFB8E4FD, 0xFF94A3B8)
 }
 
+/**
+ * Festival edition detail card shown in the Theme Pandel slot.
+ *
+ * [isNew] marks an entry added after the first release of the guide so the bottom bar and sidebar
+ * can advertise it without duplicating the Bengali copy.
+ */
 data class ThemePandel(
     val id: String = "",
     val edition: String,
@@ -399,5 +409,6 @@ data class ThemePandel(
     val pandalBengali: String = "",
     val locationNote: String = "",
     val locationNoteBengali: String = "",
-    val deity: String = ""
+    val deity: String = "",
+    val isNew: Boolean = false
 )

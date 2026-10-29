@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,6 +41,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.model.ThemePandelData
 import com.example.ui.NavigationScreen
 import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.TextMutedZinc
@@ -89,6 +91,7 @@ fun CapsuleBottomBar(
             testTag = "nav_theme_pandel"
         )
     )
+    val newThemeNumber = ThemePandelData.newest?.let { ThemePandelData.displayNumber(it) }
 
     Box(
         modifier = modifier
@@ -132,12 +135,22 @@ fun CapsuleBottomBar(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(
-                            imageVector = item.activeIcon,
-                            contentDescription = item.label,
-                            tint = Color.White,
-                            modifier = Modifier.size(17.dp)
-                        )
+                        Box {
+                            Icon(
+                                imageVector = item.activeIcon,
+                                contentDescription = item.label,
+                                tint = Color.White,
+                                modifier = Modifier.size(17.dp)
+                            )
+                            if (item.screen == NavigationScreen.THEME_PANDEL && newThemeNumber != null) {
+                                ThemePandelNewBadge(
+                                    number = newThemeNumber,
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 6.dp, y = (-6).dp)
+                                )
+                            }
+                        }
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = item.label,
@@ -160,15 +173,48 @@ fun CapsuleBottomBar(
                             .testTag(item.testTag),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = item.inactiveIcon,
-                            contentDescription = item.label,
-                            tint = TextSoftZinc,
-                            modifier = Modifier.size(19.dp)
-                        )
+                        Box {
+                            Icon(
+                                imageVector = item.inactiveIcon,
+                                contentDescription = item.label,
+                                tint = TextSoftZinc,
+                                modifier = Modifier.size(19.dp)
+                            )
+                            if (item.screen == NavigationScreen.THEME_PANDEL && newThemeNumber != null) {
+                                ThemePandelNewBadge(
+                                    number = newThemeNumber,
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .offset(x = 6.dp, y = (-6).dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+/** Small numbered pip that advertises the newest Theme Pandel entry inside the bottom dock. */
+@Composable
+private fun ThemePandelNewBadge(
+    number: Int,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(14.dp)
+            .clip(CircleShape)
+            .background(LocalAppPalette.current.accentBright)
+            .testTag("nav_theme_pandel_new_badge"),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = number.toString(),
+            color = Color(0xFF0B0B10),
+            fontSize = 7.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -59,6 +60,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -69,6 +71,7 @@ import coil.request.ImageRequest
 import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.PlusJakartaSans
 import com.example.model.ThemePandel
+import com.example.model.ThemePandelData
 
 /** Brand mark shown at the top of the sidebar header. */
 private const val SIDEBAR_BRAND_LOGO_URL =
@@ -135,6 +138,9 @@ fun SleekSidebar(
         animationSpec = tween(durationMillis = 160),
         label = "sidebarWidth"
     )
+
+    val newestTheme = ThemePandelData.newest
+    val newThemeNumber = newestTheme?.let { ThemePandelData.displayNumber(it) }
 
     Box(
         modifier = modifier
@@ -218,8 +224,18 @@ fun SleekSidebar(
                 activePillBg = activePillBg,
                 activeContentColor = activeContentColor,
                 unselectedColor = unselectedColor,
-                onSelectItem = onSelectItem
+                onSelectItem = onSelectItem,
+                newThemeNumber = newThemeNumber
             )
+
+            if (isExpanded && newestTheme != null && newThemeNumber != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                ThemePandelNewHighlight(
+                    panel = newestTheme,
+                    number = newThemeNumber,
+                    onClick = { onSelectItem(SidebarNavItem.THEME_PANDEL) }
+                )
+            }
 
             Spacer(modifier = Modifier.height(14.dp))
 
@@ -289,6 +305,62 @@ fun SleekSidebar(
                 )
             }
         }
+    }
+}
+
+/**
+ * Compact card under the Theme Pandel slot that names the newest committee and its pandal theme,
+ * so the addition is readable straight from the sidebar.
+ */
+@Composable
+private fun ThemePandelNewHighlight(
+    panel: ThemePandel,
+    number: Int,
+    onClick: () -> Unit
+) {
+    val palette = LocalAppPalette.current
+    val shape = RoundedCornerShape(12.dp)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(palette.accentSurface)
+            .border(1.dp, palette.accentBorder, shape)
+            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 8.dp)
+            .testTag("sidebar_theme_new_card"),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(
+            text = "NEW • THEME $number",
+            fontFamily = PlusJakartaSans,
+            fontSize = 8.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 0.6.sp,
+            color = palette.accentBright,
+            maxLines = 1
+        )
+        Text(
+            text = panel.committeeBengali.ifBlank { panel.committee },
+            fontFamily = FontFamily.Default,
+            fontSize = 10.5.sp,
+            lineHeight = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = palette.text,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = panel.pandalBengali.ifBlank { panel.pandal },
+            fontFamily = FontFamily.Default,
+            fontSize = 10.sp,
+            lineHeight = 13.sp,
+            fontWeight = FontWeight.Bold,
+            color = palette.accentBright,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -370,7 +442,8 @@ private fun SidebarItemGroup(
     activeContentColor: Color,
     unselectedColor: Color,
     onSelectItem: (SidebarNavItem) -> Unit,
-    hasUpdate: Boolean = false
+    hasUpdate: Boolean = false,
+    newThemeNumber: Int? = null
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -386,6 +459,11 @@ private fun SidebarItemGroup(
                 activeContentColor = activeContentColor,
                 unselectedColor = unselectedColor,
                 showUpdateDot = hasUpdate && item == SidebarNavItem.CHECK_UPDATES,
+                newBadgeText = if (item == SidebarNavItem.THEME_PANDEL && newThemeNumber != null) {
+                    "NEW $newThemeNumber"
+                } else {
+                    null
+                },
                 onClick = { onSelectItem(item) }
             )
         }
@@ -401,7 +479,8 @@ private fun SidebarButton(
     activeContentColor: Color,
     unselectedColor: Color,
     onClick: () -> Unit,
-    showUpdateDot: Boolean = false
+    showUpdateDot: Boolean = false,
+    newBadgeText: String? = null
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -453,8 +532,31 @@ private fun SidebarButton(
                     fontSize = 13.sp,
                     color = contentColor,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
+                if (newBadgeText != null) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .height(15.dp)
+                            .widthIn(min = 26.dp)
+                            .clip(CircleShape)
+                            .background(LocalAppPalette.current.accentBright)
+                            .testTag("sidebar_theme_new_badge"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = newBadgeText,
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 8.sp,
+                            letterSpacing = 0.4.sp,
+                            color = Color(0xFF0B0B10),
+                            modifier = Modifier.padding(horizontal = 5.dp)
+                        )
+                    }
+                }
                 if (showUpdateDot) {
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(

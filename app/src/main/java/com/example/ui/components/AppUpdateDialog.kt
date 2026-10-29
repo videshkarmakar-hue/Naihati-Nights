@@ -277,38 +277,20 @@ fun AppUpdateDialog(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Later",
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = DialogMuted,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable(onClick = onLater)
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                        .testTag("app_update_later")
-                )
-                Text(
-                    text = "View release on GitHub",
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 11.sp,
-                    lineHeight = 15.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = palette.accentBright,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable(onClick = onOpenRelease)
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                        .testTag("app_update_release_link")
-                )
-            }
+            Text(
+                text = "Later",
+                fontFamily = PlusJakartaSans,
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = DialogMuted,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(onClick = onLater)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .testTag("app_update_later")
+            )
         }
     }
 }

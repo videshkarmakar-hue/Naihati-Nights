@@ -592,6 +592,9 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("nav_restaurant").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_helpline").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_theme_pandel").assertIsDisplayed()
+        composeRule.onNodeWithTag("nav_theme_pandel_new_badge", useUnmergedTree = true)
+            .assertExists()
+        composeRule.onNodeWithText("13").assertExists()
         composeRule.onAllNodesWithTag("nav_feedback").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_settings").assertCountEquals(0)
 
@@ -637,6 +640,8 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_card_theme_13"))
         composeRule.onNodeWithTag("theme_pandel_card_theme_13").assertIsDisplayed()
+        composeRule.onNodeWithTag("theme_pandel_new_badge", useUnmergedTree = true)
+            .assertIsDisplayed()
         composeRule.onNodeWithText("অপারেশন সিঁদুর").assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
@@ -692,6 +697,16 @@ class CoreScreensSmokeTest {
 
         // No update dot until the release channel reports something newer.
         composeRule.onAllNodesWithTag("sidebar_update_dot").assertCountEquals(0)
+
+        // The newest Theme Pandel entry is advertised in the sidebar slot itself.
+        composeRule.onNodeWithTag("sidebar_theme_new_badge", useUnmergedTree = true).assertIsDisplayed()
+        composeRule.onNodeWithTag("sidebar_theme_new_card").assertIsDisplayed()
+        composeRule.onNodeWithText("নৈহাটি গৌরীপুর মীরাবাগান মাঠ").assertExists()
+        composeRule.onNodeWithText("অপারেশন সিঁদুর").assertExists()
+
+        composeRule.onNodeWithTag("sidebar_theme_new_card").performClick()
+        composeRule.waitForIdle()
+        assertEquals(SidebarNavItem.THEME_PANDEL, selected)
 
         composeRule.onNodeWithText("©Videsh Karmakar Project").assertIsDisplayed()
 
