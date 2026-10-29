@@ -36,6 +36,7 @@ import com.example.ui.components.CapsuleBottomBar
 import com.example.ui.components.SidebarNavItem
 import com.example.ui.components.SleekSidebar
 import com.example.ui.screens.AppDetailsScreen
+import com.example.ui.screens.BormaPujoScheduleScreen
 import com.example.ui.screens.CheckUpdatesScreen
 import com.example.ui.screens.DeveloperCreditsScreen
 import com.example.ui.screens.DeveloperProfileScreen
@@ -621,7 +622,7 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun themePandelScreen_rendersTwelveThemesAndFilters() {
+    fun themePandelScreen_rendersThirteenThemesAndFilters() {
         composeRule.setContent {
             MyApplicationTheme {
                 ThemePandelScreen()
@@ -634,8 +635,9 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("theme_pandel_card_theme_01").assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasTestTag("theme_pandel_card_theme_12"))
-        composeRule.onNodeWithTag("theme_pandel_card_theme_12").assertIsDisplayed()
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_13"))
+        composeRule.onNodeWithTag("theme_pandel_card_theme_13").assertIsDisplayed()
+        composeRule.onNodeWithText("অপারেশন সিঁদুর").assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_search_field"))
@@ -678,6 +680,7 @@ class CoreScreensSmokeTest {
             "sidebar_item_restaurant" to "Restaurant",
             "sidebar_item_helpline" to "Helpline",
             "sidebar_item_theme_pandel" to "Theme Pandel",
+            "sidebar_item_borma_pujo_schedule" to "বড়মা পুজোর নির্ঘণ্ট",
             "sidebar_item_app_info_credit" to "App Info & Developer Credit",
             "sidebar_item_check_updates" to "Check Updates",
             "sidebar_item_settings" to "Settings",
@@ -724,6 +727,10 @@ class CoreScreensSmokeTest {
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.THEME_PANDEL, selected)
 
+        composeRule.onNodeWithTag("sidebar_item_borma_pujo_schedule").performClick()
+        composeRule.waitForIdle()
+        assertEquals(SidebarNavItem.BORMA_PUJO_SCHEDULE, selected)
+
         composeRule.onNodeWithTag("sidebar_item_app_info_credit").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.APP_INFO_CREDIT, selected)
@@ -743,6 +750,32 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("sidebar_item_developer_credits").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.DEVELOPER_CREDITS, selected)
+    }
+
+    @Test
+    fun bormaPujoScheduleScreen_showsAllThreeTimings() {
+        var backPressed = 0
+        composeRule.setContent {
+            MyApplicationTheme {
+                BormaPujoScheduleScreen(onBack = { backPressed++ })
+            }
+        }
+
+        composeRule.onNodeWithTag("borma_pujo_schedule_screen").assertIsDisplayed()
+        composeRule.onNodeWithText("বড়মা পুজোর নির্ঘণ্ট").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_row_amavasya_start").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_row_amavasya_end").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_row_nishita_kala").assertIsDisplayed()
+
+        composeRule.onNodeWithText("৮ নভেম্বর ২০২৬, সকাল ১১:২৭ মি").assertIsDisplayed()
+        composeRule.onNodeWithText("৯ই নভেম্বর ২০২৬, দুপুর ১২:৩১ মি").assertIsDisplayed()
+        composeRule.onAllNodesWithText(
+            "৮ই নভেম্বর রাত ১১:৩১ থেকে ৯ই নভেম্বর রাত ১২:৩১ মি পর্যন্ত"
+        ).assertCountEquals(2)
+
+        composeRule.onNodeWithTag("borma_pujo_back_button").performClick()
+        composeRule.waitForIdle()
+        assertEquals(1, backPressed)
     }
 
     @Test

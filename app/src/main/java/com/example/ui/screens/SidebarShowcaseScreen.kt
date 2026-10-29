@@ -476,7 +476,21 @@ fun SidebarContentDisplay(
                     color = KumartuliTeal
                 )
                 Text(
-                    text = "Naihati Kali Puja 2026 – 12 Pandels from Naihati Swadhinata Sanadikaron Samity, Loharghat Park Association, Indira Nagar Yuva Samaj Club, 7 No. Bijoynagar Kathgola, Deolpara Amra Sabai Cluber, Deulpara Sukanta Soronijogya, Narkel Bagan Kali Puja Committee, Abhijatri Club, Gopal Smriti Sangha, Parar Sabai Klub, Katlopara, and Kali Pujo Somaj Kalyan Samiti.",
+                    text = "Naihati Kali Puja 2026 – 13 Pandels from Naihati Swadhinata Sanadikaron Samity, Loharghat Park Association, Indira Nagar Yuva Samaj Club, 7 No. Bijoynagar Kathgola, Deolpara Amra Sabai Cluber, Deulpara Sukanta Soronijogya, Narkel Bagan Kali Puja Committee, Abhijatri Club, Gopal Smriti Sangha, Parar Sabai Klub, Katlopara, Kali Pujo Somaj Kalyan Samiti, and Gouripur Mirabagan Math.",
+                    fontSize = 11.5.sp,
+                    color = TextSoftZinc,
+                    lineHeight = 16.sp
+                )
+            }
+            SidebarNavItem.BORMA_PUJO_SCHEDULE -> {
+                Text(
+                    text = "বড়মা পুজোর নির্ঘণ্ট",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = KumartuliTeal
+                )
+                Text(
+                    text = "অমাবস্যা তিথি শুরু, তিথি শেষ এবং নিশিত কালের প্রধান পুজোর সম্পূর্ণ সময়সূচি — শুধুমাত্র সাইডবার থেকে দেখা যায়।",
                     fontSize = 11.5.sp,
                     color = TextSoftZinc,
                     lineHeight = 16.sp

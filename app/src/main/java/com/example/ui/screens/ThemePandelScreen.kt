@@ -230,7 +230,7 @@ private fun ThemePandelHero(totalPandels: Int) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "The 12 most talked-about pandal themes of the season — committee by committee, theme by theme.",
+                text = "The $totalPandels most talked-about pandal themes of the season — committee by committee, theme by theme.",
                 fontFamily = PlusJakartaSans,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
@@ -245,7 +245,7 @@ private fun ThemePandelHero(totalPandels: Int) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ThemeStatChip(label = "$totalPandels Pandels", icon = Icons.Default.Palette)
-                ThemeStatChip(label = "12 Committees")
+                ThemeStatChip(label = "$totalPandels Committees")
                 ThemeStatChip(label = "2026 Edition")
             }
         }

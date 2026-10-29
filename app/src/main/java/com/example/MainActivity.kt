@@ -46,6 +46,7 @@ import com.example.ui.components.CapsuleBottomBar
 import com.example.ui.components.SidebarNavItem
 import com.example.ui.components.SleekSidebar
 import com.example.ui.screens.AppDetailsScreen
+import com.example.ui.screens.BormaPujoScheduleScreen
 import com.example.ui.screens.CheckUpdatesScreen
 import com.example.ui.screens.DeveloperCreditsScreen
 import com.example.ui.screens.DeveloperProfileScreen
@@ -125,6 +126,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.PROFILE,
             NavigationScreen.SETTINGS,
             NavigationScreen.CHECK_UPDATES,
+            NavigationScreen.BORMA_PUJO_SCHEDULE,
             NavigationScreen.FEEDBACK,
             NavigationScreen.HELPLINE,
             NavigationScreen.THEME_PANDEL,
@@ -147,6 +149,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.DEVELOPER_CREDITS -> SidebarNavItem.DEVELOPER_CREDITS
             NavigationScreen.SETTINGS -> SidebarNavItem.SETTINGS
             NavigationScreen.CHECK_UPDATES -> SidebarNavItem.CHECK_UPDATES
+            NavigationScreen.BORMA_PUJO_SCHEDULE -> SidebarNavItem.BORMA_PUJO_SCHEDULE
             NavigationScreen.FEEDBACK -> SidebarNavItem.REPORT_FEEDBACK
             else -> null
         }
@@ -280,6 +283,14 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                     )
                 }
 
+                NavigationScreen.BORMA_PUJO_SCHEDULE -> {
+                    BormaPujoScheduleScreen(
+                        onBack = { currentScreen = NavigationScreen.HOME },
+                        onOpenSidebar = openSidebar,
+                        onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
+                    )
+                }
+
                 NavigationScreen.PROFILE -> {
                     DeveloperProfileScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
@@ -397,6 +408,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             }
                             SidebarNavItem.CHECK_UPDATES -> {
                                 currentScreen = NavigationScreen.CHECK_UPDATES
+                                isDrawerOpen = false
+                            }
+                            SidebarNavItem.BORMA_PUJO_SCHEDULE -> {
+                                currentScreen = NavigationScreen.BORMA_PUJO_SCHEDULE
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.REPORT_FEEDBACK -> {

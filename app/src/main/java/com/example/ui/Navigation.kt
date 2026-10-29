@@ -9,6 +9,7 @@ enum class NavigationScreen {
     FEEDBACK,
     SETTINGS,
     CHECK_UPDATES,
+    BORMA_PUJO_SCHEDULE,
     PROFILE,
     APP_DETAILS,
     DEVELOPER_CREDITS,

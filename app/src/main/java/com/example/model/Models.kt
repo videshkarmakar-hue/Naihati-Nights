@@ -151,7 +151,7 @@ data class PoliceBooth(
 )
 
 /**
- * Naihati Kali Puja 2026 Theme Pandels — the 12-card list rendered by the Theme Pandel screen
+ * Naihati Kali Puja 2026 Theme Pandels — the 13-card list rendered by the Theme Pandel screen
  * and opened from the "Theme Pandel" slot in the bottom navigation bar and sidebar.
  */
 object ThemePandelData {
@@ -267,6 +267,54 @@ object ThemePandelData {
             pandal = "Baba - Ek Nirab Yoddha",
             pandalBengali = "বাবা - এক নীরব যোদ্ধা",
             deity = "Baba - Ek Nirab Yoddha"
+        ),
+        ThemePandel(
+            id = "theme_13",
+            edition = "Kali Puja 2026",
+            committee = "Naihati Gouripur Mirabagan Math",
+            committeeBengali = "নৈহাটি গৌরীপুর মীরাবাগান মাঠ",
+            pandal = "Operation Sindoor",
+            pandalBengali = "অপারেশন সিঁদুর",
+            deity = "Operation Sindoor"
+        )
+    )
+}
+
+/**
+ * Borma Pujo 2026 timetable, shown from the sidebar-only "বড়মা পুজোর নির্ঘণ্ট" destination.
+ *
+ * [entries] keep the Bengali labels and values exactly as published by the committee so the times
+ * can be read out without translation. [PujoTimeEntry.highlight] marks the nishita kala window,
+ * the one that matters most for darshan planning.
+ */
+data class PujoTimeEntry(
+    val id: String,
+    val label: String,
+    val value: String,
+    val highlight: Boolean = false
+)
+
+object BormaPujoScheduleData {
+    const val title = "বড়মা পুজোর নির্ঘণ্ট"
+    const val subtitle = "নৈহাটি • কালী পূজা ২০২৬"
+    const val timeZoneNote = "সব সময় ভারতীয় প্রমাণ সময় (IST) অনুযায়ী।"
+
+    val entries = listOf(
+        PujoTimeEntry(
+            id = "amavasya_start",
+            label = "অমাবস্যা তিথি শুরু",
+            value = "৮ নভেম্বর ২০২৬, সকাল ১১:২৭ মি"
+        ),
+        PujoTimeEntry(
+            id = "amavasya_end",
+            label = "অমাবস্যা তিথি শেষ",
+            value = "৯ই নভেম্বর ২০২৬, দুপুর ১২:৩১ মি"
+        ),
+        PujoTimeEntry(
+            id = "nishita_kala",
+            label = "নিশিত কাল বা প্রধান পুজোর সময়",
+            value = "৮ই নভেম্বর রাত ১১:৩১ থেকে ৯ই নভেম্বর রাত ১২:৩১ মি পর্যন্ত",
+            highlight = true
         )
     )
 }
