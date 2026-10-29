@@ -228,15 +228,6 @@ fun SleekSidebar(
                 newThemeNumber = newThemeNumber
             )
 
-            if (isExpanded && newestTheme != null && newThemeNumber != null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                ThemePandelNewHighlight(
-                    panel = newestTheme,
-                    number = newThemeNumber,
-                    onClick = { onSelectItem(SidebarNavItem.THEME_PANDEL) }
-                )
-            }
-
             Spacer(modifier = Modifier.height(14.dp))
 
             // Divider between primary and utility
@@ -305,62 +296,6 @@ fun SleekSidebar(
                 )
             }
         }
-    }
-}
-
-/**
- * Compact card under the Theme Pandel slot that names the newest committee and its pandal theme,
- * so the addition is readable straight from the sidebar.
- */
-@Composable
-private fun ThemePandelNewHighlight(
-    panel: ThemePandel,
-    number: Int,
-    onClick: () -> Unit
-) {
-    val palette = LocalAppPalette.current
-    val shape = RoundedCornerShape(12.dp)
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape)
-            .background(palette.accentSurface)
-            .border(1.dp, palette.accentBorder, shape)
-            .clickable { onClick() }
-            .padding(horizontal = 10.dp, vertical = 8.dp)
-            .testTag("sidebar_theme_new_card"),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        Text(
-            text = "NEW • THEME $number",
-            fontFamily = PlusJakartaSans,
-            fontSize = 8.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 0.6.sp,
-            color = palette.accentBright,
-            maxLines = 1
-        )
-        Text(
-            text = panel.committeeBengali.ifBlank { panel.committee },
-            fontFamily = FontFamily.Default,
-            fontSize = 10.5.sp,
-            lineHeight = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = palette.text,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = panel.pandalBengali.ifBlank { panel.pandal },
-            fontFamily = FontFamily.Default,
-            fontSize = 10.sp,
-            lineHeight = 13.sp,
-            fontWeight = FontWeight.Bold,
-            color = palette.accentBright,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }
 

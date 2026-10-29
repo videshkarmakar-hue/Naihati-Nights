@@ -700,13 +700,6 @@ class CoreScreensSmokeTest {
 
         // The newest Theme Pandel entry is advertised in the sidebar slot itself.
         composeRule.onNodeWithTag("sidebar_theme_new_badge", useUnmergedTree = true).assertIsDisplayed()
-        composeRule.onNodeWithTag("sidebar_theme_new_card").assertIsDisplayed()
-        composeRule.onNodeWithText("নৈহাটি গৌরীপুর মীরাবাগান মাঠ").assertExists()
-        composeRule.onNodeWithText("অপারেশন সিঁদুর").assertExists()
-
-        composeRule.onNodeWithTag("sidebar_theme_new_card").performClick()
-        composeRule.waitForIdle()
-        assertEquals(SidebarNavItem.THEME_PANDEL, selected)
 
         composeRule.onNodeWithText("©Videsh Karmakar Project").assertIsDisplayed()
 
