@@ -1,68 +1,143 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+Naihati Nights
 
-# Run and deploy your AI Studio app
+Your Ultimate Naihati Kali Puja Pandal Hopping & Navigation Guide.
 
-This contains everything you need to run your app locally.
+What is Naihati Nights?
 
-View your app in AI Studio: https://ai.studio/apps/8a392362-3207-4c15-baa4-86b327ad18a4
+Naihati Nights is a dedicated Kali Puja Pandal Hopping & Navigation Guide designed to make exploring the famous Kali Puja pandals of Naihati easier, more organized, and less stressful.
 
-## Run Locally
+The app brings together Kali Puja pandal information, Google Maps navigation, station-based planning, pandal discovery, and essential visitor information in one convenient place.
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+Whether you're a local resident, a first-time visitor, a group of friends, a family, or a Kali Puja enthusiast, Naihati Nights helps you discover pandals, plan your route, and make the most of your festive night.
 
+The name “Naihati Nights” captures the spirit of Naihati during Kali Puja — a time when the town comes alive with spectacular pandals, creative themes, dazzling lights, vibrant decorations, and the excitement of late-night pandal hopping.
 
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
-7. If you have already published your app in AI Studio, please [request upload key reset](https://support.google.com/android-developer/answer/9842756#zippy=%2Crequest-an-upload-key-reset) in Google Play Console.
+Why Naihati Nights?
 
-## Publishing an update (GitHub Releases)
+Pandal hopping made easier — Discover Naihati's Kali Puja pandals without having to search for every destination individually.
 
-The app updates itself from **GitHub Releases**, not the Play Store. On launch (and whenever it
-returns to the foreground) it asks
-`https://api.github.com/repos/videshkarmakar-hue/Naihati-Nights/releases/latest`, compares the
-release tag with the installed `versionName`, and shows an **Update available** dialog. Tapping
-**Update now** downloads the attached APK and hands it to the system installer.
+Google Maps guidance — Open supported pandal locations in Google Maps to find directions and navigate to your selected destination.
 
-The same channel is reachable by hand: **Sidebar -> Check Updates** runs the lookup immediately,
-marks the entry with a `NEW` badge while a newer build exists, and keeps the big
-**Update now / Install update** button in one place.
+Station-based planning — Discover pandals based on nearby railway stations and plan your visit according to your arrival point.
 
-To ship a new version, tag it and push the tag:
+Organized pandal discovery — Explore listed Kali Puja destinations through dedicated sections instead of navigating one long, unorganized list.
 
-```bash
-git tag v3.0.10
-git push origin v3.0.10
-```
+Night-time exploration — Plan your Kali Puja outing and discover destinations across Naihati during the festive season.
 
-That is the whole release process:
+A convenient visitor guide — Keep useful pandal information and location guidance together in one place.
 
-1. The tag triggers [`.github/workflows/release.yml`](.github/workflows/release.yml).
-2. The workflow builds `app-debug.apk` with `-PnaihatiVersionName=3.0.10`
-   (`versionCode` is derived from the version name, `3.0.10` -> `30010000`).
-3. It publishes a GitHub release named `Naihati Nights v3.0.10` with
-   `NaihatiNights-3.0.10.apk` attached.
-4. Every installed copy sees the newer tag on its next check (throttled to once every 6 hours,
-   toggleable in **Sidebar -> Check Updates -> Auto-check on launch**) and offers the update.
+Simple and accessible navigation — Find your destination and continue your journey through Google Maps.
 
-You can also run the workflow manually from **Actions -> Release APK -> Run workflow** and type a
-version number.
+Features
 
-### Signing rule (important)
+Railway Station-Wise Pandal Guide
 
-Android refuses to install an update signed with a different key than the installed app. The
-workflow therefore signs with the committed `debug.keystore`, the same key used by
-`signingConfigs.debugConfig` in `app/build.gradle.kts`. Keep that file in the repo, and do not
-switch existing users to a different keystore — every earlier install would then fail with
-`INSTALL_FAILED_UPDATE_INCOMPATIBLE` and need a manual uninstall.
+Explore Kali Puja pandals organized around nearby railway stations.
 
-Because the APK comes from outside the Play Store, Android asks once for permission to install
-apps from this source. The update dialog links straight to that toggle.
+Browse pandal destinations associated with selected railway stations.
 
-Version tags are the source of truth. If a release page has no `.apk` asset, the dialog falls back
-to opening the release page in a browser instead of downloading.
+Discover suitable destinations based on your arrival or travel station.
+
+Open supported locations in Google Maps.
+
+Plan a more convenient pandal-hopping journey using railway connectivity.
+
+Helpful for visitors arriving by train or using suburban railway services.
+
+Naihati Kali Puja Pandal Guide
+
+Discover Kali Puja destinations across Naihati through a dedicated pandal guide.
+
+Explore listed Kali Puja pandals in one convenient place.
+
+Find individual pandal locations.
+
+Access available destination information.
+
+Open supported locations in Google Maps.
+
+Organize your visit around the pandals you want to explore.
+
+Google Maps Integration
+
+Naihati Nights uses Google Maps as the navigation layer for supported destinations.
+
+Users can:
+
+Open a selected pandal location in Google Maps.
+
+Get directions to the destination.
+
+Use available navigation options to plan their journey.
+
+Navigate between selected Puja destinations.
+
+Find nearby facilities using Google Maps where available.
+
+The app focuses on helping users find their destinations, while Google Maps handles the actual navigation experience.
+
+Organized for Pandal Hopping
+
+Instead of searching for every pandal separately, Naihati Nights brings destination discovery and navigation together.
+
+The app's core concept is simple:
+
+Railway Station → Pandal
+
+Pandal List → Destination
+
+Selected Pandal → Google Maps
+
+Pandal Hopping → Planned Journey
+
+This organized approach helps visitors decide where to go and how to reach their chosen destinations more easily.
+
+Experience Naihati During Kali Puja
+
+Kali Puja is a special time to explore Naihati's festive atmosphere, creative pandal decorations, artistic presentations, and illuminated streets.
+
+Naihati Nights is designed to help visitors organize their exploration so they can focus more on experiencing the celebration and less on searching for locations.
+
+Whether you are planning a short visit or a longer pandal-hopping outing, the app provides a convenient starting point for discovering listed destinations.
+
+Privacy & Permissions
+
+Naihati Nights is designed with simplicity and privacy in mind.
+
+The app aims to avoid unnecessary phone permissions and does not require access to personal information such as:
+
+Contacts
+
+SMS
+
+Phone calls
+
+Camera
+
+Microphone
+
+Personal photos or media
+
+Device files
+
+Supported destinations can be opened through Google Maps for navigation.
+
+Note: Any specific permission requirements depend on the app's actual implementation and the external services it uses.
+
+Designed for Kali Puja Pandal Hopping
+
+Naihati Nights is designed for anyone who wants to explore Naihati's Kali Puja celebrations with a more organized approach.
+
+Whether you're visiting with friends, exploring with family, arriving by train, or discovering Naihati's Kali Puja pandals for the first time, the app aims to make destination discovery more convenient.
+
+From finding a listed pandal to opening its location in Google Maps, everything revolves around one simple goal:
+
+Discover your pandal. Plan your journey. Open the map. Start exploring.
+
+Naihati Nights
+
+Your Naihati Kali Puja Pandal Hopping & Navigation Guide.
+
+Explore More. Navigate Smarter. Experience the Night.
+
+Celebrate Kali Puja. Discover Naihati. Make Every Stop Count.
