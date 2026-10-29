@@ -356,13 +356,6 @@ fun SettingsScreen(
             )
         }
 
-        item(key = "settings_system_core") {
-            SystemCoreCard(
-                updateCheck = updateCheck,
-                onCheckForUpdates = onCheckForUpdates
-            )
-        }
-
         item(key = "settings_footer") {
             Column(
                 modifier = Modifier
@@ -1170,20 +1163,6 @@ private fun SettingsAppUpdateCard(
                 maxLines = 1
             )
         }
-
-        Text(
-            text = "Open the GitHub release page",
-            fontFamily = PlusJakartaSans,
-            fontSize = 11.sp,
-            lineHeight = 15.sp,
-            fontWeight = FontWeight.Medium,
-            color = SettingsAccent,
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .clickable(onClick = onOpenReleases)
-                .padding(vertical = 2.dp)
-                .testTag("settings_open_releases")
-        )
 
         SettingsHairlineLine()
 

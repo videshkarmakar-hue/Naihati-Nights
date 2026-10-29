@@ -231,16 +231,6 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("settings_link_instagram").assertIsDisplayed()
 
         composeRule.onNodeWithTag("settings_list")
-            .performScrollToNode(hasTestTag("check_for_updates_button"))
-        composeRule.onNodeWithText("APP ARCHITECTURE").assertIsDisplayed()
-        composeRule.onNodeWithText("Parikrama Radar Core").assertIsDisplayed()
-        composeRule.onNodeWithText("v${BuildConfig.VERSION_NAME} • STABLE").assertIsDisplayed()
-        composeRule.onNodeWithText("v${BuildConfig.VERSION_NAME} Patch Notes").assertIsDisplayed()
-        composeRule.onNodeWithText(
-            "Optimized low-light contrast & OLED battery efficiency"
-        ).assertExists()
-
-        composeRule.onNodeWithTag("settings_list")
             .performScrollToNode(hasText("JAY BORO MAA"))
         composeRule.onNodeWithText("Crafted with Devotion in Naihati").assertIsDisplayed()
         composeRule.onNodeWithText("©Crafted by VIDESH KARMAKAR").assertIsDisplayed()
