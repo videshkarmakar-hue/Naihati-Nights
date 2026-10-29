@@ -15,7 +15,10 @@
 .cxx
 local.properties
 .env
-debug.keystore
+# Committed on purpose: local builds and CI must share one signing key or Android rejects
+# every update with INSTALL_FAILED_UPDATE_INCOMPATIBLE.
+my-upload-key.jks
+*.jks
 
 # Build artifacts
 *.apk

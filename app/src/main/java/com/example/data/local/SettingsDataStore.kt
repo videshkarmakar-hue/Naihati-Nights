@@ -6,12 +6,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.model.AppSettings
 import com.example.model.NavigationMode
 import com.example.model.ThemeStyle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "naihati_settings")
@@ -40,6 +42,11 @@ class SettingsDataStore(private val context: Context) {
         val ANONYMOUS_TRAFFIC = booleanPreferencesKey("anonymous_traffic")
         val COMMUNITY_REPORTING = booleanPreferencesKey("community_reporting")
         val ONBOARDING_COMPLETE = booleanPreferencesKey("onboarding_complete")
+
+        // GitHub release channel bookkeeping (not part of the settings UI model).
+        val AUTO_UPDATE_CHECK = booleanPreferencesKey("auto_update_check")
+        val LAST_UPDATE_CHECK = longPreferencesKey("last_update_check_at")
+        val DISMISSED_UPDATE = stringPreferencesKey("dismissed_update_version")
     }
 
     val settingsFlow: Flow<AppSettings> = context.dataStore.data.map { prefs ->
@@ -67,7 +74,8 @@ class SettingsDataStore(private val context: Context) {
             emergencySosBeacon = prefs[Keys.EMERGENCY_SOS] ?: true,
             bhogAndWaterHubs = prefs[Keys.BHOG_WATER] ?: true,
             anonymousFootTraffic = prefs[Keys.ANONYMOUS_TRAFFIC] ?: true,
-            communityReportingSync = prefs[Keys.COMMUNITY_REPORTING] ?: true
+            communityReportingSync = prefs[Keys.COMMUNITY_REPORTING] ?: true,
+            autoUpdateCheck = prefs[Keys.AUTO_UPDATE_CHECK] ?: true
         )
     }
 
@@ -97,6 +105,7 @@ class SettingsDataStore(private val context: Context) {
             prefs[Keys.BHOG_WATER] = settings.bhogAndWaterHubs
             prefs[Keys.ANONYMOUS_TRAFFIC] = settings.anonymousFootTraffic
             prefs[Keys.COMMUNITY_REPORTING] = settings.communityReportingSync
+            prefs[Keys.AUTO_UPDATE_CHECK] = settings.autoUpdateCheck
         }
     }
 
@@ -111,4 +120,31 @@ class SettingsDataStore(private val context: Context) {
             prefs[Keys.ONBOARDING_COMPLETE] = complete
         }
     }
+
+    /** Epoch millis of the last successful/failed GitHub release check, 0 when never checked. */
+    suspend fun lastUpdateCheckAt(): Long =
+        context.dataStore.data.map { prefs -> prefs[Keys.LAST_UPDATE_CHECK] ?: 0L }.first()
+
+    suspend fun setLastUpdateCheckAt(checkedAtMillis: Long) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.LAST_UPDATE_CHECK] = checkedAtMillis
+        }
+    }
+
+    /** Version the user tapped "Later" on, so the launch prompt does not nag on every start. */
+    suspend fun dismissedUpdateVersion(): String? =
+        context.dataStore.data.map { prefs -> prefs[Keys.DISMISSED_UPDATE] }.first()
+
+    suspend fun setDismissedUpdateVersion(version: String?) {
+        context.dataStore.edit { prefs ->
+            if (version.isNullOrBlank()) {
+                prefs.remove(Keys.DISMISSED_UPDATE)
+            } else {
+                prefs[Keys.DISMISSED_UPDATE] = version
+            }
+        }
+    }
+
+    suspend fun isAutoUpdateCheckEnabled(): Boolean =
+        context.dataStore.data.map { prefs -> prefs[Keys.AUTO_UPDATE_CHECK] ?: true }.first()
 }

@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 
+import com.example.ui.components.AppUpdateDialog
 import com.example.ui.components.CapsuleBottomBar
 import com.example.ui.components.SidebarNavItem
 import com.example.ui.components.SleekSidebar
@@ -77,6 +78,12 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     val appSettings by viewModel.settings.collectAsState()
     val content by viewModel.content.collectAsState()
     val updateCheck by viewModel.updateCheck.collectAsState()
+    val appUpdate by viewModel.appUpdate.collectAsState()
+    val updatePromptVisible by viewModel.updatePromptVisible.collectAsState()
+    val updateNotice by viewModel.updateNotice.collectAsState()
+
+    // Throttled GitHub release check: prompts once per launch when a newer APK is published.
+    LaunchedEffect(Unit) { viewModel.autoCheckForAppUpdate() }
 
     // The branded Continue gate is the entry point for every fresh launch.
     // The branded Continue gate is the entry point for every fresh launch.
@@ -228,6 +235,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                         onResetSettings = { viewModel.resetSettings() },
                         onCheckForUpdates = { viewModel.checkForUpdates() },
                         updateCheck = updateCheck,
+                        appUpdate = appUpdate,
+                        onCheckAppUpdate = { viewModel.checkForAppUpdate() },
+                        onDownloadAppUpdate = { viewModel.downloadAndInstallUpdate() },
+                        onOpenReleases = { viewModel.openReleasesPage() },
                         onBack = { currentScreen = NavigationScreen.HOME },
                         onOpenDeveloperProfile = { currentScreen = NavigationScreen.PROFILE },
                         onOpenSidebar = openSidebar,
@@ -362,6 +373,16 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                 )
             }
         }
+
+        // GitHub release channel: app-binary updates (not the guide content sync above).
+        AppUpdateDialog(
+            visible = updatePromptVisible,
+            state = appUpdate,
+            notice = updateNotice,
+            onUpdateNow = viewModel::downloadAndInstallUpdate,
+            onLater = viewModel::dismissUpdatePrompt,
+            onOpenRelease = viewModel::openReleasesPage
+        )
     }
     }
 }

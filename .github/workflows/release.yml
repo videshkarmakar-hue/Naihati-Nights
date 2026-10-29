@@ -1,0 +1,105 @@
+name: Release APK
+
+# Publishing an update is one command:  git tag v3.0.10 && git push origin v3.0.10
+# The app reads this release via the GitHub API and prompts every install to update.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version without the v prefix, e.g. 3.0.10'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the tagged source
+        uses: actions/checkout@v4
+
+      - name: Work out the version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RAW="${{ inputs.version }}"
+          else
+            RAW="${GITHUB_REF_NAME}"
+          fi
+          VERSION="$(printf '%s' "$RAW" | grep -oE '[0-9]+(\.[0-9]+)*' | head -n1 || true)"
+          if [ -z "${VERSION:-}" ]; then
+            echo "::error::Could not read a version number from '$RAW'"
+            exit 1
+          fi
+          IFS='.' read -r MAJOR MINOR PATCH REST <<< "$VERSION"
+          CODE=$(( 10#${MAJOR:-0} * 10000000 + 10#${MINOR:-0} * 100000 + 10#${PATCH:-0} * 1000 + 10#${REST:-0} ))
+          echo "name=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "code=$CODE" >> "$GITHUB_OUTPUT"
+          echo "Building v$VERSION (versionCode $CODE)"
+
+      - name: Check the signing key is committed
+        shell: bash
+        run: |
+          if [ ! -f debug.keystore ]; then
+            echo "::error::debug.keystore is missing. Release APKs must be signed with the same key as every earlier build or Android will refuse to install them as updates."
+            exit 1
+          fi
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Install the Android SDK platform this project compiles against
+        shell: bash
+        run: |
+          SDKMANAGER="${ANDROID_HOME:-$ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then SDKMANAGER="$(command -v sdkmanager)"; fi
+          echo "Using $SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" --install "platforms;android-37.0" "build-tools;36.0.0" > /dev/null || \
+            "$SDKMANAGER" --install "platforms;android-37.0" > /dev/null
+
+      - name: Build the release APK
+        shell: bash
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app:assembleDebug --no-daemon --stacktrace \
+            -PnaihatiVersionName="${{ steps.version.outputs.name }}" \
+            -PnaihatiVersionCode="${{ steps.version.outputs.code }}"
+
+      - name: Stage the APK for upload
+        shell: bash
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/debug/app-debug.apk \
+             "out/NaihatiNights-${{ steps.version.outputs.name }}.apk"
+          ls -lh out
+
+      - name: Publish the GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.name }}
+          name: Naihati Nights v${{ steps.version.outputs.name }}
+          body: |
+            Naihati Nights v${{ steps.version.outputs.name }} (build ${{ steps.version.outputs.code }}).
+
+            Installed copies of the app check this release automatically and show an
+            "Update available" prompt. The attached APK is what they download.
+          files: out/NaihatiNights-${{ steps.version.outputs.name }}.apk
+          fail_on_unmatched_files: true
+          draft: false
+          prerelease: false

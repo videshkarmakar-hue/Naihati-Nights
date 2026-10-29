@@ -1,5 +1,26 @@
 ﻿import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
 
+/**
+ * Android versionCode derived from the version name so the two can never drift apart:
+ * `3.0.10` -> 3 * 10_000_000 + 0 * 100_000 + 10 * 1_000 = 30010000.
+ * Must increase for every published APK or Android refuses to install it as an update.
+ */
+fun versionCodeFor(versionName: String): Int {
+  val parts = versionName.split('.').mapNotNull { it.trim().toIntOrNull() }
+  if (parts.isEmpty()) return 1
+  val major = parts.getOrElse(0) { 0 }
+  val minor = parts.getOrElse(1) { 0 }
+  val patch = parts.getOrElse(2) { 0 }
+  val build = parts.getOrElse(3) { 0 }.coerceIn(0, 999)
+  return major * 10_000_000 + minor * 100_000 + patch * 1_000 + build
+}
+
+// The GitHub release workflow passes the tag version in, so a tag is the single source of truth.
+val releaseVersionName: String =
+  (findProperty("naihatiVersionName") as String?)?.takeIf { it.isNotBlank() } ?: "3.0.9.0"
+val releaseVersionCode: Int =
+  (findProperty("naihatiVersionCode") as String?)?.toIntOrNull() ?: versionCodeFor(releaseVersionName)
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
@@ -16,10 +37,14 @@ android {
     applicationId = "com.aistudio.naihatinights.videshk"
     minSdk = 24
     targetSdk = 36
-    versionCode = 25
-    versionName = "3.0.9.0"
+    versionCode = releaseVersionCode
+    versionName = releaseVersionName
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    // In-app updater: the public GitHub repo whose Releases feed the app checks.
+    buildConfigField("String", "GITHUB_OWNER", "\"videshkarmakar-hue\"")
+    buildConfigField("String", "GITHUB_REPO", "\"Naihati-Nights\"")
 
     // Base URL for the optional live-content API. The app is local-first: if this endpoint is
     // unreachable the bundled NaihatiDataProvider snapshot and Room cache are used instead.

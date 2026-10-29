@@ -320,7 +320,11 @@ data class AppSettings(
     val emergencySosBeacon: Boolean = true,
     val bhogAndWaterHubs: Boolean = true,
     val anonymousFootTraffic: Boolean = true,
-    val communityReportingSync: Boolean = true
+    val communityReportingSync: Boolean = true,
+
+    // Update channel
+    /** Checks GitHub Releases on launch and shows the update prompt when a newer build exists. */
+    val autoUpdateCheck: Boolean = true
 )
 
 enum class ThemeStyle(

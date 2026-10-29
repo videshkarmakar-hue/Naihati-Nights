@@ -38,6 +38,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Navigation
@@ -81,6 +82,10 @@ import com.example.R
 import com.example.model.AppContent
 import com.example.model.AppSettings
 import com.example.model.ThemeStyle
+import com.example.data.update.AppUpdateState
+import com.example.data.update.formatBytesCompact
+import com.example.data.update.releaseInfo
+import com.example.data.update.releaseNoteLines
 import com.example.ui.components.AppBrandHeader
 import com.example.ui.components.SectionCreditFooter
 import com.example.ui.theme.AvailablePalettes
@@ -133,6 +138,10 @@ fun SettingsScreen(
     onResetSettings: () -> Unit = { onUpdateSettings(AppSettings()) },
     onCheckForUpdates: () -> Unit = {},
     updateCheck: UpdateCheckState = UpdateCheckState.Idle,
+    appUpdate: AppUpdateState = AppUpdateState.Idle,
+    onCheckAppUpdate: () -> Unit = {},
+    onDownloadAppUpdate: () -> Unit = {},
+    onOpenReleases: () -> Unit = {},
     onBack: () -> Unit,
     onOpenDeveloperProfile: () -> Unit,
     onOpenSidebar: () -> Unit = {},
@@ -333,6 +342,17 @@ fun SettingsScreen(
             DeveloperCreditsCard(
                 onOpenProfile = onOpenDeveloperProfile,
                 onOpenLink = ::openLink
+            )
+        }
+
+        item(key = "settings_app_update") {
+            SettingsAppUpdateCard(
+                appSettings = appSettings,
+                state = appUpdate,
+                onCheck = onCheckAppUpdate,
+                onDownload = onDownloadAppUpdate,
+                onOpenReleases = onOpenReleases,
+                onAutoCheckChange = { onUpdateSettings(appSettings.copy(autoUpdateCheck = it)) }
             )
         }
 
@@ -1007,6 +1027,180 @@ private fun ThemeSwatch(
             textAlign = TextAlign.Center,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+private fun SettingsAppUpdateCard(
+    appSettings: AppSettings,
+    state: AppUpdateState,
+    onCheck: () -> Unit,
+    onDownload: () -> Unit,
+    onOpenReleases: () -> Unit,
+    onAutoCheckChange: (Boolean) -> Unit
+) {
+    val info = state.releaseInfo
+    val isChecking = state is AppUpdateState.Checking
+    val isDownloading = state is AppUpdateState.Downloading
+    val isReady = state is AppUpdateState.Ready
+    val failure = (state as? AppUpdateState.Failed)?.message
+    val canRetryDownload = state is AppUpdateState.Available || isReady || (failure != null && info != null)
+
+    val badge = when (state) {
+        AppUpdateState.Idle -> "GitHub"
+        AppUpdateState.Checking -> "Checking"
+        is AppUpdateState.UpToDate -> "Latest"
+        is AppUpdateState.Available, is AppUpdateState.Downloading, is AppUpdateState.Ready -> "Update ready"
+        is AppUpdateState.Failed -> "Offline"
+    }
+
+    val statusLine = when (state) {
+        AppUpdateState.Idle -> "Checks the GitHub Releases feed for a newer APK."
+        AppUpdateState.Checking -> "Asking GitHub for the newest release…"
+        is AppUpdateState.UpToDate ->
+            "Latest release v${state.latestVersion}. You are on the newest build."
+
+        is AppUpdateState.Available ->
+            "v${state.info.versionName} is available • ${formatBytesCompact(state.info.apkSizeBytes)}."
+
+        is AppUpdateState.Downloading ->
+            "Downloading ${(state.progress * 100f).toInt()}%…"
+
+        is AppUpdateState.Ready -> "Downloaded. Install to finish the update."
+        is AppUpdateState.Failed -> state.message
+    }
+
+    val primaryLabel = when {
+        isDownloading -> "DOWNLOADING ${((state as AppUpdateState.Downloading).progress * 100f).toInt()}%"
+        isReady -> "INSTALL UPDATE"
+        state is AppUpdateState.Available -> "UPDATE NOW"
+        else -> "CHECK GITHUB FOR UPDATES"
+    }
+
+    SettingsGroupCard(
+        title = "App Updates",
+        icon = Icons.Default.Download,
+        badge = badge
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("settings_app_update_card"),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = "Installed v${BuildConfig.VERSION_NAME} • Build ${BuildConfig.VERSION_CODE}",
+                fontFamily = PlusJakartaSans,
+                fontSize = 11.sp,
+                lineHeight = 15.sp,
+                color = SettingsMutedDeep
+            )
+            Text(
+                text = statusLine,
+                fontFamily = PlusJakartaSans,
+                fontSize = 12.sp,
+                lineHeight = 17.sp,
+                fontWeight = FontWeight.Medium,
+                color = if (failure != null) SettingsRose else SettingsText
+            )
+            info?.let { release ->
+                releaseNoteLines(release.notes, limit = 1).firstOrNull()?.let { line ->
+                    Text(
+                        text = "• $line",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 11.sp,
+                        lineHeight = 15.sp,
+                        color = SettingsMuted,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(
+                    Brush.horizontalGradient(
+                        colors = listOf(
+                            LocalAppPalette.current.accentSurface,
+                            LocalAppPalette.current.accentSurfaceStrong,
+                            LocalAppPalette.current.accentSurfaceStrong
+                        )
+                    )
+                )
+                .border(1.dp, LocalAppPalette.current.accentBorder, RoundedCornerShape(12.dp))
+                .clickable(enabled = !isChecking && !isDownloading) {
+                    if (canRetryDownload) onDownload() else onCheck()
+                }
+                .padding(horizontal = 12.dp, vertical = 12.dp)
+                .testTag("settings_app_update_button"),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = null,
+                    tint = SettingsAccent,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = primaryLabel,
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.3.sp,
+                    color = Color(0xFFF4F4F5),
+                    maxLines = 1
+                )
+            }
+            Text(
+                text = if (info != null) "v${info.versionName}" else "GitHub",
+                fontFamily = PlusJakartaSans,
+                fontSize = 11.sp,
+                lineHeight = 15.sp,
+                fontWeight = FontWeight.Medium,
+                color = SettingsMuted,
+                maxLines = 1
+            )
+        }
+
+        Text(
+            text = "Open the GitHub release page",
+            fontFamily = PlusJakartaSans,
+            fontSize = 11.sp,
+            lineHeight = 15.sp,
+            fontWeight = FontWeight.Medium,
+            color = SettingsAccent,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .clickable(onClick = onOpenReleases)
+                .padding(vertical = 2.dp)
+                .testTag("settings_open_releases")
+        )
+
+        SettingsHairlineLine()
+
+        SettingsToggleRow(
+            label = "Auto-check on launch",
+            checked = appSettings.autoUpdateCheck,
+            onCheckedChange = onAutoCheckChange,
+            testTag = "settings_toggle_auto_update"
+        )
+
+        Text(
+            text = "Delivered from GitHub Releases. Android asks once for permission to install " +
+                "apps from this source.",
+            fontFamily = PlusJakartaSans,
+            fontSize = 10.sp,
+            lineHeight = 14.sp,
+            color = SettingsMutedDeep
         )
     }
 }
