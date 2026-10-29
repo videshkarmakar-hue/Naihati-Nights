@@ -1,0 +1,6 @@
+{
+  "name": "Naihati Nights",
+  "description": "Naihati Kali Puja 2026 • Official Parikrama & Guide. Discover the Night. Experience Naihati.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
