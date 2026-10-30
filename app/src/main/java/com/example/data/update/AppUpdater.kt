@@ -69,7 +69,7 @@ class AppUpdater(context: Context) {
 
         downloadClient.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw IOException("Download failed (HTTP ${response.code})")
-            val body = response.body ?: throw IOException("GitHub sent an empty download")
+            val body = response.body ?: throw IOException("The update server sent an empty download")
             val total = body.contentLength().takeIf { it > 0L } ?: info.apkSizeBytes
 
             body.byteStream().use { input ->

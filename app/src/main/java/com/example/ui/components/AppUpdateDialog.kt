@@ -280,7 +280,7 @@ fun AppUpdateDialog(
             val primaryLabel = when {
                 isDownloading -> "DOWNLOADING…"
                 isReady -> "INSTALL UPDATE"
-                !info.hasApk -> "OPEN GITHUB RELEASE"
+                !info.hasApk -> "OPEN RELEASE"
                 failure != null -> "TRY AGAIN"
                 else -> "UPDATE NOW"
             }

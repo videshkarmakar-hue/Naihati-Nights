@@ -242,7 +242,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         if (state is AppUpdateState.Ready) {
             if (!appUpdater.installApk(state.apkFile)) {
                 _updateNotice.value =
-                    "Could not open the installer. Open the GitHub release to install manually."
+                    "Could not open the installer. Open the release to install manually."
             }
             return
         }
@@ -250,7 +250,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val info = state.releaseInfo ?: return
         if (!info.hasApk) {
             _updateNotice.value =
-                "This release has no APK attached. Opening the GitHub release page instead."
+                "This release has no APK attached. Opening it instead."
             appUpdater.openReleasesPage(info.releaseUrl)
             return
         }

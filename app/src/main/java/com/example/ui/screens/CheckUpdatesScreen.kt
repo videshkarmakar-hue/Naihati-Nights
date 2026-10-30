@@ -99,7 +99,7 @@ fun CheckUpdatesScreen(
     LaunchedEffect(Unit) { onScreenOpen() }
 
     val badge = when (state) {
-        AppUpdateState.Idle -> "GITHUB"
+        AppUpdateState.Idle -> "CHECK"
         AppUpdateState.Checking -> "CHECKING"
         is AppUpdateState.UpToDate -> "LATEST"
         is AppUpdateState.Available, is AppUpdateState.Downloading, is AppUpdateState.Ready -> "UPDATE"
@@ -108,7 +108,7 @@ fun CheckUpdatesScreen(
 
     val statusTitle = when (state) {
         AppUpdateState.Idle -> "Ready to check"
-        AppUpdateState.Checking -> "Contacting GitHub…"
+        AppUpdateState.Checking -> "Contacting the update server…"
         is AppUpdateState.UpToDate -> "You're up to date"
         is AppUpdateState.Available -> "v${state.info.versionName} is available"
         is AppUpdateState.Downloading -> "Downloading the update…"
@@ -118,17 +118,17 @@ fun CheckUpdatesScreen(
 
     val statusBody = when (state) {
         AppUpdateState.Idle ->
-            "Naihati Nights checks the official GitHub Releases feed. No Play Store needed."
+            "Naihati Nights checks the official release feed for newer builds."
 
-        AppUpdateState.Checking -> "Looking for the newest APK published on GitHub."
+        AppUpdateState.Checking -> "Looking for the newest APK published for this build."
         is AppUpdateState.UpToDate ->
             "v${state.latestVersion} is the newest release. Nothing to install."
 
         is AppUpdateState.Available ->
             if (state.info.hasApk) {
-                "A newer build is on GitHub • ${formatBytesCompact(state.info.apkSizeBytes)}."
+                "A newer build is available • ${formatBytesCompact(state.info.apkSizeBytes)}."
             } else {
-                "A newer release exists but has no APK attached. Open it on GitHub instead."
+                "A newer release exists but has no APK attached. Open it instead."
             }
 
         is AppUpdateState.Downloading -> buildString {
@@ -147,7 +147,7 @@ fun CheckUpdatesScreen(
         downloading != null -> "DOWNLOADING ${(downloading.progress * 100f).toInt()}%"
         isReady -> "INSTALL UPDATE"
         isAvailable && info?.hasApk == true -> "UPDATE NOW"
-        isAvailable -> "OPEN GITHUB RELEASE"
+        isAvailable -> "OPEN RELEASE"
         isChecking -> "CHECKING…"
         else -> "CHECK FOR UPDATES"
     }
@@ -517,7 +517,7 @@ fun CheckUpdatesScreen(
 
             item(key = "updates_footnote") {
                 Text(
-                    text = "Updates are delivered from GitHub Releases, not the Play Store. " +
+                    text = "Updates are delivered through the in-app updater. " +
                         "Android asks once for permission to install apps from this source.",
                     fontFamily = PlusJakartaSans,
                     fontSize = 10.sp,

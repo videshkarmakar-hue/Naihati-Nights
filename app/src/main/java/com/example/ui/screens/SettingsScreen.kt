@@ -1043,7 +1043,7 @@ private fun SettingsAppUpdateCard(
     val canRetryDownload = state is AppUpdateState.Available || isReady || (failure != null && info != null)
 
     val badge = when (state) {
-        AppUpdateState.Idle -> "GitHub"
+        AppUpdateState.Idle -> "Check"
         AppUpdateState.Checking -> "Checking"
         is AppUpdateState.UpToDate -> "Latest"
         is AppUpdateState.Available, is AppUpdateState.Downloading, is AppUpdateState.Ready -> "Update ready"
@@ -1051,8 +1051,8 @@ private fun SettingsAppUpdateCard(
     }
 
     val statusLine = when (state) {
-        AppUpdateState.Idle -> "Checks the GitHub Releases feed for a newer APK."
-        AppUpdateState.Checking -> "Asking GitHub for the newest release…"
+        AppUpdateState.Idle -> "Checks the official release feed for a newer APK."
+        AppUpdateState.Checking -> "Asking the update server for the newest release…"
         is AppUpdateState.UpToDate ->
             "Latest release v${state.latestVersion}. You are on the newest build."
 
@@ -1070,7 +1070,7 @@ private fun SettingsAppUpdateCard(
         isDownloading -> "DOWNLOADING ${((state as AppUpdateState.Downloading).progress * 100f).toInt()}%"
         isReady -> "INSTALL UPDATE"
         state is AppUpdateState.Available -> "UPDATE NOW"
-        else -> "CHECK GITHUB FOR UPDATES"
+        else -> "CHECK FOR UPDATES"
     }
 
     SettingsGroupCard(
@@ -1156,7 +1156,7 @@ private fun SettingsAppUpdateCard(
                 )
             }
             Text(
-                text = if (info != null) "v${info.versionName}" else "GitHub",
+                text = if (info != null) "v${info.versionName}" else "v${BuildConfig.VERSION_NAME}",
                 fontFamily = PlusJakartaSans,
                 fontSize = 11.sp,
                 lineHeight = 15.sp,
@@ -1176,7 +1176,7 @@ private fun SettingsAppUpdateCard(
         )
 
         Text(
-            text = "Delivered from GitHub Releases. Android asks once for permission to install " +
+            text = "Delivered through the in-app updater. Android asks once for permission to install " +
                 "apps from this source.",
             fontFamily = PlusJakartaSans,
             fontSize = 10.sp,

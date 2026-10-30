@@ -87,16 +87,16 @@ class GitHubReleaseApi(
                 when {
                     response.code == 404 -> ReleaseLookup.NoRelease
                     !response.isSuccessful -> ReleaseLookup.Failed(
-                        "GitHub replied with HTTP ${response.code}"
+                        "The update server replied with HTTP ${response.code}"
                     )
                     else -> {
                         val payload = response.body?.string()
                         if (payload.isNullOrBlank()) {
-                            ReleaseLookup.Failed("GitHub sent an empty response")
+                            ReleaseLookup.Failed("The update server sent an empty response")
                         } else {
                             val release = runCatching { adapter.fromJson(payload) }.getOrNull()
                             if (release == null) {
-                                ReleaseLookup.Failed("Could not read the GitHub release")
+                                ReleaseLookup.Failed("Could not read the release")
                             } else if (release.draft) {
                                 ReleaseLookup.NoRelease
                             } else {

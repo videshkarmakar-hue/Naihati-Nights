@@ -574,7 +574,7 @@ fun SidebarContentDisplay(
                     color = LocalAppPalette.current.accentBright
                 )
                 Text(
-                    text = "Ask GitHub Releases for a newer Naihati Nights build, read the release notes, and install the update without leaving the app.",
+                    text = "Ask the release feed for a newer Naihati Nights build, read the release notes, and install the update without leaving the app.",
                     fontSize = 11.5.sp,
                     color = TextSoftZinc,
                     lineHeight = 16.sp
