@@ -1,8 +1,8 @@
-Naihati Nights
+# Naihati Nights
 
 Your Ultimate Naihati Kali Puja Pandal Hopping & Navigation Guide.
 
-What is Naihati Nights?
+# What is Naihati Nights?
 
 Naihati Nights is a dedicated Kali Puja Pandal Hopping & Navigation Guide designed to make exploring the famous Kali Puja pandals of Naihati easier, more organized, and less stressful.
 
@@ -12,7 +12,7 @@ Whether you're a local resident, a first-time visitor, a group of friends, a fam
 
 The name “Naihati Nights” captures the spirit of Naihati during Kali Puja — a time when the town comes alive with spectacular pandals, creative themes, dazzling lights, vibrant decorations, and the excitement of late-night pandal hopping.
 
-Why Naihati Nights?
+# Why Naihati Nights?
 
 Pandal hopping made easier — Discover Naihati's Kali Puja pandals without having to search for every destination individually.
 
@@ -28,7 +28,7 @@ A convenient visitor guide — Keep useful pandal information and location guida
 
 Simple and accessible navigation — Find your destination and continue your journey through Google Maps.
 
-Features
+# Features
 
 Railway Station-Wise Pandal Guide
 
