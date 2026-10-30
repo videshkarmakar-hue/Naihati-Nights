@@ -100,7 +100,7 @@ Naihati Nights is designed to help visitors organize their exploration so they c
 
 Whether you are planning a short visit or a longer pandal-hopping outing, the app provides a convenient starting point for discovering listed destinations.
 
-Privacy & Permissions
+# Privacy & Permissions
 
 Naihati Nights is designed with simplicity and privacy in mind.
 
