@@ -8,12 +8,12 @@ import com.example.model.ThemeStyle
 /**
  * App theme wrapper.
  *
- * [themeStyle] selects one of the four palettes; it is resolved from the persisted Settings value,
+ * [themeStyle] selects one of the nine palettes; it is resolved from the persisted Settings value,
  * so the whole app re-colours instantly when the user picks a different theme.
  */
 @Composable
 fun MyApplicationTheme(
-    themeStyle: ThemeStyle = ThemeStyle.KUMARTULI_TEAL,
+    themeStyle: ThemeStyle = ThemeStyle.INDIGO_NIGHT,
     darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit,

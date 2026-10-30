@@ -364,7 +364,6 @@ data class AppSettings(
     val nightGlareDimmer: Boolean = true,
     val motionReduction: Boolean = false,
     val hapticFeedback: Boolean = true,
-    val themeStyle: ThemeStyle = ThemeStyle.KUMARTULI_TEAL,
     val textLegibilityScale: Int = 1, // 1: Standard (100%), 2: Medium (115%), 3: Large (130% - Night Hopping)
 
     // Safety & Municipal Alerts
@@ -376,7 +375,10 @@ data class AppSettings(
 
     // Update channel
     /** Checks GitHub Releases on launch and shows the update prompt when a newer build exists. */
-    val autoUpdateCheck: Boolean = true
+    val autoUpdateCheck: Boolean = true,
+
+    /** Currently selected app theme; Indigo Night is the launch default. */
+    val themeStyle: ThemeStyle = ThemeStyle.INDIGO_NIGHT
 )
 
 enum class ThemeStyle(

@@ -68,7 +68,7 @@ class SettingsDataStore(private val context: Context) {
             hapticFeedback = prefs[Keys.HAPTIC] ?: true,
             themeStyle = prefs[Keys.ACCENT_HUE]?.let { name ->
                 runCatching { ThemeStyle.valueOf(name) }.getOrNull()
-            } ?: ThemeStyle.KUMARTULI_TEAL,
+            } ?: ThemeStyle.INDIGO_NIGHT,
             textLegibilityScale = prefs[Keys.TEXT_SCALE] ?: 1,
             thanaFlashBroadcasts = prefs[Keys.THANA_BROADCASTS] ?: true,
             emergencySosBeacon = prefs[Keys.EMERGENCY_SOS] ?: true,
