@@ -435,7 +435,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             state = appUpdate,
             notice = updateNotice,
             onUpdateNow = viewModel::downloadAndInstallUpdate,
-            onLater = viewModel::dismissUpdatePrompt,
             onOpenRelease = viewModel::openReleasesPage
         )
     }

@@ -29,6 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -65,7 +67,6 @@ fun AppUpdateDialog(
     state: AppUpdateState,
     notice: String?,
     onUpdateNow: () -> Unit,
-    onLater: () -> Unit,
     onOpenRelease: () -> Unit
 ) {
     if (!visible) return
@@ -78,7 +79,7 @@ fun AppUpdateDialog(
     val notes = releaseNoteLines(info.notes)
 
     Dialog(
-        onDismissRequest = onLater,
+        onDismissRequest = { },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
             dismissOnClickOutside = false
@@ -88,6 +89,19 @@ fun AppUpdateDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 18.dp)
+                .drawBehind {
+                    val glowRadius = (size.width * 0.9f).coerceAtLeast(180f)
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                palette.accentBright.copy(alpha = 0.10f),
+                                palette.accentDeep.copy(alpha = 0.22f)
+                            )
+                        ),
+                        center = Offset(size.width / 2f, -size.height / 3f),
+                        radius = glowRadius
+                    )
+                }
                 .clip(RoundedCornerShape(24.dp))
                 .background(DialogSurface)
                 .border(1.dp, palette.accentBorderStrong, RoundedCornerShape(24.dp))
@@ -273,23 +287,6 @@ fun AppUpdateDialog(
                 label = primaryLabel,
                 enabled = !isDownloading,
                 onClick = if (!info.hasApk) onOpenRelease else onUpdateNow
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = "Later",
-                fontFamily = PlusJakartaSans,
-                fontSize = 12.sp,
-                lineHeight = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = DialogMuted,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable(onClick = onLater)
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .testTag("app_update_later")
             )
         }
     }
