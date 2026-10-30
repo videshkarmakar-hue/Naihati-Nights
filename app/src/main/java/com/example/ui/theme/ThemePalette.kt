@@ -127,6 +127,96 @@ private val AzureSignalPalette = AppPalette(
     textMuted = Color(0xFF94A3B8)
 )
 
+/** Dark Red — deep crimson on blood plum panels (the requested dark red accent). */
+private val DarkRedPalette = AppPalette(
+    name = "Dark Red",
+    accent = Color(0xFFB91C1C),
+    accentBright = Color(0xFFF87171),
+    accentStrong = Color(0xFF991B1B),
+    accentDeep = Color(0xFF7F1D1D),
+    accentSurface = Color(0xFF2A0A0A),
+    accentSurfaceStrong = Color(0xFF3B0F0F),
+    accentSoft = Color(0x33B91C1C),
+    accentBorder = Color(0x4DB91C1C),
+    accentBorderStrong = Color(0x99B91C1C),
+    onAccent = Color(0xFFF8FAFC),
+    textBg = Color(0xFF050505),
+    text = Color(0xFFF4F4F5),
+    textMuted = Color(0xFF94A3B8)
+)
+
+/** Forest Green — deep forest green on pine ink panels. */
+private val ForestGreenPalette = AppPalette(
+    name = "Forest Green",
+    accent = Color(0xFF16A34A),
+    accentBright = Color(0xFF86EFAC),
+    accentStrong = Color(0xFF15803D),
+    accentDeep = Color(0xFF14532D),
+    accentSurface = Color(0xFF0A1F14),
+    accentSurfaceStrong = Color(0xFF0F2B1B),
+    accentSoft = Color(0x3316A34A),
+    accentBorder = Color(0x4D16A34A),
+    accentBorderStrong = Color(0x9916A34A),
+    onAccent = Color(0xFFF0FDF4),
+    textBg = Color(0xFF050505),
+    text = Color(0xFFF4F4F5),
+    textMuted = Color(0xFF94A3B8)
+)
+
+/** Indigo Night — deep indigo on night plum panels. */
+private val IndigoNightPalette = AppPalette(
+    name = "Indigo Night",
+    accent = Color(0xFF4F46E5),
+    accentBright = Color(0xFFC7D2FE),
+    accentStrong = Color(0xFF4338CA),
+    accentDeep = Color(0xFF312E81),
+    accentSurface = Color(0xFF141338),
+    accentSurfaceStrong = Color(0xFF1B1A44),
+    accentSoft = Color(0x334F46E5),
+    accentBorder = Color(0x4D4F46E5),
+    accentBorderStrong = Color(0x995F59EB),
+    onAccent = Color(0xFFF5F5FF),
+    textBg = Color(0xFF050505),
+    text = Color(0xFFF4F4F5),
+    textMuted = Color(0xFF94A3B8)
+)
+
+/** Royal Amber — burnt amber on deep bronze panels. */
+private val RoyalAmberPalette = AppPalette(
+    name = "Royal Amber",
+    accent = Color(0xFFD97706),
+    accentBright = Color(0xFFFBBF24),
+    accentStrong = Color(0xFFB45309),
+    accentDeep = Color(0xFF92400E),
+    accentSurface = Color(0xFF241505),
+    accentSurfaceStrong = Color(0xFF2E1A08),
+    accentSoft = Color(0x33D97706),
+    accentBorder = Color(0x4DD97706),
+    accentBorderStrong = Color(0x99D97706),
+    onAccent = Color(0xFF1C1204),
+    textBg = Color(0xFF050505),
+    text = Color(0xFFF4F4F5),
+    textMuted = Color(0xFF94A3B8)
+)
+
+/** Plum Noir — muted plum on ink plum panels. */
+private val PlumNoirPalette = AppPalette(
+    name = "Plum Noir",
+    accent = Color(0xFFA855F7),
+    accentBright = Color(0xFFD8B4FE),
+    accentStrong = Color(0xFF9333EA),
+    accentDeep = Color(0xFF6B21A8),
+    accentSurface = Color(0xFF22102E),
+    accentSurfaceStrong = Color(0xFF2A1540),
+    accentSoft = Color(0x33A855F7),
+    accentBorder = Color(0x4DA855F7),
+    accentBorderStrong = Color(0x99A855F7),
+    onAccent = Color(0xFFFAF5FF),
+    textBg = Color(0xFF050505),
+    text = Color(0xFFF4F4F5),
+    textMuted = Color(0xFF94A3B8)
+)
+
 /** The palette backing the currently selected [ThemeStyle]. */
 val ThemeStyle.palette: AppPalette
     get() = when (this) {
@@ -134,6 +224,11 @@ val ThemeStyle.palette: AppPalette
         ThemeStyle.SACRED_GOLD -> SacredGoldPalette
         ThemeStyle.KUMARTULI_TEAL -> KumartuliTealPalette
         ThemeStyle.AZURE_SIGNAL -> AzureSignalPalette
+        ThemeStyle.DARK_RED -> DarkRedPalette
+        ThemeStyle.FOREST_GREEN -> ForestGreenPalette
+        ThemeStyle.INDIGO_NIGHT -> IndigoNightPalette
+        ThemeStyle.ROYAL_AMBER -> RoyalAmberPalette
+        ThemeStyle.PLUM_NOIR -> PlumNoirPalette
     }
 
 /** Every selectable theme, in the order shown by the Settings picker. */

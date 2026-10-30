@@ -19,6 +19,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -937,16 +938,17 @@ private fun ThemeColorPicker(
             color = SettingsText
         )
 
-        Row(
+        FlowRow(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             AvailablePalettes.forEach { style ->
                 ThemeSwatch(
                     style = style,
                     selected = style == selected,
                     onClick = { onSelect(style) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
                 )
             }
         }

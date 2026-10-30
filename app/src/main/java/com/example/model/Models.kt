@@ -391,7 +391,12 @@ enum class ThemeStyle(
     REGAL_VIOLET("Regal Violet", "Signature obsidian & regal violet", 0xFF8257E5, 0xFF3A0CA3, 0xFF050505, 0xFFF4F4F5, 0xFF94A3B8),
     SACRED_GOLD("Sacred Gold", "Warm gold on deep amber", 0xFFE5A93B, 0xFF5A3E08, 0xFF050505, 0xFFF4F4F5, 0xFF94A3B8),
     KUMARTULI_TEAL("Kumartuli Teal", "Sea-glass teal & deep pine", 0xFF2DD4BF, 0xFF0B4F49, 0xFF04211FL, 0xFFCCFBE6L, 0xFF94A3B8),
-    AZURE_SIGNAL("Azure Signal", "Crisp sky blue on deep ink", 0xFF38BDF8, 0xFF0C4A6E, 0xFF04202E, 0xFFB8E4FD, 0xFF94A3B8)
+    AZURE_SIGNAL("Azure Signal", "Crisp sky blue on deep ink", 0xFF38BDF8, 0xFF0C4A6E, 0xFF04202E, 0xFFB8E4FD, 0xFF94A3B8),
+    DARK_RED("Dark Red", "Deep crimson on blood plum", 0xFFC8102E, 0xFF450A0A, 0xFF050505, 0xFFF4F4F5, 0xFF94A3B8),
+    FOREST_GREEN("Forest Green", "Deep forest green on pine ink", 0xFF16A34A, 0xFF052E16, 0xFF050505, 0xFFF4F4F5, 0xFF94A3B8),
+    INDIGO_NIGHT("Indigo Night", "Deep indigo on night plum", 0xFF6366F1, 0xFF1E1B4B, 0xFF050505, 0xFFF4F4F5, 0xFF94A3B8),
+    ROYAL_AMBER("Royal Amber", "Burnt amber on deep bronze", 0xFFD97706, 0xFF451A03, 0xFF050505, 0xFFF4F4F5, 0xFF94A3B8),
+    PLUM_NOIR("Plum Noir", "Muted plum on ink plum", 0xFFA855F7, 0xFF3B1160, 0xFF050505, 0xFFF4F4F5, 0xFF94A3B8)
 }
 
 /**

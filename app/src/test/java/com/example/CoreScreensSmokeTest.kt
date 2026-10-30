@@ -218,6 +218,14 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithTag("settings_list")
             .performScrollToNode(hasText("SAFETY & HELPLINE"))
+        listOf(
+            "24/7 MONITORED",
+            "Emergency Quick-Dial Trigger",
+            "Community Reporting Sync"
+        ).forEach { label ->
+            composeRule.onNodeWithTag("settings_list")
+                .performScrollToNode(hasText(label))
+        }
         composeRule.onNodeWithText("24/7 MONITORED").assertIsDisplayed()
         composeRule.onNodeWithText("Emergency Quick-Dial Trigger").assertIsDisplayed()
         composeRule.onNodeWithText("Community Reporting Sync").assertIsDisplayed()
