@@ -28,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-
+import kotlinx.coroutines.launch
 import com.example.data.update.AppUpdateState
 import com.example.ui.components.AppUpdateDialog
 import com.example.ui.components.CapsuleBottomBar
@@ -90,6 +91,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     // GitHub release channel: check on every resume (throttled inside the view model), so a
     // release published while the app was open still raises the popup when the user returns.
     val lifecycleOwner = LocalLifecycleOwner.current
+    val watchdogScope = rememberCoroutineScope()
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
@@ -100,7 +102,16 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+
+        // Foreground watchdog: while the app is open, keep checking the release feed so a build
+        // published mid-session raises the un-closable update popup over whatever screen is shown.
+        val watchdog = watchdogScope.launch { viewModel.startUpdateWatchdog() }
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            watchdog.cancel()
+            viewModel.stopUpdateWatchdog()
+        }
     }
 
     // The branded Continue gate is the entry point for every fresh launch.

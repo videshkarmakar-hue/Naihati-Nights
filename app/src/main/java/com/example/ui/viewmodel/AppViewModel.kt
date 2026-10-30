@@ -17,6 +17,8 @@ import com.example.di.ServiceLocator
 import com.example.model.AppContent
 import com.example.model.AppSettings
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -210,6 +212,29 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { settingsDataStore.setDismissedUpdateVersion(null) }
     }
 
+    private var updateWatchdogJob: Job? = null
+
+    /**
+     * Foreground watchdog: while the app is open it periodically asks the release feed for a newer
+     * build and re-asserts the update popup, so a release published mid-session surfaces even when
+     * the user is sitting on any screen. Respects the "Auto-check on launch" switch.
+     */
+    fun startUpdateWatchdog(intervalMs: Long = UPDATE_WATCH_INTERVAL_MS) {
+        stopUpdateWatchdog()
+        updateWatchdogJob = viewModelScope.launch {
+            while (true) {
+                delay(intervalMs)
+                if (!settingsDataStore.isAutoUpdateCheckEnabled()) return@launch
+                runUpdateCheck(manual = false, forcePrompt = true)
+            }
+        }
+    }
+
+    fun stopUpdateWatchdog() {
+        updateWatchdogJob?.cancel()
+        updateWatchdogJob = null
+    }
+
     /**
      * Keeps the global update popup on screen: whenever a newer build is pending (available or
      * ready to install) and that version has not been dismissed, the prompt is forced visible again.
@@ -346,5 +371,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     private companion object {
         /** Six hours: frequent enough to catch a release the same day, cheap against the API limit. */
         const val AUTO_CHECK_INTERVAL_MS = 6L * 60L * 60L * 1000L
+
+        /** Foreground poll while the app is open: how often to ask the release feed for updates. */
+        const val UPDATE_WATCH_INTERVAL_MS = 15L * 60L * 1000L
     }
 }
