@@ -82,7 +82,8 @@ fun AppUpdateDialog(
         onDismissRequest = { },
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
-            dismissOnClickOutside = false
+            dismissOnClickOutside = false,
+            dismissOnBackPress = false
         )
     ) {
         Column(

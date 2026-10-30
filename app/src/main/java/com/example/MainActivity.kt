@@ -92,7 +92,12 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) viewModel.autoCheckForAppUpdate()
+            if (event == Lifecycle.Event.ON_RESUME) {
+                // Re-assert the global update popup on resume so it covers whichever screen the
+                // user is on while a newer build is pending, and never leaves them without it.
+                viewModel.reassertUpdatePrompt()
+                viewModel.autoCheckForAppUpdate()
+            }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }

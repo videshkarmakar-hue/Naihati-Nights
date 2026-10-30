@@ -211,6 +211,27 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
+     * Keeps the global update popup on screen: whenever a newer build is pending (available or
+     * ready to install) and that version has not been dismissed, the prompt is forced visible again.
+     * Called on every app resume so the popup re-asserts over whichever screen the user is on,
+     * without offering any dismiss path of its own.
+     */
+    fun reassertUpdatePrompt() {
+        viewModelScope.launch {
+            val state = _appUpdate.value
+            val pending = state is AppUpdateState.Available || state is AppUpdateState.Ready
+            if (!pending) return@launch
+            val version = when (state) {
+                is AppUpdateState.Available -> state.info.versionName
+                is AppUpdateState.Ready -> state.info.versionName
+                else -> return@launch
+            }
+            if (settingsDataStore.dismissedUpdateVersion() == version) return@launch
+            _updatePromptVisible.value = true
+        }
+    }
+
+    /**
      * Downloads the release APK (progress is published to [appUpdate]) and hands it to the
      * system installer. Tapping again after a cancel resumes from a fresh download.
      */
