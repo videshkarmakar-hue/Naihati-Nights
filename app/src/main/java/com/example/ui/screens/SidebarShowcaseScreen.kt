@@ -496,6 +496,20 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
+            SidebarNavItem.SPECIAL_NOTICE -> {
+                Text(
+                    text = "বিশেষ ঘোষণা",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = KumartuliTeal
+                )
+                Text(
+                    text = "বার্ষিক পুজো উপলক্ষে আগামী ঘটনা, মন্দির বন্ধতা ও প্রসাদ সময়সূচি — শুধুমাত্র সাইডবার থেকে দেখা যায়।",
+                    fontSize = 11.5.sp,
+                    color = TextSoftZinc,
+                    lineHeight = 16.sp
+                )
+            }
             SidebarNavItem.RESTAURANT -> {
                 Text(
                     text = "Restaurant",

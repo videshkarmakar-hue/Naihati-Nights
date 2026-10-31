@@ -326,6 +326,53 @@ object BormaPujoScheduleData {
     )
 }
 
+/**
+ * Special notice (বিশেষ ঘোষণা) surfaced from the sidebar for the annual Borma Pujo observance.
+ *
+ * [notices] carry the puja closure, darshan window and prasad windows the committee announced for
+ * the year; each row reads on its own without the nishita highlight used by the full timetable.
+ */
+data class PujoNoticeItem(
+    val id: String,
+    val label: String,
+    val detail: String
+)
+
+object BormaPujoNoticeData {
+    const val title = "বিশেষ ঘোষণা"
+    const val subtitle = "বড়মা পুজোর নির্ঘণ্ট • বার্ষিক উপলক্ষে"
+
+    val notices = listOf(
+        PujoNoticeItem(
+            id = "annual_closure",
+            label = "বার্ষিক পুজো উপলক্ষ",
+            detail = "আগামী ০৬/১১/২৬ শুক্রবার থেকে ১৪/১১/২৬ শনিবার পর্যন্ত।"
+        ),
+        PujoNoticeItem(
+            id = "mandir_closure",
+            label = "মন্দির বন্ধ",
+            detail = "বড়মা'র মন্দির সর্বসাধারণের জন্য পূর্ণ রূপে বন্ধ থাকবে। ১৫/১১/২৬ রবিবার থেকে মন্দিরে পূর্ব নির্ধারিত সময় অনুযায়ী পুজো দেওয়া যাবে।"
+        ),
+        PujoNoticeItem(
+            id = "maternal_darshan",
+            label = "মাতৃ দর্শন ও পুজো",
+            detail = "(সকাল ৮টা থেকে দুপুর ২: ৩০মিঃ এবং বিকাল ৪টে থেকে রাত্রি ৮টা পর্যন্ত মাতৃ দর্শন ও পুজো দেওয়া যাবে)"
+        ),
+        PujoNoticeItem(
+            id = "prasad_closure",
+            label = "প্রসাদ গ্রহণ",
+            detail = "বার্ষিক পুজো উপলক্ষে ৩১/১০/২৬ থেকে ১৬/১১/২৬ সোমবার পর্যন্ত মন্দিরে বসে প্রসাদ গ্রহণ বন্ধ থাকবে।"
+        ),
+        PujoNoticeItem(
+            id = "prasad_resume",
+            label = "পুনরায় প্রসাদ গ্রহণ",
+            detail = "পুনরায় মন্দিরে বসে প্রসাদ গ্রহণ শুরু হবে ১৮/১১/২৬ বুধবার থেকে পূর্ব নির্ধারিত সময় অনুযায়ী।"
+        )
+    )
+
+    const val closingNote = "সময় পরিবর্তন হলে কমিটি জানালে এখানে হালনাগাদ করা হবে।"
+}
+
 enum class NavigationMode(val label: String) {
     IN_APP("In-App Kali Puja Radar"),
     GOOGLE_MAPS("Deep-link to Google Maps"),

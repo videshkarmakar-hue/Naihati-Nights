@@ -46,6 +46,7 @@ import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.IntroScreen
 import com.example.ui.screens.RestaurantScreen
 import com.example.ui.screens.SettingsScreen
+import com.example.ui.screens.SpecialNoticeScreen
 import com.example.ui.screens.ThemePandelScreen
 import com.example.ui.theme.MyApplicationTheme
 import org.junit.Assert.assertEquals
@@ -684,6 +685,7 @@ class CoreScreensSmokeTest {
             "sidebar_item_helpline" to "Helpline",
             "sidebar_item_theme_pandel" to "Theme Pandel",
             "sidebar_item_borma_pujo_schedule" to "বড়মা পুজোর নির্ঘণ্ট",
+            "sidebar_item_special_notice" to "বিশেষ ঘোষণা",
             "sidebar_item_app_info_credit" to "App Info & Developer Credit",
             "sidebar_item_check_updates" to "Check Updates",
             "sidebar_item_settings" to "Settings",
@@ -737,6 +739,10 @@ class CoreScreensSmokeTest {
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.BORMA_PUJO_SCHEDULE, selected)
 
+        composeRule.onNodeWithTag("sidebar_item_special_notice").performClick()
+        composeRule.waitForIdle()
+        assertEquals(SidebarNavItem.SPECIAL_NOTICE, selected)
+
         composeRule.onNodeWithTag("sidebar_item_app_info_credit").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.APP_INFO_CREDIT, selected)
@@ -780,6 +786,31 @@ class CoreScreensSmokeTest {
         ).assertCountEquals(2)
 
         composeRule.onNodeWithTag("borma_pujo_back_button").performClick()
+        composeRule.waitForIdle()
+        assertEquals(1, backPressed)
+    }
+
+    @Test
+    fun specialNoticeScreen_showsAnnouncements() {
+        var backPressed = 0
+        composeRule.setContent {
+            MyApplicationTheme {
+                SpecialNoticeScreen(onBack = { backPressed++ })
+            }
+        }
+
+        composeRule.onNodeWithTag("special_notice_screen").assertIsDisplayed()
+        composeRule.onNodeWithText("বিশেষ ঘোষণা").assertIsDisplayed()
+        composeRule.onNodeWithTag("special_notice_hero").assertIsDisplayed()
+        composeRule.onNodeWithTag("special_notice_card").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("special_notice_row_annual_closure").assertIsDisplayed()
+        composeRule.onNodeWithTag("special_notice_row_mandir_closure").assertIsDisplayed()
+        composeRule.onNodeWithTag("special_notice_row_maternal_darshan").assertIsDisplayed()
+        composeRule.onNodeWithTag("special_notice_row_prasad_closure").assertIsDisplayed()
+        composeRule.onNodeWithTag("special_notice_row_prasad_resume").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("special_notice_back_button").performClick()
         composeRule.waitForIdle()
         assertEquals(1, backPressed)
     }

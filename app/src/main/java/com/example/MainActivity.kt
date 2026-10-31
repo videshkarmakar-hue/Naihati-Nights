@@ -58,6 +58,7 @@ import com.example.ui.screens.IntroScreen
 import com.example.ui.screens.RestaurantScreen
 import com.example.ui.screens.SettingsScreen
 import com.example.ui.screens.SidebarShowcaseScreen
+import com.example.ui.screens.SpecialNoticeScreen
 import com.example.ui.screens.ThemePandelScreen
 import com.example.ui.theme.MyApplicationTheme
 import com.example.ui.theme.ObsidianNoir
@@ -143,6 +144,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.SETTINGS,
             NavigationScreen.CHECK_UPDATES,
             NavigationScreen.BORMA_PUJO_SCHEDULE,
+            NavigationScreen.SPECIAL_NOTICE,
             NavigationScreen.FEEDBACK,
             NavigationScreen.HELPLINE,
             NavigationScreen.THEME_PANDEL,
@@ -166,6 +168,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.SETTINGS -> SidebarNavItem.SETTINGS
             NavigationScreen.CHECK_UPDATES -> SidebarNavItem.CHECK_UPDATES
             NavigationScreen.BORMA_PUJO_SCHEDULE -> SidebarNavItem.BORMA_PUJO_SCHEDULE
+            NavigationScreen.SPECIAL_NOTICE -> SidebarNavItem.SPECIAL_NOTICE
             NavigationScreen.FEEDBACK -> SidebarNavItem.REPORT_FEEDBACK
             else -> null
         }
@@ -307,6 +310,14 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                     )
                 }
 
+                NavigationScreen.SPECIAL_NOTICE -> {
+                    SpecialNoticeScreen(
+                        onBack = { currentScreen = NavigationScreen.HOME },
+                        onOpenSidebar = openSidebar,
+                        onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
+                    )
+                }
+
                 NavigationScreen.PROFILE -> {
                     DeveloperProfileScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
@@ -428,6 +439,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             }
                             SidebarNavItem.BORMA_PUJO_SCHEDULE -> {
                                 currentScreen = NavigationScreen.BORMA_PUJO_SCHEDULE
+                                isDrawerOpen = false
+                            }
+                            SidebarNavItem.SPECIAL_NOTICE -> {
+                                currentScreen = NavigationScreen.SPECIAL_NOTICE
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.REPORT_FEEDBACK -> {
