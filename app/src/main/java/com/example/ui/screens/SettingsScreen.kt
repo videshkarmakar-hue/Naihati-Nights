@@ -37,17 +37,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Facebook
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material.icons.filled.SmartDisplay
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -124,6 +129,8 @@ private const val DEVELOPER_AVATAR_URL =
 private const val PORTFOLIO_URL = "https://videshkarmakar.carrd.co"
 private const val SPOTIFY_URL = "https://open.spotify.com"
 private const val INSTAGRAM_URL = "https://instagram.com"
+private const val YOUTUBE_URL = "https://www.youtube.com/@videshkarmakar2000"
+private const val FACEBOOK_URL = "https://www.facebook.com/gfx.videsh"
 
 /**
  * Settings & Preferences, rebuilt from the supplied reference screen.
@@ -153,6 +160,9 @@ fun SettingsScreen(
     val coroutineScope = rememberCoroutineScope()
     var isResetting by remember { mutableStateOf(false) }
     var resetTurns by remember { mutableIntStateOf(0) }
+    var locationEnabled by remember { mutableStateOf(true) }
+    var showPassword by remember { mutableStateOf(false) }
+    var permissionsEnabled by remember { mutableStateOf(true) }
 
     val resetRotation by animateFloatAsState(
         targetValue = resetTurns * 360f,
@@ -249,12 +259,52 @@ fun SettingsScreen(
             }
         }
 
-        item(key = "settings_navigation") {
+        item(key = "settings_profile") {
+            SettingsProfileHeader(
+                onOpenProfile = onOpenDeveloperProfile,
+                onOpenLink = ::openLink
+            )
+        }
+
+        item(key = "settings_section_privacy") {
             SettingsGroupCard(
-                title = "Parikrama & Navigation",
-                icon = Icons.Default.Navigation,
-                badge = "Active"
+                title = "PRIVACY",
+                icon = Icons.Default.Shield,
+                iconBackground = Color(0x0AFFFFFF),
+                iconBorder = Color(0x1AFFFFFF)
             ) {
+                SettingsToggleRow(
+                    label = "Location",
+                    checked = locationEnabled,
+                    onCheckedChange = { locationEnabled = it },
+                    testTag = "settings_toggle_location"
+                )
+                SettingsHairlineLine()
+                SettingsToggleRow(
+                    label = "Show Password",
+                    checked = showPassword,
+                    onCheckedChange = { showPassword = it },
+                    testTag = "settings_toggle_show_password"
+                )
+                SettingsHairlineLine()
+                SettingsAdvanceRow(label = "Advance", testTag = "settings_privacy_advance")
+            }
+        }
+
+        item(key = "settings_section_notification") {
+            SettingsGroupCard(
+                title = "NOTIFICATION",
+                icon = Icons.Filled.Notifications,
+                iconBackground = Color(0x0AFFFFFF),
+                iconBorder = Color(0x1AFFFFFF)
+            ) {
+                SettingsToggleRow(
+                    label = "Permissions",
+                    checked = permissionsEnabled,
+                    onCheckedChange = { permissionsEnabled = it },
+                    testTag = "settings_toggle_permissions"
+                )
+                SettingsHairlineLine()
                 SettingsToggleRow(
                     label = "Live Pandal Queue Alerts",
                     checked = appSettings.queueEstimator,
@@ -262,6 +312,51 @@ fun SettingsScreen(
                     testTag = "settings_toggle_queue_alerts"
                 )
                 SettingsHairlineLine()
+                SettingsAdvanceRow(label = "Advance", testTag = "settings_notification_advance")
+            }
+        }
+
+        item(key = "settings_help") {
+            SettingsGroupCard(
+                title = "HELP",
+                icon = Icons.Filled.Info,
+                iconBackground = Color(0x0AFFFFFF),
+                iconBorder = Color(0x1AFFFFFF)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "24/7 Monitored Helplines",
+                        modifier = Modifier.weight(1f).padding(end = 12.dp),
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = SettingsText
+                    )
+                    Text(
+                        text = "112 / 100",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = SettingsEmerald,
+                        modifier = Modifier.testTag("settings_help_helpline")
+                    )
+                }
+                SettingsHairlineLine()
+                SettingsAdvanceRow(label = "Naihati Municipality Desk", testTag = "settings_help_municipality")
+            }
+        }
+
+        item(key = "settings_navigation") {
+            SettingsGroupCard(
+                title = "Parikrama & Navigation",
+                icon = Icons.Default.Navigation,
+                badge = "Active"
+            ) {
                 SettingsToggleRow(
                     label = "Offline Map Cache",
                     checked = appSettings.offlineCorridors,
@@ -608,6 +703,171 @@ private fun SettingsHairlineLine() {
             .height(1.dp)
             .background(Color(0x0DFFFFFF))
     )
+}
+
+@Composable
+private fun SettingsProfileHeader(
+    onOpenProfile: () -> Unit,
+    onOpenLink: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(SettingsSurface)
+            .border(1.dp, SettingsOutline, RoundedCornerShape(16.dp))
+            .clickable { onOpenProfile() }
+            .padding(16.dp)
+            .testTag("settings_profile_header"),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(52.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF161622))
+                .border(1.dp, Color(0x1AFFFFFF), CircleShape)
+        ) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(DEVELOPER_AVATAR_URL)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Videsh Karmakar",
+                contentScale = ContentScale.Crop,
+                loading = { AvatarFallback() },
+                error = { AvatarFallback() },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "Videsh Karmakar",
+                fontFamily = PlusJakartaSans,
+                fontSize = 15.sp,
+                lineHeight = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = (-0.2).sp,
+                color = SettingsText,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = "videshkarmakar@gmail.com",
+                fontFamily = PlusJakartaSans,
+                fontSize = 13.sp,
+                lineHeight = 16.sp,
+                color = SettingsMuted,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SocialIconButton(
+                    label = "Website",
+                    icon = Icons.Default.Language,
+                    tint = SettingsAccent,
+                    testTag = "settings_social_website",
+                    onClick = { onOpenLink(PORTFOLIO_URL) }
+                )
+                SocialIconButton(
+                    label = "Spotify",
+                    icon = Icons.Default.MusicNote,
+                    tint = SettingsEmerald,
+                    testTag = "settings_social_spotify",
+                    onClick = { onOpenLink(SPOTIFY_URL) }
+                )
+                SocialIconButton(
+                    label = "Instagram",
+                    icon = Icons.Default.PhotoCamera,
+                    tint = SettingsFuchsia,
+                    testTag = "settings_social_instagram",
+                    onClick = { onOpenLink(INSTAGRAM_URL) }
+                )
+                SocialIconButton(
+                    label = "YouTube",
+                    icon = Icons.Default.SmartDisplay,
+                    tint = SettingsRose,
+                    testTag = "settings_social_youtube",
+                    onClick = { onOpenLink(YOUTUBE_URL) }
+                )
+                SocialIconButton(
+                    label = "Facebook",
+                    icon = Icons.Default.Facebook,
+                    tint = Color(0xFF60A5FA),
+                    testTag = "settings_social_facebook",
+                    onClick = { onOpenLink(FACEBOOK_URL) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SocialIconButton(
+    label: String,
+    icon: ImageVector,
+    tint: Color,
+    testTag: String,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(28.dp)
+            .clip(CircleShape)
+            .background(Color(0x0AFFFFFF))
+            .border(1.dp, Color(0x1AFFFFFF), CircleShape)
+            .clickable { onClick() }
+            .testTag(testTag),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = tint,
+            modifier = Modifier.size(14.dp)
+        )
+    }
+}
+
+@Composable
+private fun SettingsAdvanceRow(
+    label: String,
+    testTag: String,
+    onClick: () -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .testTag(testTag),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 12.dp),
+            fontFamily = PlusJakartaSans,
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
+            fontWeight = FontWeight.Medium,
+            color = SettingsText
+        )
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = null,
+            tint = SettingsMutedDeep,
+            modifier = Modifier.size(16.dp)
+        )
+    }
 }
 
 @Composable

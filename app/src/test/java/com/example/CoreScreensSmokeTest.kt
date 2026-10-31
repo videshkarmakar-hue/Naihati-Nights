@@ -205,11 +205,38 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithTag("reset_settings_button").assertIsDisplayed()
         composeRule.onNodeWithTag("header_sidebar_button").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("settings_profile_header").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_social_website").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_social_youtube").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_social_facebook").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("settings_list")
+            .performScrollToNode(hasText("PRIVACY"))
+        composeRule.onNodeWithText("PRIVACY").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_toggle_location").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_toggle_show_password").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_toggle_permissions").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("settings_list")
+            .performScrollToNode(hasText("PARIKRAMA & NAVIGATION"))
         composeRule.onNodeWithText("PARIKRAMA & NAVIGATION").assertIsDisplayed()
         composeRule.onNodeWithText("ACTIVE").assertIsDisplayed()
-        composeRule.onNodeWithText("Live Pandal Queue Alerts").assertIsDisplayed()
         composeRule.onNodeWithText("Offline Map Cache").assertIsDisplayed()
         composeRule.onNodeWithText("GPS High Precision Mode").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("settings_list")
+            .performScrollToNode(hasText("NOTIFICATION"))
+        composeRule.onNodeWithText("NOTIFICATION").assertIsDisplayed()
+        composeRule.onNodeWithText("Live Pandal Queue Alerts").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_notification_advance").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("settings_list")
+            .performScrollToNode(hasText("HELP"))
+        composeRule.onNodeWithText("HELP").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_help_helpline").assertIsDisplayed()
+        composeRule.onNodeWithText("112 / 100").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_help_municipality").assertIsDisplayed()
 
         composeRule.onNodeWithTag("settings_list")
             .performScrollToNode(hasText("DISPLAY & EXPERIENCE"))
@@ -262,6 +289,8 @@ class CoreScreensSmokeTest {
             }
         }
 
+        composeRule.onNodeWithTag("settings_list")
+            .performScrollToNode(hasTestTag("settings_toggle_queue_alerts"))
         composeRule.onNodeWithTag("settings_toggle_queue_alerts").performClick()
         composeRule.waitForIdle()
         composeRule.runOnIdle {
