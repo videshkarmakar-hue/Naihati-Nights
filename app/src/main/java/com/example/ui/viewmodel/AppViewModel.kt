@@ -161,6 +161,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun runUpdateCheck(manual: Boolean, forcePrompt: Boolean = manual) {
+        val current = _appUpdate.value
+        // Never let a background check interrupt an in-flight download or an install hand-off.
+        if (current is AppUpdateState.Downloading || current is AppUpdateState.Ready) return
         if (_appUpdate.value is AppUpdateState.Checking) return
         _updatePromptVisible.value = false
         _updateNotice.value = null
@@ -184,12 +187,23 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         val state = _appUpdate.value
-        if (state is AppUpdateState.Available) {
-            val dismissed = settingsDataStore.dismissedUpdateVersion()
-            if (forcePrompt || !dismissed.equals(state.info.versionName, ignoreCase = true)) {
+        when (state) {
+            is AppUpdateState.Available -> {
+                val dismissed = settingsDataStore.dismissedUpdateVersion()
+                if (forcePrompt || !dismissed.equals(state.info.versionName, ignoreCase = true)) {
+                    _updatePromptVisible.value = true
+                }
+            }
+
+            is AppUpdateState.Failed -> {
+                // A failed attempt must keep the mandatory retry surface alive on screen.
                 _updatePromptVisible.value = true
             }
-        } else if (manual) {
+
+            else -> Unit
+        }
+
+        if (manual) {
             _updateNotice.value = when (state) {
                 is AppUpdateState.UpToDate ->
                     "You are on the newest build (v${appUpdater.installedVersionName})."
@@ -225,6 +239,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             while (true) {
                 delay(intervalMs)
                 if (!settingsDataStore.isAutoUpdateCheckEnabled()) return@launch
+                // Same throttle as the launch/resume auto-check: at most one release probe every
+                // [AUTO_CHECK_INTERVAL_MS] instead of hammering the GitHub API.
+                val lastCheck = settingsDataStore.lastUpdateCheckAt()
+                if (System.currentTimeMillis() - lastCheck < AUTO_CHECK_INTERVAL_MS) return@launch
                 runUpdateCheck(manual = false, forcePrompt = true)
             }
         }

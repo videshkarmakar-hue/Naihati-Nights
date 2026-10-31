@@ -89,6 +89,16 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     val updatePromptVisible by viewModel.updatePromptVisible.collectAsState()
     val updateNotice by viewModel.updateNotice.collectAsState()
 
+    // Mandatory update gate: while an update is pending (or the prompt is on screen) the system back
+    // press is consumed here so the mandatory update surface can never be bypassed through screen
+    // navigation. It is disabled whenever nothing is pending, so everyday back behaviour is intact.
+    val updateGateActive = updatePromptVisible ||
+        appUpdate is AppUpdateState.Available ||
+        appUpdate is AppUpdateState.Downloading ||
+        appUpdate is AppUpdateState.Ready ||
+        appUpdate is AppUpdateState.Failed
+    BackHandler(enabled = updateGateActive) { }
+
     // GitHub release channel: check on every resume (throttled inside the view model), so a
     // release published while the app was open still raises the popup when the user returns.
     val lifecycleOwner = LocalLifecycleOwner.current
