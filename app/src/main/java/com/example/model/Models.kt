@@ -276,7 +276,29 @@ object ThemePandelData {
             pandal = "Operation Sindoor",
             pandalBengali = "অপারেশন সিঁদুর",
             deity = "Operation Sindoor",
-            isNew = true
+            isNew = false
+        ),
+        ThemePandel(
+            id = "theme_14",
+            edition = "62nd Year",
+            committee = "Naihati Sangha Association",
+            committeeBengali = "নৈহাটি সংঘ এসোসিয়েশন",
+            pandal = "Adishakta",
+            pandalBengali = "আদিশক্তি",
+            locationNote = "Bazarghat Road, Dhanakala, Naihati",
+            locationNoteBengali = "বাজারঘাট রোড, ধানকল, নৈহাটি",
+            deity = "Adishakta"
+        ),
+        ThemePandel(
+            id = "theme_15",
+            edition = "37th Year",
+            committee = "Naihati Nav Yuba Samaj",
+            committeeBengali = "নৈহাটি নব যুবক সংঘ",
+            pandal = "Rupokhyo Debalok",
+            pandalBengali = "রূপকথার দেবলোক",
+            locationNote = "Piranos Registry Office, Littera School",
+            locationNoteBengali = "পিরনো রেজিস্ট্রি অফিসের সামনে, Littera স্কুলের পাশে",
+            deity = "Rupokhyo Debalok"
         )
     )
 

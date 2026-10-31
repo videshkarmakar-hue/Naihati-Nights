@@ -592,9 +592,6 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("nav_helpline").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_theme_pandel").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_borma_pujo").assertIsDisplayed()
-        composeRule.onNodeWithTag("nav_theme_pandel_new_badge", useUnmergedTree = true)
-            .assertExists()
-        composeRule.onNodeWithText("13").assertExists()
         composeRule.onAllNodesWithTag("nav_feedback").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_settings").assertCountEquals(0)
 
@@ -629,7 +626,7 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun themePandelScreen_rendersThirteenThemesAndFilters() {
+    fun themePandelScreen_rendersThemesAndFilters() {
         composeRule.setContent {
             MyApplicationTheme {
                 ThemePandelScreen()
@@ -644,9 +641,15 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_card_theme_13"))
         composeRule.onNodeWithTag("theme_pandel_card_theme_13").assertIsDisplayed()
-        composeRule.onNodeWithTag("theme_pandel_new_badge", useUnmergedTree = true)
-            .assertIsDisplayed()
         composeRule.onNodeWithText("অপারেশন সিঁদুর").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_14"))
+        composeRule.onNodeWithTag("theme_pandel_card_theme_14").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_15"))
+        composeRule.onNodeWithTag("theme_pandel_card_theme_15").assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_search_field"))
@@ -703,8 +706,8 @@ class CoreScreensSmokeTest {
         // No update dot until the release channel reports something newer.
         composeRule.onAllNodesWithTag("sidebar_update_dot").assertCountEquals(0)
 
-        // The newest Theme Pandel entry is advertised in the sidebar slot itself.
-        composeRule.onNodeWithTag("sidebar_theme_new_badge", useUnmergedTree = true).assertIsDisplayed()
+        // The guide publishes the full edition list, so no NEW badge is raised.
+        composeRule.onAllNodesWithTag("sidebar_theme_new_badge").assertCountEquals(0)
 
         composeRule.onNodeWithText("©Videsh Karmakar Project").assertIsDisplayed()
 
