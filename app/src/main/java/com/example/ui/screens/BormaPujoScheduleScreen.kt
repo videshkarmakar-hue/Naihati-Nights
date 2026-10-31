@@ -40,7 +40,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.model.BormaPujoScheduleData
-import com.example.model.PujoTimeEntry
+import com.example.model.PujoDay
+import com.example.model.PujoEvent
 import com.example.ui.components.AppBrandHeader
 import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.ObsidianNoir
@@ -55,17 +56,16 @@ private val ScheduleFaint = Color(0xFF71717A)
 private val ScheduleHairline = Color(0x14FFFFFF)
 
 /**
- * Sidebar-only festival timetable for Borma Pujo 2026.
+ * Borma Pujo bulletin for Naihati, reached from the bottom navigation bar and the sidebar panel.
  *
- * Kept off the bottom navigation on purpose: it is reference material for the night of Kali Puja,
- * not a primary destination. The nishita kala window is highlighted so it can be read at a glance
- * in a crowd.
+ * The committee copy stays verbatim in [BormaPujoScheduleData] so the night can be read out without
+ * translation; the primary puja moment is flagged inside its day list for instant reading.
  */
 @Composable
 fun BormaPujoScheduleScreen(
     onBack: () -> Unit,
-    onOpenSidebar: () -> Unit = {},
-    onOpenDeveloperCredits: () -> Unit = {},
+    onOpenSidebar: () -> Unit = { },
+    onOpenDeveloperCredits: () -> Unit = { },
     modifier: Modifier = Modifier
 ) {
     val palette = LocalAppPalette.current
@@ -147,7 +147,7 @@ fun BormaPujoScheduleScreen(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "বড়মা পুজো ২০২৬",
+                            text = BormaPujoScheduleData.kicker,
                             fontFamily = FontFamily.Default,
                             fontSize = 10.sp,
                             lineHeight = 14.sp,
@@ -178,57 +178,7 @@ fun BormaPujoScheduleScreen(
                 }
             }
 
-            item(key = "borma_main_window") {
-                val main = BormaPujoScheduleData.entries.firstOrNull { it.highlight }
-                if (main != null) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(ScheduleCard)
-                            .border(1.dp, palette.accentBorderStrong, RoundedCornerShape(20.dp))
-                            .padding(16.dp)
-                            .testTag("borma_pujo_main_window")
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                modifier = Modifier
-                                    .size(28.dp)
-                                    .clip(CircleShape)
-                                    .background(palette.accentSoft),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.NightsStay,
-                                    contentDescription = null,
-                                    tint = palette.accentBright,
-                                    modifier = Modifier.size(15.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(9.dp))
-                            Text(
-                                text = "প্রধান পুজো • নিশিত কাল",
-                                fontFamily = FontFamily.Default,
-                                fontSize = 11.sp,
-                                lineHeight = 15.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = palette.accentBright
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(
-                            text = main.value,
-                            fontFamily = FontFamily.Default,
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = ScheduleText
-                        )
-                    }
-                }
-            }
-
-            item(key = "borma_entries") {
+            item(key = "borma_days") {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -236,24 +186,13 @@ fun BormaPujoScheduleScreen(
                         .background(ScheduleInset)
                         .border(1.dp, ScheduleHairline, RoundedCornerShape(20.dp))
                         .padding(vertical = 4.dp)
-                        .testTag("borma_pujo_schedule_card")
+                        .testTag("borma_pujo_days")
                 ) {
-                    Text(
-                        text = "পূর্ণ সময়সূচি",
-                        fontFamily = FontFamily.Default,
-                        fontSize = 10.sp,
-                        lineHeight = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 0.9.sp,
-                        color = ScheduleFaint,
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)
-                    )
-
-                    BormaPujoScheduleData.entries.forEachIndexed { index, entry ->
-                        ScheduleRow(
-                            entry = entry,
-                            number = index + 1,
-                            showDivider = index != BormaPujoScheduleData.entries.lastIndex
+                    BormaPujoScheduleData.days.forEachIndexed { index, day ->
+                        BormaPujoDay(
+                            day = day,
+                            isFirst = index == 0,
+                            isLast = index == BormaPujoScheduleData.days.lastIndex
                         )
                     }
                 }
@@ -267,6 +206,7 @@ fun BormaPujoScheduleScreen(
                         .background(ScheduleCard)
                         .border(1.dp, ScheduleHairline, RoundedCornerShape(14.dp))
                         .padding(horizontal = 14.dp, vertical = 12.dp)
+                        .testTag("borma_pujo_note")
                 ) {
                     Text(
                         text = BormaPujoScheduleData.timeZoneNote,
@@ -277,7 +217,7 @@ fun BormaPujoScheduleScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "সময় পরিবর্তন হলে কমিটি জানালে এখানে হালনাগাদ করা হবে।",
+                        text = BormaPujoScheduleData.closingNote,
                         fontFamily = FontFamily.Default,
                         fontSize = 10.sp,
                         lineHeight = 15.sp,
@@ -290,24 +230,81 @@ fun BormaPujoScheduleScreen(
 }
 
 @Composable
-private fun ScheduleRow(
-    entry: PujoTimeEntry,
+private fun BormaPujoDay(
+    day: PujoDay,
+    isFirst: Boolean,
+    isLast: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("borma_pujo_day_${day.id}")
+    ) {
+        if (!isFirst) {
+            BormaPujoDivider()
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)
+        ) {
+            Text(
+                text = day.dayLabel,
+                fontFamily = FontFamily.Default,
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = ScheduleText
+            )
+        }
+
+        day.events.forEachIndexed { eventIndex, event ->
+            BormaPujoEvent(
+                event = event,
+                number = eventIndex + 1,
+                showDivider = eventIndex < day.events.lastIndex
+            )
+        }
+
+        day.note?.let { note ->
+            Text(
+                text = note,
+                fontFamily = FontFamily.Default,
+                fontSize = 11.sp,
+                lineHeight = 16.sp,
+                color = ScheduleFaint,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+            )
+        }
+
+        if (!isLast) {
+            BormaPujoDivider()
+        }
+    }
+}
+
+@Composable
+private fun BormaPujoEvent(
+    event: PujoEvent,
     number: Int,
-    showDivider: Boolean
+    showDivider: Boolean,
+    modifier: Modifier = Modifier
 ) {
     val palette = LocalAppPalette.current
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
-            .testTag("borma_pujo_row_${entry.id}")
+            .testTag("borma_pujo_event_${event.id}")
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(if (entry.highlight) palette.accentSoft else Color.Transparent)
+                .background(if (event.highlight) palette.accentSoft else Color.Transparent)
                 .padding(horizontal = 6.dp, vertical = 11.dp),
             verticalAlignment = Alignment.Top
         ) {
@@ -315,7 +312,7 @@ private fun ScheduleRow(
                 modifier = Modifier
                     .size(22.dp)
                     .clip(CircleShape)
-                    .background(if (entry.highlight) palette.accentDeep else Color(0xFF1E1E28)),
+                    .background(if (event.highlight) palette.accentDeep else Color(0xFF1E1E28)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -323,38 +320,43 @@ private fun ScheduleRow(
                     fontFamily = PlusJakartaSans,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (entry.highlight) Color.White else ScheduleMuted
+                    color = if (event.highlight) Color.White else ScheduleMuted
                 )
             }
             Spacer(modifier = Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = entry.label,
+                    text = event.time,
                     fontFamily = FontFamily.Default,
-                    fontSize = 12.sp,
-                    lineHeight = 17.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = if (entry.highlight) palette.accentBright else ScheduleBody
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    fontWeight = if (event.highlight) FontWeight.Bold else FontWeight.SemiBold,
+                    color = if (event.highlight) palette.accentBright else ScheduleText
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
-                    text = entry.value,
+                    text = event.detail ?: "",
                     fontFamily = FontFamily.Default,
                     fontSize = 13.sp,
                     lineHeight = 19.sp,
-                    fontWeight = if (entry.highlight) FontWeight.Bold else FontWeight.Medium,
+                    fontWeight = if (event.highlight) FontWeight.Bold else FontWeight.Medium,
                     color = ScheduleText
                 )
             }
         }
 
         if (showDivider) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(ScheduleHairline)
-            )
+            BormaPujoDivider()
         }
     }
+}
+
+@Composable
+private fun BormaPujoDivider() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(ScheduleHairline)
+    )
 }

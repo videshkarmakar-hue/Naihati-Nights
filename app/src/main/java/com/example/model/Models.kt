@@ -288,40 +288,130 @@ object ThemePandelData {
 }
 
 /**
- * Borma Pujo 2026 timetable, shown from the sidebar-only "বড়মা পুজোর নির্ঘণ্ট" destination.
+ * Borma Pujo timetable for Naihati, surfaced through the "বড়মা পুজোর নির্ঘণ্ট" slot in the bottom
+ * navigation bar and the sidebar panel.
  *
- * [entries] keep the Bengali labels and values exactly as published by the committee so the times
- * can be read out without translation. [PujoTimeEntry.highlight] marks the nishita kala window,
- * the one that matters most for darshan planning.
+ * [PujoDay] groups the committee bulletin by day label and [PujoEvent] keeps the clock time and the
+ * action copy verbatim so the night can be read out without translation; [PujoEvent.highlight] marks
+ * the primary puja moment of the observance.
  */
-data class PujoTimeEntry(
+data class PujoEvent(
     val id: String,
-    val label: String,
-    val value: String,
+    val time: String,
+    val detail: String? = null,
     val highlight: Boolean = false
 )
 
+data class PujoDay(
+    val id: String,
+    val dayLabel: String,
+    val events: List<PujoEvent> = emptyList(),
+    val note: String? = null
+)
+
 object BormaPujoScheduleData {
+    const val kicker = "বার্ষিক উপলক্ষ"
     const val title = "বড়মা পুজোর নির্ঘণ্ট"
     const val subtitle = "নৈহাটি • কালী পূজা ২০২৬"
     const val timeZoneNote = "সব সময় ভারতীয় প্রমাণ সময় (IST) অনুযায়ী।"
+    const val closingNote = "*(৬-১৪ নভেম্বর - সাধারণের জন্য বন্ধ মূল মন্দির দর্শন)"
 
-    val entries = listOf(
-        PujoTimeEntry(
-            id = "amavasya_start",
-            label = "অমাবস্যা তিথি শুরু",
-            value = "৮ নভেম্বর ২০২৬, সকাল ১১:২৭ মি"
+    val days = listOf(
+        PujoDay(
+            id = "day_2_7_nov",
+            dayLabel = "২ - ৭ নভেম্বর",
+            events = listOf(
+                PujoEvent(
+                    id = "day_2_7_offering",
+                    time = "২ - ৭ নভেম্বর",
+                    detail = "জমা নেওয়া হবে মানতের সোনা-দানা ও প্রণামী"
+                )
+            )
         ),
-        PujoTimeEntry(
-            id = "amavasya_end",
-            label = "অমাবস্যা তিথি শেষ",
-            value = "৯ই নভেম্বর ২০২৬, দুপুর ১২:৩১ মি"
+        PujoDay(
+            id = "day_7_8_nov",
+            dayLabel = "৭ - ৮ নভেম্বর",
+            note = "* (৮ নভেম্বর সন্ধে ছ'টার মধ্যে শেষ করতে হবে দণ্ড কাটা)",
+            events = listOf(
+                PujoEvent(
+                    id = "day_7_8_abhisheka",
+                    time = "৭ - ৮ নভেম্বর",
+                    detail = "গযনা পরানো ও দণ্ড কাটা"
+                ),
+                PujoEvent(
+                    id = "day_7_8_prasad",
+                    time = "৭ - ৮ নভেম্বর",
+                    detail = "ফল ও মিষ্টির ডালি গ্রহণ"
+                )
+            )
         ),
-        PujoTimeEntry(
-            id = "nishita_kala",
-            label = "নিশিত কাল বা প্রধান পুজোর সময়",
-            value = "৮ই নভেম্বর রাত ১১:৩১ থেকে ৯ই নভেম্বর রাত ১২:৩১ মি পর্যন্ত",
-            highlight = true
+        PujoDay(
+            id = "day_8_8_nov",
+            dayLabel = "৮ নভেম্বর",
+            events = listOf(
+                PujoEvent(
+                    id = "day_8_8_abhisheka",
+                    time = "বিকেল ৫:৩০",
+                    detail = "মাকে বরণ"
+                ),
+                PujoEvent(
+                    id = "day_8_8_puja_start",
+                    time = "রাত ১২টা",
+                    detail = "পুজো শুরু",
+                    highlight = true
+                ),
+                PujoEvent(
+                    id = "day_8_8_anjali",
+                    time = "রাত ১:৩০",
+                    detail = "অঞ্জলি"
+                ),
+                PujoEvent(
+                    id = "day_8_8_prasad_bijoy",
+                    time = "রাত ২:৩০",
+                    detail = "ভোগ-প্রসাদ বিতরণ (৯-১১ নভেম্বর)"
+                ),
+                PujoEvent(
+                    id = "day_8_8_prasad_dopura",
+                    time = "দুপুর ২:৩০",
+                    detail = "ভোগ বিতরণ"
+                ),
+                PujoEvent(
+                    id = "day_8_8_prasad_raat",
+                    time = "রাত ৯:৩০",
+                    detail = "ভোগ বিতরণ"
+                ),
+                PujoEvent(
+                    id = "day_8_8_pratishtha",
+                    time = "রাত ১১:৩০",
+                    detail = "ঘট প্রতিষ্ঠা"
+                )
+            )
+        ),
+        PujoDay(
+            id = "day_12_12_nov",
+            dayLabel = "১২ নভেম্বর",
+            events = listOf(
+                PujoEvent(
+                    id = "day_12_12_bisaran",
+                    time = "সকাল ৭.৩০",
+                    detail = "বিসর্জনের পুজো"
+                ),
+                PujoEvent(
+                    id = "day_12_12_maa_khula",
+                    time = "সকাল ১০.৩০",
+                    detail = "মায়ের গযনা খোলা"
+                ),
+                PujoEvent(
+                    id = "day_12_12_maa_baran",
+                    time = "দুপুর ২টো",
+                    detail = "মাকে বরণ"
+                ),
+                PujoEvent(
+                    id = "day_12_12_niranjan",
+                    time = "বিকেল ৪টে",
+                    detail = "নিরঞ্জন শুরু"
+                )
+            )
         )
     )
 }

@@ -576,7 +576,7 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun bottomBar_containsOnlyPrimaryDestinationsAndNavigates() {
+    fun bottomBar_containsDestinationsAndNavigates() {
         var navigatedTo: NavigationScreen? = null
         composeRule.setContent {
             MyApplicationTheme {
@@ -591,6 +591,7 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("nav_restaurant").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_helpline").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_theme_pandel").assertIsDisplayed()
+        composeRule.onNodeWithTag("nav_borma_pujo").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_theme_pandel_new_badge", useUnmergedTree = true)
             .assertExists()
         composeRule.onNodeWithText("13").assertExists()
@@ -621,6 +622,10 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("nav_theme_pandel").performClick()
         composeRule.waitForIdle()
         assertTrue(navigatedTo == NavigationScreen.THEME_PANDEL)
+
+        composeRule.onNodeWithTag("nav_borma_pujo").performClick()
+        composeRule.waitForIdle()
+        assertTrue(navigatedTo == NavigationScreen.BORMA_PUJO_SCHEDULE)
     }
 
     @Test
@@ -765,7 +770,7 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun bormaPujoScheduleScreen_showsAllThreeTimings() {
+    fun bormaPujoScheduleScreen_showsPujoBulletin() {
         var backPressed = 0
         composeRule.setContent {
             MyApplicationTheme {
@@ -774,20 +779,22 @@ class CoreScreensSmokeTest {
         }
 
         composeRule.onNodeWithTag("borma_pujo_schedule_screen").assertIsDisplayed()
-        composeRule.onNodeWithText("বড়মা পুজোর নির্ঘণ্ট").assertIsDisplayed()
-        composeRule.onNodeWithTag("borma_pujo_row_amavasya_start").assertIsDisplayed()
-        composeRule.onNodeWithTag("borma_pujo_row_amavasya_end").assertIsDisplayed()
-        composeRule.onNodeWithTag("borma_pujo_row_nishita_kala").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_hero").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_days").assertIsDisplayed()
+        composeRule.onNodeWithText("বার্ষিক উপলক্ষ").assertIsDisplayed()
 
-        composeRule.onNodeWithText("৮ নভেম্বর ২০২৬, সকাল ১১:২৭ মি").assertIsDisplayed()
-        composeRule.onNodeWithText("৯ই নভেম্বর ২০২৬, দুপুর ১২:৩১ মি").assertIsDisplayed()
-        composeRule.onAllNodesWithText(
-            "৮ই নভেম্বর রাত ১১:৩১ থেকে ৯ই নভেম্বর রাত ১২:৩১ মি পর্যন্ত"
-        ).assertCountEquals(2)
+        composeRule.onNodeWithTag("borma_pujo_day_day_8_8_nov").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_event_day_8_8_puja_start").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_event_day_8_8_prasad_bijoy").assertIsDisplayed()
+        composeRule.onNodeWithTag("borma_pujo_event_day_2_7_offering").assertIsDisplayed()
 
         composeRule.onNodeWithTag("borma_pujo_back_button").performClick()
         composeRule.waitForIdle()
         assertEquals(1, backPressed)
+
+        composeRule.onNodeWithTag("borma_pujo_schedule_screen")
+            .performScrollToNode(hasTestTag("borma_pujo_note"))
+        composeRule.onNodeWithTag("borma_pujo_note").assertIsDisplayed()
     }
 
     @Test

@@ -19,10 +19,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.outlined.Call
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Restaurant
@@ -89,6 +91,13 @@ fun CapsuleBottomBar(
             activeIcon = Icons.Filled.Palette,
             inactiveIcon = Icons.Outlined.Palette,
             testTag = "nav_theme_pandel"
+        ),
+        NavItemSpec(
+            screen = NavigationScreen.BORMA_PUJO_SCHEDULE,
+            label = "Borma Puja",
+            activeIcon = Icons.Filled.CalendarMonth,
+            inactiveIcon = Icons.Outlined.CalendarMonth,
+            testTag = "nav_borma_pujo"
         )
     )
     val newThemeNumber = ThemePandelData.newest?.let { ThemePandelData.displayNumber(it) }
