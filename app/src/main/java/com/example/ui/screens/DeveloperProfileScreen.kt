@@ -193,7 +193,7 @@ fun DeveloperProfileScreen(
                             .padding(horizontal = 10.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = "PRODUCT LEAD & ARCHITECT",
+                            text = "Developer/Creator",
                             fontSize = 9.5.sp,
                             fontWeight = FontWeight.Bold,
                             color = LocalAppPalette.current.accentBright,

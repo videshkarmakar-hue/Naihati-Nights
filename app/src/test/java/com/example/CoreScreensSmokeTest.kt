@@ -999,7 +999,7 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("dev_credits_hero").assertIsDisplayed()
         composeRule.onNodeWithTag("dev_credits_avatar").assertIsDisplayed()
         composeRule.onAllNodesWithText("Videsh Karmakar").onFirst().assertIsDisplayed()
-        composeRule.onNodeWithText("PRODUCT LEAD & ARCHITECT").assertIsDisplayed()
+        composeRule.onNodeWithText("Developer/Creator").assertIsDisplayed()
         composeRule.onNodeWithText("Founder · Developer · UI/UX Designer").assertIsDisplayed()
 
         composeRule.onNodeWithText("CONNECT WITH THE DEVELOPER").assertExists()

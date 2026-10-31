@@ -234,7 +234,7 @@ fun DeveloperCreditsScreen(
                                 .padding(horizontal = 7.dp, vertical = 2.dp)
                         ) {
                             Text(
-                                text = "PRODUCT LEAD & ARCHITECT",
+                                text = "Developer/Creator",
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 8.5.sp,
                                 fontWeight = FontWeight.Bold,
