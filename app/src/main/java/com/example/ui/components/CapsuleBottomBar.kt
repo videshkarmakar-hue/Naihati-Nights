@@ -94,7 +94,7 @@ fun CapsuleBottomBar(
         ),
         NavItemSpec(
             screen = NavigationScreen.BORMA_PUJO_SCHEDULE,
-            label = "Borma Puja",
+            label = "Boro Maa Puja",
             activeIcon = Icons.Filled.CalendarMonth,
             inactiveIcon = Icons.Outlined.CalendarMonth,
             testTag = "nav_borma_pujo"

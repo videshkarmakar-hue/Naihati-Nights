@@ -331,12 +331,12 @@ object BormaPujoScheduleData {
         PujoDay(
             id = "day_7_8_nov",
             dayLabel = "৭ - ৮ নভেম্বর",
-            note = "* (৮ নভেম্বর সন্ধে ছ'টার মধ্যে শেষ করতে হবে দণ্ড কাটা)",
+            note = "* (৮ নভেম্বর সন্ধে ছ'টার মধ্যে শেষ করতে হবে দন্ডি কাটা)",
             events = listOf(
                 PujoEvent(
                     id = "day_7_8_abhisheka",
                     time = "৭ - ৮ নভেম্বর",
-                    detail = "গযনা পরানো ও দণ্ড কাটা"
+                    detail = "অলংকার পরানো ও দন্ডি কাটা"
                 ),
                 PujoEvent(
                     id = "day_7_8_prasad",
@@ -399,7 +399,7 @@ object BormaPujoScheduleData {
                 PujoEvent(
                     id = "day_12_12_maa_khula",
                     time = "সকাল ১০.৩০",
-                    detail = "মায়ের গযনা খোলা"
+                    detail = "মায়ের অলংকার খোলা"
                 ),
                 PujoEvent(
                     id = "day_12_12_maa_baran",
