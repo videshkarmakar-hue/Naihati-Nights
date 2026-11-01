@@ -420,9 +420,9 @@ class CoreScreensSmokeTest {
             "PANDAL_UPDATE|Route 1 (Station PF1)|Queue is spilling onto the main road near Boro Maa.|URGENT_DIVERSION",
             captured
         )
-        composeRule.onNodeWithText("Report Logged Successfully").assertIsDisplayed()
+        composeRule.onNodeWithText("Report Dispatched Successfully").assertIsDisplayed()
         composeRule.onNodeWithTag("feedback_ticket_id").assertIsDisplayed()
-        composeRule.onNodeWithText("• JAY BORO MAA •").assertExists()
+        composeRule.onNodeWithText("✦ JAY MAA BORO MAA ✦").assertExists()
         composeRule.onNodeWithText("©Crafted by VIDESH KARMAKAR").assertExists()
     }
 

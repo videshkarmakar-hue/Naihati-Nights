@@ -89,7 +89,6 @@ import com.example.model.InquiryType
 import com.example.model.UrgencyLevel
 import com.example.ui.components.AppBrandHeader
 import com.example.ui.components.SectionCreditFooter
-import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.PlusJakartaSans
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -97,24 +96,22 @@ import kotlin.random.Random
 // ---------------------------------------------------------------------------
 // Design tokens lifted from the "Report & Feedback" reference screen.
 // ---------------------------------------------------------------------------
-private val PageBlack = Color(0xFF050505)
-private val SurfaceLow = Color(0xFF0E0E14)
-private val SurfaceCard = Color(0xFF13131B)
-private val SurfaceHigh = Color(0xFF181824)
-private val FieldSurface = Color(0xFF111118)
-private val RegalViolet: Color @Composable get() = LocalAppPalette.current.accentDeep
-private val RegalVioletBorder: Color @Composable get() = LocalAppPalette.current.accentStrong
-private val LavenderAccent: Color @Composable get() = LocalAppPalette.current.accentBright
+private val PageBlack = Color(0xFF0B0C0F)
+private val SurfaceLow = Color(0xFF12141B)
+private val SurfaceCard = Color(0xFF12141A)
+private val SurfaceHigh = Color(0xFF20232E)
+private val FieldSurface = Color(0xFF181922)
 private val Zinc200 = Color(0xFFE4E4E7)
+private val Zinc300 = Color(0xFFD4D4D8)
 private val Zinc400 = Color(0xFFA1A1AA)
-private val Zinc500 = Color(0xFF71717A)
-private val BorderCard = Color(0x12FFFFFF) // white / 7 %
+private val Zinc500 = Color(0xFF717586)
+private val FocusBorder = Color(0xFFA1A1AA)
+private val BlackInk = Color(0xFF0B0C0F)
+private val BorderCard = Color(0x14FFFFFF) // white / 8 %
 private val BorderField = Color(0x14FFFFFF) // white / 8 %
 private val BorderSoft = Color(0x1AFFFFFF) // white / 10 %
 private val BorderDashed = Color(0x26FFFFFF) // white / 15 %
 private val BorderHeader = Color(0x0DFFFFFF) // white / 5 %
-private val UrgentFill = Color(0x807F1D1D) // red-900 / 50 %
-private val UrgentBorder = Color(0x80EF4444) // red-500 / 50 %
 private val ErrorRose = Color(0xFFFB7185)
 private const val MaxDetailsLength = 500
 private const val MaxAttachmentBytes = 10L * 1024L * 1024L
@@ -280,11 +277,11 @@ fun FeedbackScreen(
                 // ---------------- Category hub ----------------
                 Text(
                     text = "Select Inquiry Type",
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    letterSpacing = (-0.35).sp,
-                    color = Color.White,
+                    letterSpacing = (-0.2).sp,
+                    color = Zinc200,
                     modifier = Modifier.padding(start = 2.dp, end = 2.dp)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -321,10 +318,13 @@ fun FeedbackScreen(
                         .background(SurfaceLow)
                         .border(1.dp, BorderCard, RoundedCornerShape(16.dp))
                         .alpha(if (formLocked) 0.4f else 1f)
-                        .padding(20.dp)
+                        .padding(16.dp)
                 ) {
                     // Affected zone / corridor
-                    FormLabel("Affected Zone / Corridor")
+                    FormLabelRow(
+                        title = "Affected Zone / Corridor",
+                        trailing = "7 Core Routes"
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier
@@ -339,10 +339,10 @@ fun FeedbackScreen(
                                 modifier = Modifier
                                     .height(32.dp)
                                     .clip(ChipShape)
-                                    .background(if (selected) RegalViolet else SurfaceCard)
+                                    .background(if (selected) Color.White else FieldSurface)
                                     .border(
                                         1.dp,
-                                        if (selected) RegalVioletBorder else BorderCard,
+                                        if (selected) Color.White else BorderCard,
                                         ChipShape
                                     )
                                     .clickable(enabled = !formLocked) { selectedZone = zone }
@@ -355,7 +355,7 @@ fun FeedbackScreen(
                                     fontSize = 12.sp,
                                     lineHeight = 16.sp,
                                     fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
-                                    color = if (selected) Color.White else Zinc400,
+                                    color = if (selected) BlackInk else Zinc300,
                                     maxLines = 1
                                 )
                             }
@@ -450,7 +450,7 @@ fun FeedbackScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Photo evidence
-                    FormLabel("Attachment / Photo Evidence")
+                    FormLabel("Evidence / Attachment Slot")
                     Spacer(modifier = Modifier.height(6.dp))
                     Box(
                         modifier = Modifier
@@ -470,7 +470,7 @@ fun FeedbackScreen(
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Box(
                                 modifier = Modifier
-                                    .size(40.dp)
+                                    .size(32.dp)
                                     .clip(CircleShape)
                                     .background(SurfaceHigh)
                                     .border(1.dp, BorderSoft, CircleShape),
@@ -479,25 +479,25 @@ fun FeedbackScreen(
                                 Icon(
                                     imageVector = Icons.Outlined.AddAPhoto,
                                     contentDescription = null,
-                                    tint = LavenderAccent,
-                                    modifier = Modifier.size(20.dp)
+                                    tint = Zinc200,
+                                    modifier = Modifier.size(18.dp)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = attachedName?.let { "Attached: $it" }
-                                    ?: "Tap to upload screenshot or on-ground photo",
+                                    ?: "Tap to attach photo evidence or screenshot",
                                 fontSize = 12.sp,
                                 lineHeight = 16.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = if (attachedName != null) LavenderAccent else Color.White,
+                                color = if (attachedName != null) Color.White else Zinc200,
                                 textAlign = TextAlign.Center,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = "JPG, PNG or WEBP up to 10MB",
+                                text = "JPG, PNG up to 10MB",
                                 fontSize = 11.sp,
                                 lineHeight = 14.sp,
                                 color = Zinc400,
@@ -520,27 +520,16 @@ fun FeedbackScreen(
                     ) {
                         UrgencyLevel.entries.forEach { level ->
                             val selected = urgency == level
-                            val urgentSelected = selected && level == UrgencyLevel.URGENT_DIVERSION
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
                                     .fillMaxHeight()
                                     .heightIn(min = 36.dp)
                                     .clip(FieldShape)
-                                    .background(
-                                        when {
-                                            urgentSelected -> UrgentFill
-                                            selected -> RegalViolet
-                                            else -> SurfaceCard
-                                        }
-                                    )
+                                    .background(if (selected) Color.White else FieldSurface)
                                     .border(
                                         1.dp,
-                                        when {
-                                            urgentSelected -> UrgentBorder
-                                            selected -> RegalVioletBorder
-                                            else -> BorderCard
-                                        },
+                                        if (selected) Color.White else BorderCard,
                                         FieldShape
                                     )
                                     .clickable(enabled = !formLocked) { urgency = level }
@@ -553,7 +542,7 @@ fun FeedbackScreen(
                                     fontSize = 12.sp,
                                     lineHeight = 16.sp,
                                     fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
-                                    color = if (selected) Color.White else Zinc400,
+                                    color = if (selected) BlackInk else Zinc300,
                                     textAlign = TextAlign.Center,
                                     maxLines = 2
                                 )
@@ -569,8 +558,7 @@ fun FeedbackScreen(
                             .fillMaxWidth()
                             .height(48.dp)
                             .clip(FieldShape)
-                            .background(RegalViolet)
-                            .border(1.dp, RegalVioletBorder, FieldShape)
+                            .background(Color.White)
                             .clickable(enabled = !formLocked) { submit() }
                             .testTag("feedback_submit_button"),
                         contentAlignment = Alignment.Center
@@ -579,17 +567,16 @@ fun FeedbackScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.Send,
                                 contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(20.dp)
+                                tint = BlackInk,
+                                modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "Submit Report & Feedback",
-                                fontSize = 14.sp,
-                                lineHeight = 20.sp,
+                                fontSize = 12.sp,
+                                lineHeight = 16.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                letterSpacing = 0.35.sp,
-                                color = Color.White
+                                color = BlackInk
                             )
                         }
                     }
@@ -606,12 +593,12 @@ fun FeedbackScreen(
                         Icon(
                             imageVector = Icons.Outlined.VerifiedUser,
                             contentDescription = null,
-                            tint = LavenderAccent,
-                            modifier = Modifier.size(16.dp)
+                            tint = Zinc400,
+                            modifier = Modifier.size(15.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Privacy protected • Information directly verified by the Naihati Kali Puja Volunteer Team",
+                            text = "Privacy protected • Information directly verified by the Naihati Kali Puja Volunteer Desk",
                             fontSize = 11.sp,
                             lineHeight = 14.sp,
                             color = Zinc400,
@@ -636,12 +623,22 @@ fun FeedbackScreen(
                 // ---------------- Footer ----------------
                 Spacer(modifier = Modifier.height(28.dp))
                 Text(
-                    text = "• JAY BORO MAA •",
-                    fontSize = 12.sp,
+                    text = "✦ JAY MAA BORO MAA ✦",
+                    fontSize = 11.sp,
                     lineHeight = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 1.2.sp,
-                    color = LavenderAccent,
+                    letterSpacing = 1.6.sp,
+                    color = Zinc300,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Naihati Kali Puja Guide • Verified by Videsh Karmakar",
+                    fontSize = 11.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Zinc400,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -722,34 +719,31 @@ private fun CategoryPill(
 
     Row(
         modifier = modifier
-            .height(48.dp)
             .clip(CategoryShape)
-            .background(if (selected) RegalViolet else SurfaceLow)
+            .background(if (selected) Color.White else SurfaceCard)
             .border(
                 1.dp,
-                if (selected) RegalVioletBorder else BorderCard,
+                if (selected) Color.White else BorderCard,
                 CategoryShape
             )
             .clickable { onClick() }
-            .padding(14.dp)
+            .padding(12.dp)
             .testTag("feedback_type_${type.name.lowercase()}"),
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = if (selected) Color.White else Zinc500,
-            modifier = Modifier
-                .padding(top = 2.dp)
-                .size(20.dp)
+            tint = if (selected) BlackInk else Zinc400,
+            modifier = Modifier.size(18.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = type.title,
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = if (selected) Color.White else Zinc200,
+            fontSize = 12.sp,
+            lineHeight = 15.sp,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+            color = if (selected) BlackInk else Zinc300,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -763,10 +757,10 @@ private fun CategoryPill(
 private fun FormLabel(text: String) {
     Text(
         text = text,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
         fontWeight = FontWeight.SemiBold,
-        color = Color.White
+        color = Zinc200
     )
 }
 
@@ -782,17 +776,17 @@ private fun FormLabelRow(
     ) {
         Text(
             text = title,
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color.White,
+            color = Zinc200,
             modifier = Modifier.weight(1f, fill = false)
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = trailing,
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
+            fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = if (trailingMonospace) FontFamily.Monospace else FontFamily.Default,
             color = Zinc400,
@@ -818,7 +812,7 @@ private fun FeedbackTextField(
     var focused by remember { mutableStateOf(false) }
     val borderColor = when {
         isError -> ErrorRose.copy(alpha = 0.6f)
-        focused -> RegalViolet
+        focused -> FocusBorder
         else -> BorderField
     }
 
@@ -842,8 +836,8 @@ private fun FeedbackTextField(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = if (focused) LavenderAccent else Zinc500,
-                modifier = Modifier.size(18.dp)
+                tint = Zinc500,
+                modifier = Modifier.size(17.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
         }
@@ -854,14 +848,14 @@ private fun FeedbackTextField(
             enabled = enabled,
             textStyle = TextStyle(
                 color = Color.White,
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
                 fontFamily = PlusJakartaSans
             ),
             singleLine = singleLine,
             maxLines = if (singleLine) 1 else 6,
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-            cursorBrush = SolidColor(LavenderAccent),
+            cursorBrush = SolidColor(Color.White),
             modifier = Modifier
                 .weight(1f)
                 .then(if (singleLine) Modifier else Modifier.fillMaxHeight())
@@ -878,8 +872,8 @@ private fun FeedbackTextField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
                             color = Zinc500
                         )
                     }
@@ -910,7 +904,7 @@ private fun SubmissionSuccessCard(ticketCode: Int) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(SurfaceCard)
-            .border(1.dp, RegalViolet.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
+            .border(1.dp, BorderSoft, RoundedCornerShape(16.dp))
             .padding(20.dp)
             .testTag("feedback_success_notice"),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -918,40 +912,39 @@ private fun SubmissionSuccessCard(ticketCode: Int) {
     ) {
         Box(
             modifier = Modifier
-                .size(48.dp)
+                .size(40.dp)
                 .clip(CircleShape)
-                .background(RegalViolet.copy(alpha = 0.2f))
-                .border(1.dp, RegalViolet.copy(alpha = 0.4f), CircleShape),
+                .background(Color.White),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Outlined.CheckCircle,
                 contentDescription = null,
-                tint = LavenderAccent,
-                modifier = Modifier.size(26.dp)
+                tint = BlackInk,
+                modifier = Modifier.size(22.dp)
             )
         }
         Text(
-            text = "Report Logged Successfully",
-            fontSize = 16.sp,
-            lineHeight = 24.sp,
+            text = "Report Dispatched Successfully",
+            fontSize = 14.sp,
+            lineHeight = 20.sp,
             fontWeight = FontWeight.SemiBold,
             color = Color.White,
             textAlign = TextAlign.Center
         )
         Text(
             text = buildAnnotatedString {
-                append("Ticket ID ")
+                append("Ticket ")
                 withStyle(
                     SpanStyle(
-                        color = LavenderAccent,
+                        color = Color.White,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Bold
                     )
                 ) {
                     append("#NKP-${ticketCode.toString().padStart(4, '0')}")
                 }
-                append(" has been transmitted to Naihati Control Room volunteers.")
+                append(" transmitted to volunteer control room.")
             },
             fontSize = 12.sp,
             lineHeight = 16.sp,
