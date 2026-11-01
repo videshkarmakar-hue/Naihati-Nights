@@ -398,7 +398,8 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("app_brand_title").assertIsDisplayed()
         composeRule.onNodeWithText("Select Inquiry Type").assertIsDisplayed()
         composeRule.onNodeWithText("Route 1 (Station PF1)").assertIsDisplayed()
-        composeRule.onNodeWithText("General App").assertExists()
+        composeRule.onNodeWithText("Route 3 (Park Rd)").assertExists()
+        composeRule.onNodeWithText("General App").assertDoesNotExist()
 
         composeRule.onNodeWithTag("feedback_type_pandal_update").performClick()
         composeRule.onNodeWithTag("feedback_details_field")
@@ -407,6 +408,7 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("feedback_urgency_urgent_diversion")
             .performScrollTo()
             .performClick()
+        composeRule.onNodeWithText("Urgent / Diversion").assertIsDisplayed()
         composeRule.onNodeWithTag("feedback_submit_button")
             .performScrollTo()
             .performClick()
@@ -422,8 +424,8 @@ class CoreScreensSmokeTest {
         )
         composeRule.onNodeWithText("Report Dispatched Successfully").assertIsDisplayed()
         composeRule.onNodeWithTag("feedback_ticket_id").assertIsDisplayed()
-        composeRule.onNodeWithText("✦ JAY MAA BORO MAA ✦").assertExists()
-        composeRule.onNodeWithText("©Crafted by VIDESH KARMAKAR").assertExists()
+        composeRule.onNodeWithText("✦ JAY BORO MAA ✦").assertExists()
+        composeRule.onNodeWithText("Verified by Videsh Karmakar").assertExists()
     }
 
     @Test

@@ -513,7 +513,7 @@ enum class InquiryType(val title: String, val subtitle: String) {
 enum class UrgencyLevel(val label: String) {
     NORMAL("Normal"),
     IMPORTANT("Important"),
-    URGENT_DIVERSION("Urgent Diversion")
+    URGENT_DIVERSION("Urgent / Diversion")
 }
 
 data class AppSettings(

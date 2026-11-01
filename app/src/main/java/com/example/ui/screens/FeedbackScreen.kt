@@ -39,10 +39,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.material.icons.outlined.AltRoute
 import androidx.compose.material.icons.outlined.Badge
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.PhoneIphone
 import androidx.compose.material.icons.outlined.SentimentSatisfied
@@ -65,6 +65,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.SolidColor
@@ -88,7 +90,6 @@ import com.example.model.AppContent
 import com.example.model.InquiryType
 import com.example.model.UrgencyLevel
 import com.example.ui.components.AppBrandHeader
-import com.example.ui.components.SectionCreditFooter
 import com.example.ui.theme.PlusJakartaSans
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -124,12 +125,11 @@ private val ChipShape = RoundedCornerShape(8.dp)
 private val FeedbackZones = listOf(
     "Route 1 (Station PF1)",
     "Route 2 (Shyam Rd)",
-    "Route 3 (Swapnabithi)",
-    "Route 4 (Kanaidas)",
+    "Route 3 (Park Rd)",
+    "Route 4 (Ghat)",
     "Route 5 (Green View)",
     "Route 6 (29 Haat)",
-    "Route 7 (Power House)",
-    "General App"
+    "Route 7 (Power House)"
 )
 
 @Composable
@@ -226,7 +226,7 @@ fun FeedbackScreen(
 
     LaunchedEffect(submissionCount) {
         if (submissionCount == 0) return@LaunchedEffect
-        delay(3500)
+        delay(4000)
         // The reference form resets itself after the success toast appears.
         landmark = ""
         reporterName = ""
@@ -251,7 +251,26 @@ fun FeedbackScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(PageBlack),
+            .drawBehind {
+                drawRect(
+                    Brush.verticalGradient(
+                        0f to PageBlack,
+                        0.45f to Color(0xFF0F1016),
+                        1f to PageBlack
+                    )
+                )
+                drawRect(
+                    Brush.radialGradient(
+                        colors = listOf(
+                            Color(0x24DCE0E8),
+                            Color(0x0F828894),
+                            Color.Transparent
+                        ),
+                        center = Offset(size.width * 0.5f, size.height * 0.92f),
+                        radius = size.height * 0.55f
+                    )
+                )
+            },
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
@@ -287,9 +306,9 @@ fun FeedbackScreen(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 val categories = InquiryType.entries
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     categories.chunked(2).forEach { row ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             row.forEach { type ->
                                 CategoryPill(
                                     type = type,
@@ -317,7 +336,7 @@ fun FeedbackScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .background(SurfaceLow)
                         .border(1.dp, BorderCard, RoundedCornerShape(16.dp))
-                        .alpha(if (formLocked) 0.4f else 1f)
+                        .alpha(if (formLocked) 0.3f else 1f)
                         .padding(16.dp)
                 ) {
                     // Affected zone / corridor
@@ -331,13 +350,13 @@ fun FeedbackScreen(
                             .fillMaxWidth()
                             .horizontalScroll(rememberScrollState())
                             .padding(top = 2.dp, bottom = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         FeedbackZones.forEachIndexed { index, zone ->
                             val selected = selectedZone == zone
                             Box(
                                 modifier = Modifier
-                                    .height(32.dp)
+                                    .height(30.dp)
                                     .clip(ChipShape)
                                     .background(if (selected) Color.White else FieldSurface)
                                     .border(
@@ -346,7 +365,7 @@ fun FeedbackScreen(
                                         ChipShape
                                     )
                                     .clickable(enabled = !formLocked) { selectedZone = zone }
-                                    .padding(horizontal = 14.dp)
+                                    .padding(horizontal = 12.dp)
                                     .testTag("feedback_zone_$index"),
                                 contentAlignment = Alignment.Center
                             ) {
@@ -365,10 +384,7 @@ fun FeedbackScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Related pandal / landmark
-                    FormLabelRow(
-                        title = "Related Pandal / Landmark",
-                        trailing = "Recommended"
-                    )
+                    FormLabel("Related Pandal / Landmark")
                     Spacer(modifier = Modifier.height(6.dp))
                     FeedbackTextField(
                         value = landmark,
@@ -382,43 +398,43 @@ fun FeedbackScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Devotee details
-                    FormLabelRow(title = "Your Name", trailing = "Optional")
-                    Spacer(modifier = Modifier.height(6.dp))
-                    FeedbackTextField(
-                        value = reporterName,
-                        onValueChange = { if (it.length <= 60) reporterName = it },
-                        placeholder = "e.g., Sayan Mukherjee",
-                        icon = Icons.Outlined.Badge,
-                        singleLine = true,
-                        enabled = !formLocked,
-                        testTag = "feedback_name_field"
-                    )
-
-                    Spacer(modifier = Modifier.height(14.dp))
-
-                    FormLabelRow(
-                        title = "Contact / WhatsApp",
-                        trailing = "For quick on-ground sync"
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    FeedbackTextField(
-                        value = contactNumber,
-                        onValueChange = {
-                            if (it.length <= 18 && it.all { ch -> ch.isDigit() || ch in "+ -()" }) {
-                                contactNumber = it
-                                if (contactError != null) contactError = null
-                            }
-                        },
-                        placeholder = "+91 98765 XXXXX",
-                        icon = Icons.Outlined.PhoneIphone,
-                        singleLine = true,
-                        enabled = !formLocked,
-                        keyboardType = KeyboardType.Phone,
-                        isError = contactError != null,
-                        testTag = "feedback_contact_field"
-                    )
-                    InlineError(contactError)
+                    // Devotee details (two-column contact row)
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            FormLabel("Your Name")
+                            Spacer(modifier = Modifier.height(6.dp))
+                            FeedbackTextField(
+                                value = reporterName,
+                                onValueChange = { if (it.length <= 60) reporterName = it },
+                                placeholder = "e.g. Sayan",
+                                icon = Icons.Outlined.Badge,
+                                singleLine = true,
+                                enabled = !formLocked,
+                                testTag = "feedback_name_field"
+                            )
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            FormLabel("Contact / WhatsApp")
+                            Spacer(modifier = Modifier.height(6.dp))
+                            FeedbackTextField(
+                                value = contactNumber,
+                                onValueChange = {
+                                    if (it.length <= 18 && it.all { ch -> ch.isDigit() || ch in "+ -()" }) {
+                                        contactNumber = it
+                                        if (contactError != null) contactError = null
+                                    }
+                                },
+                                placeholder = "+91 98765 XXXXX",
+                                icon = Icons.Outlined.PhoneIphone,
+                                singleLine = true,
+                                enabled = !formLocked,
+                                keyboardType = KeyboardType.Phone,
+                                isError = contactError != null,
+                                testTag = "feedback_contact_field"
+                            )
+                            InlineError(contactError)
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -437,11 +453,11 @@ fun FeedbackScreen(
                                 if (detailsError != null) detailsError = null
                             }
                         },
-                        placeholder = "Describe the road blockage, queue status, incorrect information, or suggestion in detail...",
+                        placeholder = "Describe road blockage, queue status, crowd surge, lost & found, or suggestions in detail...",
                         icon = null,
                         singleLine = false,
                         enabled = !formLocked,
-                        height = 108.dp,
+                        height = 96.dp,
                         isError = detailsError != null,
                         testTag = "feedback_details_field"
                     )
@@ -463,7 +479,7 @@ fun FeedbackScreen(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
                             ) { photoPicker.launch("image/*") }
-                            .padding(16.dp)
+                            .padding(14.dp)
                             .testTag("feedback_attach_button"),
                         contentAlignment = Alignment.Center
                     ) {
@@ -507,7 +523,7 @@ fun FeedbackScreen(
                     }
                     InlineError(attachmentError)
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     // Urgency
                     FormLabel("Urgency Level")
@@ -556,7 +572,7 @@ fun FeedbackScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
+                            .height(44.dp)
                             .clip(FieldShape)
                             .background(Color.White)
                             .clickable(enabled = !formLocked) { submit() }
@@ -623,29 +639,34 @@ fun FeedbackScreen(
                 // ---------------- Footer ----------------
                 Spacer(modifier = Modifier.height(28.dp))
                 Text(
-                    text = "✦ JAY MAA BORO MAA ✦",
+                    text = "✦ JAY BORO MAA ✦",
                     fontSize = 11.sp,
                     lineHeight = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 1.6.sp,
+                    letterSpacing = 1.2.sp,
                     color = Zinc300,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Naihati Kali Puja Guide • Verified by Videsh Karmakar",
+                    text = buildAnnotatedString {
+                        append("Verified by ")
+                        withStyle(
+                            SpanStyle(
+                                color = Zinc200,
+                                fontWeight = FontWeight.Medium
+                            )
+                        ) {
+                            append("Videsh Karmakar")
+                        }
+                    },
                     fontSize = 11.sp,
                     lineHeight = 16.sp,
                     fontWeight = FontWeight.Normal,
                     color = Zinc400,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                SectionCreditFooter(
-                    topPadding = 0.dp,
-                    bottomPadding = 0.dp
                 )
             }
         }
@@ -806,7 +827,7 @@ private fun FeedbackTextField(
     testTag: String,
     enabled: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
-    height: androidx.compose.ui.unit.Dp = 46.dp,
+    height: androidx.compose.ui.unit.Dp = 40.dp,
     isError: Boolean = false
 ) {
     var focused by remember { mutableStateOf(false) }
@@ -903,8 +924,8 @@ private fun SubmissionSuccessCard(ticketCode: Int) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(SurfaceCard)
-            .border(1.dp, BorderSoft, RoundedCornerShape(16.dp))
+            .background(SurfaceLow)
+            .border(1.dp, Color(0x33FFFFFF), RoundedCornerShape(16.dp))
             .padding(20.dp)
             .testTag("feedback_success_notice"),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -918,7 +939,7 @@ private fun SubmissionSuccessCard(ticketCode: Int) {
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = Icons.Outlined.CheckCircle,
+                imageVector = Icons.Filled.Check,
                 contentDescription = null,
                 tint = BlackInk,
                 modifier = Modifier.size(22.dp)
