@@ -31,8 +31,6 @@ import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -77,12 +75,10 @@ fun CheckUpdatesScreen(
     installedBuild: Int,
     state: AppUpdateState,
     notice: String?,
-    autoCheckEnabled: Boolean,
     onScreenOpen: () -> Unit,
     onCheck: () -> Unit,
     onUpdate: () -> Unit,
     onOpenRelease: () -> Unit,
-    onAutoCheckChange: (Boolean) -> Unit,
     onBack: () -> Unit,
     onOpenSidebar: () -> Unit = {},
     onOpenDeveloperCredits: () -> Unit = {},
@@ -478,12 +474,13 @@ fun CheckUpdatesScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .background(UpdatesCard)
                         .border(1.dp, UpdatesHairline, RoundedCornerShape(16.dp))
-                        .padding(horizontal = 14.dp, vertical = 10.dp),
+                        .padding(horizontal = 14.dp, vertical = 10.dp)
+                        .testTag("check_updates_auto_toggle"),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Auto-check on launch",
+                            text = "Automatic updates",
                             fontFamily = PlusJakartaSans,
                             fontSize = 13.sp,
                             lineHeight = 18.sp,
@@ -492,26 +489,38 @@ fun CheckUpdatesScreen(
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Show a popup when a new version is published.",
+                            text = "Always on. New builds download and install as soon as the app opens.",
                             fontFamily = PlusJakartaSans,
                             fontSize = 11.sp,
                             lineHeight = 15.sp,
                             color = UpdatesFaint
                         )
                     }
-                    Switch(
-                        checked = autoCheckEnabled,
-                        onCheckedChange = onAutoCheckChange,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = palette.onAccent,
-                            checkedTrackColor = palette.accent,
-                            checkedBorderColor = palette.accentBorderStrong,
-                            uncheckedThumbColor = UpdatesMuted,
-                            uncheckedTrackColor = Color(0xFF1E1E28),
-                            uncheckedBorderColor = UpdatesHairline
-                        ),
-                        modifier = Modifier.testTag("check_updates_auto_toggle")
-                    )
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color(0x14FFFFFF))
+                            .border(1.dp, UpdatesHairline, RoundedCornerShape(8.dp))
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Verified,
+                            contentDescription = null,
+                            tint = palette.accentBright,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "REQUIRED",
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 9.sp,
+                            lineHeight = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.8.sp,
+                            color = palette.accentBright
+                        )
+                    }
                 }
             }
 

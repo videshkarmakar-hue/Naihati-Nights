@@ -443,12 +443,10 @@ fun SettingsScreen(
 
         item(key = "settings_app_update") {
             SettingsAppUpdateCard(
-                appSettings = appSettings,
                 state = appUpdate,
                 onCheck = onCheckAppUpdate,
                 onDownload = onDownloadAppUpdate,
-                onOpenReleases = onOpenReleases,
-                onAutoCheckChange = { onUpdateSettings(appSettings.copy(autoUpdateCheck = it)) }
+                onOpenReleases = onOpenReleases
             )
         }
 
@@ -1288,12 +1286,10 @@ private fun ThemeSwatch(
 
 @Composable
 private fun SettingsAppUpdateCard(
-    appSettings: AppSettings,
     state: AppUpdateState,
     onCheck: () -> Unit,
     onDownload: () -> Unit,
-    onOpenReleases: () -> Unit,
-    onAutoCheckChange: (Boolean) -> Unit
+    onOpenReleases: () -> Unit
 ) {
     val info = state.releaseInfo
     val isChecking = state is AppUpdateState.Checking
@@ -1428,12 +1424,46 @@ private fun SettingsAppUpdateCard(
 
         SettingsHairlineLine()
 
-        SettingsToggleRow(
-            label = "Auto-check on launch",
-            checked = appSettings.autoUpdateCheck,
-            onCheckedChange = onAutoCheckChange,
-            testTag = "settings_toggle_auto_update"
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("settings_toggle_auto_update"),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Shield,
+                contentDescription = null,
+                tint = SettingsAccent,
+                modifier = Modifier.size(15.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Automatic updates",
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = SettingsText
+                )
+                Text(
+                    text = "Always on. New builds install as soon as the app opens.",
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 10.sp,
+                    lineHeight = 14.sp,
+                    color = SettingsMutedDeep
+                )
+            }
+            Text(
+                text = "REQUIRED",
+                fontFamily = PlusJakartaSans,
+                fontSize = 9.sp,
+                lineHeight = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.8.sp,
+                color = SettingsAccent
+            )
+        }
 
         Text(
             text = "Delivered through the in-app updater. Android asks once for permission to install " +

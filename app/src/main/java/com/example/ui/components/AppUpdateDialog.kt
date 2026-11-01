@@ -128,7 +128,11 @@ fun AppUpdateDialog(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = if (isReady) "READY TO INSTALL" else "UPDATE AVAILABLE",
+                        text = when {
+                            isReady -> "READY TO INSTALL"
+                            isDownloading -> "UPDATING • DO NOT CLOSE"
+                            else -> "UPDATE REQUIRED"
+                        },
                         fontFamily = PlusJakartaSans,
                         fontSize = 10.sp,
                         lineHeight = 13.sp,
@@ -168,6 +172,17 @@ fun AppUpdateDialog(
                 color = DialogMuted,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "This update is required to keep using Naihati Nights. It downloads " +
+                    "automatically and Android asks you to confirm the install.",
+                fontFamily = PlusJakartaSans,
+                fontSize = 11.sp,
+                lineHeight = 16.sp,
+                color = DialogText,
+                modifier = Modifier.testTag("app_update_required_note")
             )
 
             if (notes.isNotEmpty()) {
@@ -281,7 +296,8 @@ fun AppUpdateDialog(
                 isDownloading -> "DOWNLOADING…"
                 isReady -> "INSTALL UPDATE"
                 !info.hasApk -> "OPEN RELEASE"
-                failure != null -> "TRY AGAIN"
+                failure != null -> "RETRY UPDATE"
+                notice != null -> "CONTINUE UPDATE"
                 else -> "UPDATE NOW"
             }
             UpdatePrimaryButton(

@@ -32,6 +32,7 @@ import com.example.data.update.ReleaseInfo
 import com.example.model.AppSettings
 import com.example.ui.NavigationScreen
 import com.example.ui.components.AppBrandHeader
+import com.example.ui.components.AppUpdateDialog
 import com.example.ui.components.CapsuleBottomBar
 import com.example.ui.components.SidebarNavItem
 import com.example.ui.components.SleekSidebar
@@ -982,12 +983,10 @@ class CoreScreensSmokeTest {
                     installedBuild = 30010000,
                     state = AppUpdateState.Available(availableRelease),
                     notice = null,
-                    autoCheckEnabled = true,
                     onScreenOpen = { screenOpened++ },
                     onCheck = { checked++ },
                     onUpdate = { updated++ },
                     onOpenRelease = { releaseOpened++ },
-                    onAutoCheckChange = {},
                     onBack = {}
                 )
             }
@@ -1022,12 +1021,10 @@ class CoreScreensSmokeTest {
                     installedBuild = 30011000,
                     state = AppUpdateState.UpToDate("3.0.11", 0L),
                     notice = null,
-                    autoCheckEnabled = false,
                     onScreenOpen = {},
                     onCheck = { checked++ },
                     onUpdate = { updated++ },
                     onOpenRelease = {},
-                    onAutoCheckChange = {},
                     onBack = {}
                 )
             }
@@ -1035,12 +1032,45 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithText("You're up to date").assertIsDisplayed()
         composeRule.onNodeWithText("CHECK FOR UPDATES").assertIsDisplayed()
+        composeRule.onNodeWithText("Automatic updates").assertIsDisplayed()
+        composeRule.onNodeWithText("REQUIRED").assertIsDisplayed()
+        composeRule.onNodeWithTag("check_updates_auto_toggle").assertExists()
 
         composeRule.onNodeWithTag("check_updates_button").performClick()
         composeRule.waitForIdle()
 
         assertEquals(1, checked)
         assertEquals(0, updated)
+    }
+
+    @Test
+    fun appUpdateDialog_isMandatoryAndCannotBeDismissed() {
+        var updateTapped = 0
+
+        composeRule.setContent {
+            MyApplicationTheme {
+                AppUpdateDialog(
+                    visible = true,
+                    state = AppUpdateState.Available(availableRelease),
+                    notice = null,
+                    onUpdateNow = { updateTapped++ },
+                    onOpenRelease = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("app_update_dialog").assertIsDisplayed()
+        composeRule.onNodeWithText("UPDATE REQUIRED").assertIsDisplayed()
+        composeRule.onNodeWithTag("app_update_required_note").assertIsDisplayed()
+        composeRule.onNodeWithText("This update is required to keep using Naihati Nights. " +
+            "It downloads automatically and Android asks you to confirm the install.")
+            .assertIsDisplayed()
+        composeRule.onNodeWithText("UPDATE NOW").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("app_update_now").performClick()
+        composeRule.waitForIdle()
+
+        assertEquals(1, updateTapped)
     }
 
     @Test

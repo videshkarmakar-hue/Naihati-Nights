@@ -132,17 +132,55 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Called once per launch from the UI. Throttled so the app talks to GitHub at most every
-     * [AUTO_CHECK_INTERVAL_MS] instead of on every resume, and skipped when the user turned the
-     * "Auto-check for updates" switch off.
+     * Mandatory update check, called on every launch/resume from the UI.
+     *
+     * The first call in a process always probes the release feed; later calls are throttled to one
+     * probe every [AUTO_CHECK_INTERVAL_MS] so the app does not hammer the GitHub API. The user's
+     * "auto-check" preference is intentionally ignored: checking for a newer build is required.
      */
     fun autoCheckForAppUpdate() {
         if (isUiTestRun) return
         viewModelScope.launch {
-            if (!settingsDataStore.isAutoUpdateCheckEnabled()) return@launch
-            val lastCheck = settingsDataStore.lastUpdateCheckAt()
-            if (System.currentTimeMillis() - lastCheck < AUTO_CHECK_INTERVAL_MS) return@launch
+            // If a newer build is already known, drive it forward on resume (e.g. after the user
+            // granted the install permission) instead of spending a network probe on it.
+            if (continuePendingUpdate()) return@launch
+
+            val firstCheckThisProcess = !hasCheckedThisProcess
+            if (!firstCheckThisProcess) {
+                val lastCheck = settingsDataStore.lastUpdateCheckAt()
+                if (System.currentTimeMillis() - lastCheck < AUTO_CHECK_INTERVAL_MS) return@launch
+            }
+            hasCheckedThisProcess = true
             runUpdateCheck(manual = false)
+        }
+    }
+
+    /**
+     * Advances an update that is already in hand: starts the download when it is available and
+     * hands a finished APK to the installer. Returns true when it took over the resume.
+     */
+    private fun continuePendingUpdate(): Boolean {
+        val state = _appUpdate.value
+        return when (state) {
+            is AppUpdateState.Available -> {
+                _updatePromptVisible.value = true
+                if (state.info.hasApk) startAutoUpdate()
+                true
+            }
+
+            is AppUpdateState.Ready -> {
+                _updatePromptVisible.value = true
+                // Re-open the system installer if the previous hand-off was interrupted.
+                downloadAndInstallUpdate()
+                true
+            }
+
+            is AppUpdateState.Downloading -> {
+                _updatePromptVisible.value = true
+                true
+            }
+
+            else -> false
         }
     }
 
@@ -151,16 +189,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { runUpdateCheck(manual = true) }
     }
 
-    /**
-     * Entry point of the Check Updates screen. It refreshes quietly: the screen already renders the
-     * full state and the Update button, so a remembered "Later" must not re-open the popup.
-     */
+    /** Entry point of the Check Updates screen: refresh quietly, then auto-start the update. */
     fun refreshAppUpdate() {
         if (isUiTestRun) return
-        viewModelScope.launch { runUpdateCheck(manual = true, forcePrompt = false) }
+        viewModelScope.launch { runUpdateCheck(manual = true) }
     }
 
-    private suspend fun runUpdateCheck(manual: Boolean, forcePrompt: Boolean = manual) {
+    private suspend fun runUpdateCheck(manual: Boolean) {
         val current = _appUpdate.value
         // Never let a background check interrupt an in-flight download or an install hand-off.
         if (current is AppUpdateState.Downloading || current is AppUpdateState.Ready) return
@@ -189,9 +224,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val state = _appUpdate.value
         when (state) {
             is AppUpdateState.Available -> {
-                val dismissed = settingsDataStore.dismissedUpdateVersion()
-                if (forcePrompt || !dismissed.equals(state.info.versionName, ignoreCase = true)) {
-                    _updatePromptVisible.value = true
+                // Mandatory flow: surface the gate and start the download immediately. There is no
+                // dismiss path, so a user who opened the app always sees the update through.
+                _updatePromptVisible.value = true
+                if (state.info.hasApk) {
+                    startAutoUpdate()
+                } else {
+                    _updateNotice.value =
+                        "This release has no APK attached. Open the release to install manually."
                 }
             }
 
@@ -209,41 +249,34 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     "You are on the newest build (v${appUpdater.installedVersionName})."
 
                 is AppUpdateState.Failed -> state.message
-                else -> null
+                else -> _updateNotice.value
             }
         }
     }
 
-    /** "Later": hide the prompt and remember the version so launch checks stay quiet for it. */
-    fun dismissUpdatePrompt() {
-        _updatePromptVisible.value = false
-        val version = _appUpdate.value.releaseInfo?.versionName ?: return
-        viewModelScope.launch { settingsDataStore.setDismissedUpdateVersion(version) }
-    }
+    /** True after the first mandatory release probe of this process. */
+    private var hasCheckedThisProcess = false
 
-    /** Clears a remembered "Later" so a manual check can prompt again. */
-    fun forgetDismissedUpdate() {
-        viewModelScope.launch { settingsDataStore.setDismissedUpdateVersion(null) }
-    }
+    /** Only auto-open the OS "install unknown apps" screen once per process. */
+    private var installPermissionPrompted = false
 
     private var updateWatchdogJob: Job? = null
 
     /**
      * Foreground watchdog: while the app is open it periodically asks the release feed for a newer
-     * build and re-asserts the update popup, so a release published mid-session surfaces even when
-     * the user is sitting on any screen. Respects the "Auto-check on launch" switch.
+     * build, so a release published mid-session surfaces without any user action.
      */
     fun startUpdateWatchdog(intervalMs: Long = UPDATE_WATCH_INTERVAL_MS) {
         stopUpdateWatchdog()
         updateWatchdogJob = viewModelScope.launch {
             while (true) {
                 delay(intervalMs)
-                if (!settingsDataStore.isAutoUpdateCheckEnabled()) return@launch
-                // Same throttle as the launch/resume auto-check: at most one release probe every
+                if (continuePendingUpdate()) continue
+                // Same throttle as the launch/resume check: at most one release probe every
                 // [AUTO_CHECK_INTERVAL_MS] instead of hammering the GitHub API.
                 val lastCheck = settingsDataStore.lastUpdateCheckAt()
-                if (System.currentTimeMillis() - lastCheck < AUTO_CHECK_INTERVAL_MS) return@launch
-                runUpdateCheck(manual = false, forcePrompt = true)
+                if (System.currentTimeMillis() - lastCheck < AUTO_CHECK_INTERVAL_MS) continue
+                runUpdateCheck(manual = false)
             }
         }
     }
@@ -254,24 +287,35 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Keeps the global update popup on screen: whenever a newer build is pending (available or
-     * ready to install) and that version has not been dismissed, the prompt is forced visible again.
-     * Called on every app resume so the popup re-asserts over whichever screen the user is on,
-     * without offering any dismiss path of its own.
+     * Keeps the mandatory update popup on screen on every resume, whichever screen the user is on.
+     * There is no dismissed state: a pending update can only be cleared by installing it.
      */
     fun reassertUpdatePrompt() {
-        viewModelScope.launch {
-            val state = _appUpdate.value
-            val pending = state is AppUpdateState.Available || state is AppUpdateState.Ready
-            if (!pending) return@launch
-            val version = when (state) {
-                is AppUpdateState.Available -> state.info.versionName
-                is AppUpdateState.Ready -> state.info.versionName
-                else -> return@launch
+        val state = _appUpdate.value
+        val pending = state is AppUpdateState.Available ||
+            state is AppUpdateState.Downloading ||
+            state is AppUpdateState.Ready ||
+            (state is AppUpdateState.Failed && state.info != null)
+        if (pending) _updatePromptVisible.value = true
+    }
+
+    /**
+     * Auto-drive entry point: starts the mandatory download, but only deep-links into the OS
+     * "install unknown apps" screen once per process so a denied permission does not trap the user
+     * in a Settings loop. A manual tap on the dialog always re-opens the toggle.
+     */
+    private fun startAutoUpdate() {
+        val state = _appUpdate.value
+        if (state is AppUpdateState.Available && !appUpdater.canInstallPackages()) {
+            _updateNotice.value =
+                "Allow \"Install unknown apps\" for Naihati Nights to finish this required update."
+            if (!installPermissionPrompted) {
+                installPermissionPrompted = true
+                appUpdater.openInstallPermissionSettings()
             }
-            if (settingsDataStore.dismissedUpdateVersion() == version) return@launch
-            _updatePromptVisible.value = true
+            return
         }
+        downloadAndInstallUpdate()
     }
 
     /**
@@ -300,7 +344,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
         if (!appUpdater.canInstallPackages()) {
             _updateNotice.value =
-                "Allow \"Install unknown apps\" for Naihati Nights, then tap Update now again."
+                "Allow \"Install unknown apps\" for Naihati Nights to finish this required update."
             appUpdater.openInstallPermissionSettings()
             return
         }
@@ -387,10 +431,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private companion object {
-        /** Six hours: frequent enough to catch a release the same day, cheap against the API limit. */
-        const val AUTO_CHECK_INTERVAL_MS = 6L * 60L * 60L * 1000L
+        /** Mandatory probe cadence while the app is used: fast enough to catch a fresh release. */
+        const val AUTO_CHECK_INTERVAL_MS = 5L * 60L * 1000L
 
         /** Foreground poll while the app is open: how often to ask the release feed for updates. */
-        const val UPDATE_WATCH_INTERVAL_MS = 15L * 60L * 1000L
+        const val UPDATE_WATCH_INTERVAL_MS = 5L * 60L * 1000L
     }
 }

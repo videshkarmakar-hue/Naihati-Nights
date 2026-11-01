@@ -298,14 +298,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                         installedBuild = BuildConfig.VERSION_CODE,
                         state = appUpdate,
                         notice = updateNotice,
-                        autoCheckEnabled = appSettings.autoUpdateCheck,
                         onScreenOpen = { viewModel.refreshAppUpdate() },
                         onCheck = { viewModel.checkForAppUpdate() },
                         onUpdate = { viewModel.downloadAndInstallUpdate() },
                         onOpenRelease = { viewModel.openReleasesPage() },
-                        onAutoCheckChange = {
-                            viewModel.updateSettings(appSettings.copy(autoUpdateCheck = it))
-                        },
                         onBack = { currentScreen = NavigationScreen.HOME },
                         onOpenSidebar = openSidebar,
                         onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }

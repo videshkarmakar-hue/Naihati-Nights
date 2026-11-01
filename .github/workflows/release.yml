@@ -97,8 +97,8 @@ jobs:
           body: |
             Naihati Nights v${{ steps.version.outputs.name }} (build ${{ steps.version.outputs.code }}).
 
-            Installed copies of the app check this release automatically and show an
-            "Update available" prompt. The attached APK is what they download.
+            This is a required update. Installed copies of the app check this release
+            automatically when opened and download + install the attached APK.
           files: out/NaihatiNights-${{ steps.version.outputs.name }}.apk
           fail_on_unmatched_files: true
           draft: false
