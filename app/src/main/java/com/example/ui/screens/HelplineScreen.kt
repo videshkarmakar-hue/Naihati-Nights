@@ -47,7 +47,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -520,12 +523,11 @@ private fun StandardHelplineCard(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom
         ) {
-            HelpText(
+            MonoNumber(
                 text = item.numbers,
                 size = 14.sp,
                 weight = FontWeight.Medium,
                 color = Zinc100,
-                family = FontFamily.Monospace,
                 letterSpacing = (-0.3).sp,
                 lineHeight = 18.sp,
                 modifier = Modifier.weight(1f)
@@ -844,12 +846,11 @@ private fun TrafficHelplineCard(
                 lineHeight = 16.sp
             )
             Spacer(modifier = Modifier.height(2.dp))
-            HelpText(
+            MonoNumber(
                 text = item.numbers,
                 size = 12.sp,
                 weight = FontWeight.Normal,
                 color = Zinc300,
-                family = FontFamily.Monospace,
                 lineHeight = 16.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -1156,13 +1157,46 @@ private fun HelplineFooter() {
         )
         Spacer(modifier = Modifier.height(5.dp))
         HelpText(
-            text = "\u00A9 Crafted by Videsh Karmakar",
+            text = "\u00A9 Crafted by VIDESH KARMAKAR",
             size = 10.sp,
             weight = FontWeight.Normal,
             color = Zinc500,
             lineHeight = 14.sp
         )
     }
+}
+
+@Composable
+private fun MonoNumber(
+    text: String,
+    size: TextUnit,
+    weight: FontWeight,
+    color: Color,
+    modifier: Modifier = Modifier,
+    letterSpacing: TextUnit = 0.sp,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip
+) {
+    Text(
+        text = buildAnnotatedString {
+            text.split("/").forEachIndexed { index, part ->
+                if (index > 0) {
+                    withStyle(SpanStyle(color = Zinc500)) { append("/") }
+                }
+                append(part)
+            }
+        },
+        modifier = modifier,
+        color = color,
+        fontSize = size,
+        fontWeight = weight,
+        fontFamily = FontFamily.Monospace,
+        letterSpacing = letterSpacing,
+        lineHeight = lineHeight,
+        maxLines = maxLines,
+        overflow = overflow
+    )
 }
 
 @Composable

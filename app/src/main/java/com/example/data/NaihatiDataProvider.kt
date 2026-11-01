@@ -722,7 +722,7 @@ object NaihatiDataProvider {
             category = "medical",
             subtitleLabel = "HOSPITAL PHONE",
             numbers = "033 2581 2145",
-            actionLabel = "Call Hospital",
+            actionLabel = "Hospital",
             dialNumber = "03325812145"
         ),
         HelplineItem(
@@ -731,7 +731,7 @@ object NaihatiDataProvider {
             category = "medical",
             subtitleLabel = "Ambulance SOS",
             numbers = "102 / 108",
-            actionLabel = "Call Ambulance",
+            actionLabel = "Ambulance",
             dialNumber = "102"
         ),
         HelplineItem(
@@ -740,7 +740,7 @@ object NaihatiDataProvider {
             category = "police",
             subtitleLabel = "HOTLINE NUMBER",
             numbers = "101 / 033 2581 2222",
-            actionLabel = "Call Fire Station",
+            actionLabel = "Call Station",
             dialNumber = "101"
         ),
         HelplineItem(

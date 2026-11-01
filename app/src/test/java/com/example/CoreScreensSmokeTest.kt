@@ -593,6 +593,7 @@ class CoreScreensSmokeTest {
         )
         composeRule.onNodeWithText("TRUST").assertIsDisplayed()
         composeRule.onNodeWithText("FIRE").assertIsDisplayed()
+        composeRule.onNodeWithText("Call Station").assertIsDisplayed()
         composeRule.onNodeWithText("HOSPITAL").assertIsDisplayed()
         composeRule.onNodeWithText("CIVIC").assertIsDisplayed()
         composeRule.onNodeWithTag("helpline_list").performScrollToNode(
@@ -604,6 +605,8 @@ class CoreScreensSmokeTest {
         )
         composeRule.onNodeWithText("General Desk").assertIsDisplayed()
         composeRule.onNodeWithText("Ambulance SOS").assertIsDisplayed()
+        composeRule.onNodeWithText("Hospital").assertIsDisplayed()
+        composeRule.onNodeWithText("Ambulance").assertIsDisplayed()
         composeRule.onNodeWithTag("helpline_list").performScrollToNode(
             hasText("FIELD UNITS")
         )
@@ -615,6 +618,11 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("helpline_list").performScrollToNode(
             hasText("\u2726 JAY BORO MAA \u2726")
         )
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("\u00A9 Crafted by VIDESH KARMAKAR")
+        )
+        composeRule.onNodeWithText("\u00A9 Crafted by VIDESH KARMAKAR")
+            .assertIsDisplayed()
     }
 
     @Test
