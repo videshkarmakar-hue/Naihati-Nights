@@ -136,6 +136,8 @@ fun HomeScreen(
         if (query.isBlank()) routes else routes.filter { it.matchesQuery(query) }
     }
     val searchAutoExpands = query.length > 1
+    val allRoutesExpanded = visibleRoutes.isNotEmpty() &&
+        visibleRoutes.all { it.id in expandedRouteIds }
 
     LazyColumn(
         modifier = modifier
@@ -151,6 +153,10 @@ fun HomeScreen(
             )
         }
 
+        item(key = "home_micro_header") {
+            RoutesMicroHeader()
+        }
+
         item(key = "home_hero") {
             Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp)) {
                 RoutesHero(
@@ -162,6 +168,22 @@ fun HomeScreen(
 
         item(key = "home_hero_spacer") {
             Spacer(modifier = Modifier.height(14.dp))
+        }
+
+        if (visibleRoutes.isNotEmpty()) {
+            item(key = "home_directory_header") {
+                RoutesDirectoryHeader(
+                    sectorCount = visibleRoutes.size,
+                    allExpanded = allRoutesExpanded,
+                    onToggleAll = {
+                        expandedRouteIds = if (allRoutesExpanded) {
+                            emptySet()
+                        } else {
+                            expandedRouteIds + visibleRoutes.map { it.id }
+                        }
+                    }
+                )
+            }
         }
 
         if (visibleRoutes.isEmpty()) {
@@ -193,6 +215,85 @@ fun HomeScreen(
             HomeFooter()
         }
     }
+}
+
+@Composable
+private fun RoutesMicroHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 4.dp)
+            .testTag("home_routes_micro_header"),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "ROUTES",
+            color = TextZinc400,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontFamily = FontFamily.Monospace,
+            letterSpacing = 2.sp
+        )
+    }
+}
+
+@Composable
+private fun RoutesDirectoryHeader(
+    sectorCount: Int,
+    allExpanded: Boolean,
+    onToggleAll: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 2.dp)
+            .testTag("home_directory_header"),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "DIRECTION DIRECTORY",
+                color = TextZinc400,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = FontFamily.Monospace,
+                letterSpacing = 1.6.sp
+            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Color(0x0FFFFFFF))
+                    .padding(horizontal = 7.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    text = "$sectorCount SECTORS",
+                    color = TextZinc300,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = FontFamily.Monospace
+                )
+            }
+        }
+
+        Text(
+            text = if (allExpanded) "COLLAPSE ALL" else "EXPAND ALL",
+            color = TextZinc400,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily.Monospace,
+            letterSpacing = 1.sp,
+            modifier = Modifier
+                .clip(RoundedCornerShape(6.dp))
+                .clickable { onToggleAll() }
+                .padding(horizontal = 6.dp, vertical = 3.dp)
+                .testTag("home_expand_all")
+        )
+    }
+    Spacer(modifier = Modifier.height(10.dp))
 }
 
 @Composable
@@ -297,7 +398,7 @@ private fun HomeSearchBox(
                 Box {
                     if (query.isEmpty()) {
                         Text(
-                            text = "Search pandal or club (e.g., Borokali, Bankim)...",
+                            text = "Search pandal, route, or committee...",
                             color = TextZinc500,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
@@ -364,17 +465,18 @@ private fun RouteAccordionCard(
         ) {
             Box(
                 modifier = Modifier
-                    .size(32.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(RegalViolet)
-                    .border(1.dp, RegalVioletBorder, RoundedCornerShape(12.dp)),
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0x0FFFFFFF))
+                    .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(10.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = route.routeNumber,
                     color = Color.White,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontFamily = FontFamily.Monospace
                 )
             }
 
@@ -415,10 +517,9 @@ private fun RouteAccordionCard(
 
             Box(
                 modifier = Modifier
-                    .size(32.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(SurfaceCard)
-                    .border(1.dp, CardBorder, RoundedCornerShape(12.dp)),
+                    .size(28.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0x0AFFFFFF)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -439,7 +540,7 @@ private fun RouteAccordionCard(
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 RouteMapButton(
-                    label = "View Route $displayNumber on Google Maps",
+                    label = "Open Route $displayNumber Navigation",
                     query = route.routeMapQuery.ifBlank { route.title },
                     context = context,
                     modifier = Modifier.fillMaxWidth()
@@ -1055,11 +1156,12 @@ private fun HomeFooter() {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "• Jay Maa Boro Maa •",
-                color = TextZinc300,
-                fontSize = 12.sp,
+                text = "✦ JAY MAA BORO MAA ✦",
+                color = TextZinc100,
+                fontSize = 11.sp,
                 fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.4.sp
+                fontFamily = FontFamily.Monospace,
+                letterSpacing = 1.4.sp
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(
@@ -1069,6 +1171,15 @@ private fun HomeFooter() {
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "Crafted with devotion by VIDESH KARMAKAR • Naihati Kali Puja Guide",
+            color = TextZinc500,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily.Monospace,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         SectionCreditFooter(
             topPadding = 0.dp,
             bottomPadding = 0.dp

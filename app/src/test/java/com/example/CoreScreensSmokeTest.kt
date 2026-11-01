@@ -330,6 +330,32 @@ class CoreScreensSmokeTest {
     }
 
     @Test
+    fun homeRoutes_expandAllTogglesAllAccordionCards() {
+        composeRule.setContent {
+            MyApplicationTheme {
+                HomeScreen(content = NaihatiDataProvider.content())
+            }
+        }
+
+        composeRule.onNodeWithTag("home_routes_micro_header").assertIsDisplayed()
+        composeRule.onNodeWithTag("home_directory_header").assertIsDisplayed()
+        composeRule.onNodeWithText("7 SECTORS").assertIsDisplayed()
+        composeRule.onNodeWithTag("home_expand_all").assertIsDisplayed()
+
+        composeRule.onAllNodesWithText("Ramukali", substring = true).assertCountEquals(0)
+
+        composeRule.onNodeWithTag("home_expand_all").performClick()
+        composeRule.waitForIdle()
+        composeRule.onAllNodesWithText("Ramukali", substring = true).onFirst().assertIsDisplayed()
+        composeRule.onNodeWithText("COLLAPSE ALL").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("home_expand_all").performClick()
+        composeRule.waitForIdle()
+        composeRule.onAllNodesWithText("Ramukali", substring = true).assertCountEquals(0)
+        composeRule.onNodeWithText("EXPAND ALL").assertIsDisplayed()
+    }
+
+    @Test
     fun feedbackScreen_validatesAndSubmits() {
         var submitted = false
         composeRule.setContent {

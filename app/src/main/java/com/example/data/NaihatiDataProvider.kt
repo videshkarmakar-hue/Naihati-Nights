@@ -173,7 +173,6 @@ object NaihatiDataProvider {
                 )
             ),
             directionNote = RouteNote(
-                emoji = "🧭",
                 label = "Direction Note:",
                 text = "From Boro Kali, take a left towards Shyam Road, visit Adi Maitri Sangha, then Balak Sangha on Sanjib Chatterjee Road, and reach RBC Road to see Bharatmata Seba Samiti.",
                 accent = "violet"
@@ -251,7 +250,6 @@ object NaihatiDataProvider {
                 )
             ),
             directionNote = RouteNote(
-                emoji = "🧭",
                 label = "Direction Note:",
                 text = "Following this road straight leads onto R.B.C Road.",
                 accent = "violet"
@@ -345,11 +343,10 @@ object NaihatiDataProvider {
                 )
             ),
             directionNote = RouteNote(
-                emoji = "📍",
                 label = "Detailed Direction Guide:",
                 text = "After Ekata Sangha, pass Amra Sobai Club and enter the right alley up to Jan Mohammad Ghat Road, proceed towards Kanaidas Bairagi Sarani to see Sanghasree & Lohaghat Park Association. Return along that path, continue along Jan Mohammad Ghat straight to Mahakali Tala, then proceed opposite St. Luke's School to visit Subhash Samiti, return, and walk straight along RBC Road turning left.",
                 labelOnOwnLine = true,
-                accent = "none"
+                accent = "violet"
             )
         ),
         PandalRoute(
