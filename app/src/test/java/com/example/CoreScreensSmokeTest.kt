@@ -1032,6 +1032,45 @@ class CoreScreensSmokeTest {
     }
 
     @Test
+    fun restaurantSearch_narrowsAndClears() {
+        composeRule.setContent {
+            MyApplicationTheme {
+                RestaurantScreen(content = NaihatiDataProvider.content())
+            }
+        }
+
+        composeRule.onNodeWithTag("restaurant_search_field").performTextInput("chamcham")
+        composeRule.waitForIdle()
+
+        composeRule.onNodeWithText("Naihati Mishti Mahal & Dairy").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Dada Boudi Biryani").assertCountEquals(0)
+
+        composeRule.onNodeWithTag("restaurant_search_clear").performClick()
+        composeRule.waitForIdle()
+
+        composeRule.onNodeWithText("Dada Boudi Biryani").assertIsDisplayed()
+        composeRule.onNodeWithText("Bijoynagar Bhojohori Hindu Hotel").assertIsDisplayed()
+    }
+
+    @Test
+    fun restaurantHotelsFilter_hidesEateriesAndKeepsStays() {
+        composeRule.setContent {
+            MyApplicationTheme {
+                RestaurantScreen(content = NaihatiDataProvider.content())
+            }
+        }
+
+        composeRule.onNodeWithTag("restaurant_filter_hotels_&_stays").performClick()
+        composeRule.waitForIdle()
+
+        composeRule.onAllNodesWithText("Dada Boudi Biryani").assertCountEquals(0)
+        composeRule.onNodeWithTag("restaurant_screen")
+            .performScrollToNode(hasText("ACCOMMODATION", substring = true))
+        composeRule.onNodeWithText("Hotel Royal Palace & AC Deluxe Suites").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Verified", substring = true).onFirst().assertIsDisplayed()
+    }
+
+    @Test
     fun helplineHeader_menuButtonOpensSidebar() {
         var menuOpened = false
         var backPressed = false

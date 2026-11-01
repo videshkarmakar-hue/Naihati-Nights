@@ -3,11 +3,6 @@ package com.example.ui.screens
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,12 +26,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Hotel
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,53 +39,44 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.model.AppContent
 import com.example.model.RestaurantPlace
 import com.example.ui.components.AppBrandHeader
 import com.example.ui.components.SectionCreditFooter
-import com.example.ui.theme.LocalAppPalette
 
-private val RestaurantPage = Color(0xFF050505)
-private val RestaurantSurface = Color(0xFF0E0E14)
-private val RestaurantChip = Color(0xFF13131B)
-private val RestaurantButton = Color(0xFF181824)
-private val RestaurantHairline = Color(0x14FFFFFF)
+private val RestaurantPage = Color(0xFF0A0B0E)
+private val RestaurantSurface = Color(0xFF111217)
+private val RestaurantChip = Color(0x0DFFFFFF)
 private val RestaurantDivider = Color(0x0DFFFFFF)
-private val RestaurantViolet: Color @Composable get() = LocalAppPalette.current.accentDeep
-private val RestaurantVioletBorder: Color @Composable get() = LocalAppPalette.current.accentBorder
-private val RestaurantActiveBorder: Color @Composable get() = LocalAppPalette.current.accentStrong
+private val RestaurantHairline = Color(0x12FFFFFF)
+private val RestaurantBrightBorder = Color(0x2EFFFFFF)
 private val RestaurantZinc = Color(0xFFD4D4D8)
 private val RestaurantZincBody = Color(0xFFA1A1AA)
-private val RestaurantZincMuted = Color(0xFF71717A)
-private val RestaurantLavender: Color @Composable get() = LocalAppPalette.current.accentBright
-private val RestaurantGreen = Color(0xFF34D399)
-private val RestaurantAmber = Color(0xFFFBBF24)
-private val RestaurantAmberText = Color(0xFFFCD34D)
+private val RestaurantZincMuted = Color(0xFF7E8391)
+private val RestaurantInk = Color(0xFF0A0B0E)
 
 private const val FILTER_ALL = "All Eateries"
-private const val FILTER_LATE_NIGHT = "Late Night (24x7)"
+private const val FILTER_HOTELS = "Hotels & Stays"
 
 private val restaurantFilters = listOf(
     FILTER_ALL,
     "Biryani & Mughlai",
     "Bengali Thali",
     "Street Food",
-    "Cafes & Snacks",
     "Sweets & Desserts",
-    FILTER_LATE_NIGHT
+    FILTER_HOTELS
 )
 
 @Composable
@@ -104,15 +88,20 @@ fun RestaurantScreen(
 ) {
     val context = LocalContext.current
     var selectedFilter by remember { mutableStateOf(FILTER_ALL) }
+    var searchQuery by remember { mutableStateOf("") }
 
     val restaurants = content.restaurants
-    val filteredRestaurants = remember(selectedFilter, restaurants) {
-        restaurants.filter { place ->
-            when (selectedFilter) {
-                FILTER_ALL -> true
-                FILTER_LATE_NIGHT -> place.isLateNight
-                else -> place.categories.any { it == selectedFilter }
-            }
+    val query = searchQuery.trim()
+    val filteredRestaurants = remember(selectedFilter, restaurants, query) {
+        val base = when (selectedFilter) {
+            FILTER_ALL -> restaurants
+            FILTER_HOTELS -> emptyList()
+            else -> restaurants.filter { place -> place.categories.any { it == selectedFilter } }
+        }
+        if (query.isBlank()) {
+            base
+        } else {
+            base.filter { it.matchesQuery(query) }
         }
     }
 
@@ -158,46 +147,109 @@ fun RestaurantScreen(
             )
         }
 
+        // ============ MICRO HEADER ============
+        item(key = "restaurant_micro_header") {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 6.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "EATS",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 2.sp,
+                    color = RestaurantZincMuted
+                )
+            }
+        }
+
+        // ============ SEARCH ============
+        item(key = "restaurant_search") {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(RestaurantSurface)
+                    .border(1.dp, RestaurantHairline, RoundedCornerShape(16.dp))
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    tint = RestaurantZincMuted,
+                    modifier = Modifier.size(15.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Box(modifier = Modifier.weight(1f)) {
+                    if (searchQuery.isEmpty()) {
+                        Text(
+                            text = "Search restaurant, biryani, sweets, stay...",
+                            fontSize = 12.sp,
+                            color = RestaurantZincMuted,
+                            maxLines = 1
+                        )
+                    }
+                    BasicTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        singleLine = true,
+                        textStyle = TextStyle(fontSize = 12.sp, color = Color.White),
+                        cursorBrush = SolidColor(Color.White),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("restaurant_search_field")
+                    )
+                }
+                if (searchQuery.isNotEmpty()) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Clear search",
+                        tint = RestaurantZincMuted,
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clickable { searchQuery = "" }
+                            .testTag("restaurant_search_clear")
+                    )
+                }
+            }
+        }
+
         // ============ QUICK CATEGORY FILTERS ============
         item {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState())
-                    .padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 restaurantFilters.forEach { filter ->
                     val selected = selectedFilter == filter
-                    val lateNight = filter == FILTER_LATE_NIGHT
                     Row(
                         modifier = Modifier
                             .clip(CircleShape)
-                            .background(if (selected) RestaurantViolet else RestaurantSurface)
+                            .background(if (selected) Color.White else Color.Transparent)
                             .border(
                                 1.dp,
-                                if (selected) RestaurantActiveBorder else RestaurantHairline,
+                                if (selected) Color.White else RestaurantHairline,
                                 CircleShape
                             )
                             .clickable { selectedFilter = filter }
-                            .padding(horizontal = 14.dp, vertical = 6.dp)
+                            .padding(horizontal = 14.dp, vertical = 7.dp)
                             .testTag("restaurant_filter_${filter.lowercase().replace(" ", "_")}"),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(if (lateNight) 4.dp else 6.dp)
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (lateNight) {
-                            PulsingDot(color = RestaurantAmber, size = 6.dp)
-                        }
                         Text(
                             text = filter,
                             fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = when {
-                                selected -> Color.White
-                                lateNight -> RestaurantAmberText
-                                else -> RestaurantZinc
-                            },
+                            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+                            color = if (selected) RestaurantInk else RestaurantZinc,
                             maxLines = 1
                         )
                     }
@@ -209,8 +261,17 @@ fun RestaurantScreen(
         if (filteredRestaurants.isEmpty()) {
             item {
                 RestaurantEmptyState(
-                    message = "No eateries match \"$selectedFilter\".",
-                    onShowAll = { selectedFilter = FILTER_ALL }
+                    message = when {
+                        selectedFilter == FILTER_HOTELS ->
+                            "Hotels & stays are listed in the accommodation section below."
+                        query.isNotBlank() -> "No eateries match \"$query\"."
+                        else -> "No eateries match \"$selectedFilter\"."
+                    },
+                    onShowAll = {
+                        searchQuery = ""
+                        selectedFilter = FILTER_ALL
+                    },
+                    onShowAllVisible = selectedFilter != FILTER_HOTELS
                 )
             }
         } else {
@@ -224,36 +285,27 @@ fun RestaurantScreen(
         }
 
         // ============ HOTELS & STAYS ============
-        item {
-            Column(
+        item(key = "restaurant_stays_header") {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 6.dp)
+                    .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "ACCOMMODATION & STAYS",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = RestaurantAmber,
-                    letterSpacing = 1.sp
+                    text = "ACCOMMODATION & LODGING • NAIHATI ZONE",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.6.sp,
+                    color = RestaurantZinc,
+                    modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.height(2.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Hotel,
-                        contentDescription = null,
-                        tint = RestaurantAmber,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Best Hotels & Lodging in Naihati Zone",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        lineHeight = 20.sp
-                    )
-                }
+                Text(
+                    text = "${content.accommodationPlaces.size} Verified",
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = RestaurantZincMuted
+                )
             }
         }
 
@@ -282,35 +334,24 @@ fun RestaurantScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 24.dp),
+                    .padding(top = 20.dp, bottom = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .clip(CircleShape)
-                            .background(RestaurantViolet)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "• Jay Boro Maa •",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = RestaurantZinc,
-                        letterSpacing = 0.6.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .size(6.dp)
-                            .clip(CircleShape)
-                            .background(RestaurantViolet)
-                    )
-                }
+                Text(
+                    text = "✦ Jay Maa Boro Maa ✦",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 1.5.sp,
+                    color = RestaurantZinc
+                )
+                Spacer(modifier = Modifier.height(7.dp))
+                Text(
+                    text = "Naihati Kali Puja Food Guide • Curated by Videsh Karmakar",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = RestaurantZincBody,
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 SectionCreditFooter(
                     topPadding = 0.dp,
@@ -331,91 +372,103 @@ private fun RestaurantCard(
     onMap: () -> Unit,
     onCall: () -> Unit
 ) {
-    Column(
+    val shape = RoundedCornerShape(24.dp)
+    val sacred = place.name.startsWith("Boro Maa")
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(shape)
             .background(RestaurantSurface)
-            .border(1.dp, RestaurantHairline, RoundedCornerShape(16.dp))
-            .padding(14.dp)
+            .border(1.dp, if (sacred) RestaurantBrightBorder else RestaurantHairline, shape)
             .testTag("restaurant_card_${place.id}")
     ) {
-        Text(
-            text = place.name,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            lineHeight = 15.sp
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = place.cuisine,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = RestaurantLavender
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = place.locationDescription,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Normal,
-            color = RestaurantZincBody,
-            lineHeight = 13.sp
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            place.dishes.forEach { dish ->
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(RestaurantChip)
-                        .border(1.dp, RestaurantHairline, RoundedCornerShape(6.dp))
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                ) {
-                    Text(
-                        text = dish,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = RestaurantZinc,
-                        maxLines = 1
+        if (sacred) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                Color.Transparent,
+                                Color(0x66FFFFFF),
+                                Color.Transparent
+                            )
+                        )
                     )
-                }
-            }
+            )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(RestaurantDivider)
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            RestaurantAction(
-                label = "Open in Google Maps",
-                icon = Icons.Default.Place,
-                onClick = onMap,
-                modifier = Modifier.weight(1f),
-                primary = true,
-                testTag = "restaurant_map_${place.id}"
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = place.name,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White,
+                lineHeight = 20.sp
             )
-            RestaurantAction(
-                label = "Call / Menu",
-                icon = Icons.Default.Phone,
-                onClick = onCall,
-                primary = false,
-                testTag = "restaurant_call_${place.id}"
+            Spacer(modifier = Modifier.height(3.dp))
+            Text(
+                text = place.locationDescription,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                color = RestaurantZincBody,
+                lineHeight = 15.sp
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                place.dishes.forEach { dish ->
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(RestaurantChip)
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = dish,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = RestaurantZinc,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(RestaurantDivider)
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                RestaurantAction(
+                    label = "Open in Maps",
+                    onClick = onMap,
+                    style = RestaurantActionStyle.Solid,
+                    modifier = Modifier.weight(1f),
+                    testTag = "restaurant_map_${place.id}"
+                )
+                RestaurantAction(
+                    label = "Call / Menu",
+                    onClick = onCall,
+                    style = RestaurantActionStyle.Outline,
+                    modifier = Modifier.weight(1f),
+                    testTag = "restaurant_call_${place.id}"
+                )
+            }
         }
     }
 }
@@ -427,7 +480,12 @@ private fun RestaurantStayCard(
     priceRange: String,
     onMap: () -> Unit
 ) {
-    Row(
+    val priceMain = priceRange
+        .removeSuffix("/night")
+        .removeSuffix("/ night")
+        .trimEnd()
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp)
@@ -435,93 +493,100 @@ private fun RestaurantStayCard(
             .background(RestaurantSurface)
             .border(1.dp, RestaurantHairline, RoundedCornerShape(16.dp))
             .padding(14.dp)
-            .testTag("restaurant_stay_${name.lowercase().replace(" ", "_")}"),
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+            .testTag("restaurant_stay_${name.lowercase().replace(" ", "_")}")
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = name,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                lineHeight = 15.sp
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = location,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Medium,
-                color = RestaurantZincBody,
-                lineHeight = 15.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(RestaurantChip)
-                    .border(1.dp, RestaurantHairline, RoundedCornerShape(6.dp))
-                    .padding(horizontal = 8.dp, vertical = 2.dp)
+        Text(
+            text = name,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.White,
+            lineHeight = 18.sp
+        )
+        Spacer(modifier = Modifier.height(3.dp))
+        Text(
+            text = location,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Normal,
+            color = RestaurantZincBody,
+            lineHeight = 14.sp
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(RestaurantDivider)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = priceRange,
-                    fontSize = 10.sp,
+                    text = priceMain,
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = RestaurantZinc
                 )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                    text = "/ night",
+                    fontSize = 10.sp,
+                    color = RestaurantZincMuted
+                )
             }
+            RestaurantAction(
+                label = "Location & Booking",
+                onClick = onMap,
+                style = RestaurantActionStyle.Soft,
+                testTag = "restaurant_stay_map_$name"
+            )
         }
-        RestaurantAction(
-            label = "Location",
-            icon = Icons.Default.LocationOn,
-            onClick = onMap,
-            primary = true,
-            compact = true,
-            testTag = "restaurant_stay_map_$name"
-        )
     }
 }
+
+private enum class RestaurantActionStyle { Solid, Outline, Soft }
 
 @Composable
 private fun RestaurantAction(
     label: String,
-    icon: ImageVector,
     onClick: () -> Unit,
-    primary: Boolean,
+    style: RestaurantActionStyle,
     modifier: Modifier = Modifier,
-    compact: Boolean = false,
     testTag: String = ""
 ) {
-    Row(
+    val shape = RoundedCornerShape(12.dp)
+    val container = when (style) {
+        RestaurantActionStyle.Solid -> Color.White
+        RestaurantActionStyle.Soft -> Color(0x1AFFFFFF)
+        RestaurantActionStyle.Outline -> Color.Transparent
+    }
+    val contentColor = if (style == RestaurantActionStyle.Solid) RestaurantInk else RestaurantZinc
+
+    Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (primary) RestaurantViolet else RestaurantButton)
+            .clip(if (style == RestaurantActionStyle.Soft) RoundedCornerShape(8.dp) else shape)
+            .background(container)
             .border(
                 1.dp,
-                if (primary) RestaurantVioletBorder else RestaurantHairline,
-                RoundedCornerShape(12.dp)
+                if (style == RestaurantActionStyle.Outline) RestaurantHairline else Color.Transparent,
+                if (style == RestaurantActionStyle.Soft) RoundedCornerShape(8.dp) else shape
             )
             .clickable { onClick() }
-            .padding(
-                horizontal = if (compact) 12.dp else 8.dp,
-                vertical = 6.dp
-            )
+            .padding(horizontal = 12.dp, vertical = 8.dp)
             .testTag(testTag),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = if (primary && !compact) Color.White else RestaurantLavender,
-            modifier = Modifier.size(12.dp)
-        )
-        Spacer(modifier = Modifier.width(if (compact) 6.dp else 4.dp))
         Text(
             text = label,
-            fontSize = 10.sp,
-            fontWeight = if (primary) FontWeight.Bold else FontWeight.Medium,
-            color = if (primary) Color.White else RestaurantZinc,
+            fontSize = 12.sp,
+            fontWeight = if (style == RestaurantActionStyle.Solid) FontWeight.SemiBold else FontWeight.Medium,
+            color = contentColor,
             maxLines = 1
         )
     }
@@ -530,7 +595,8 @@ private fun RestaurantAction(
 @Composable
 private fun RestaurantEmptyState(
     message: String,
-    onShowAll: () -> Unit
+    onShowAll: () -> Unit,
+    onShowAllVisible: Boolean = true
 ) {
     Column(
         modifier = Modifier
@@ -549,42 +615,29 @@ private fun RestaurantEmptyState(
             color = Color.White,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(RestaurantViolet)
-                .border(1.dp, RestaurantVioletBorder, RoundedCornerShape(12.dp))
-                .clickable { onShowAll() }
-                .padding(horizontal = 12.dp, vertical = 6.dp)
-        ) {
-            Text(
-                text = "Show all eateries",
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
+        if (onShowAllVisible) {
+            Spacer(modifier = Modifier.height(12.dp))
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White)
+                    .clickable { onShowAll() }
+                    .padding(horizontal = 14.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = "Show all eateries",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = RestaurantInk
+                )
+            }
         }
     }
 }
 
-@Composable
-private fun PulsingDot(color: Color, size: androidx.compose.ui.unit.Dp) {
-    val transition = rememberInfiniteTransition(label = "restaurantPulse")
-    val alpha by transition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0.35f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 900),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "restaurantPulseAlpha"
-    )
-    Box(
-        modifier = Modifier
-            .size(size)
-            .alpha(alpha)
-            .clip(CircleShape)
-            .background(color)
-    )
-}
+private fun RestaurantPlace.matchesQuery(query: String): Boolean =
+    name.contains(query, ignoreCase = true) ||
+        cuisine.contains(query, ignoreCase = true) ||
+        locationDescription.contains(query, ignoreCase = true) ||
+        dishes.any { it.contains(query, ignoreCase = true) }
+
