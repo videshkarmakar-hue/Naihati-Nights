@@ -681,6 +681,11 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("theme_pandel_card_theme_15").assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_16"))
+        composeRule.onNodeWithTag("theme_pandel_card_theme_16").assertIsDisplayed()
+        composeRule.onNodeWithText("মঙ্গলচিত্রে মহাকালী").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_search_field"))
         composeRule.onNodeWithTag("theme_pandel_search_field")
             .performTextInput("Mahakal")

@@ -151,7 +151,7 @@ data class PoliceBooth(
 )
 
 /**
- * Naihati Kali Puja 2026 Theme Pandels — the 13-card list rendered by the Theme Pandel screen
+ * Naihati Kali Puja 2026 Theme Pandels — the card list rendered by the Theme Pandel screen
  * and opened from the "Theme Pandel" slot in the bottom navigation bar and sidebar.
  */
 object ThemePandelData {
@@ -299,6 +299,15 @@ object ThemePandelData {
             locationNote = "Piranos Registry Office, Littera School",
             locationNoteBengali = "পিরনো রেজিস্ট্রি অফিসের সামনে, Littera স্কুলের পাশে",
             deity = "Rupokhyo Debalok"
+        ),
+        ThemePandel(
+            id = "theme_16",
+            edition = "45th Year",
+            committee = "Naihati 4 No. Bijoynagar Tarama Sangha Club",
+            committeeBengali = "নৈহাটী ৪ নং বিজয়নগর তারামা সংঘ ক্লাব",
+            pandal = "Mangalchitre Mahakali",
+            pandalBengali = "মঙ্গলচিত্রে মহাকালী",
+            deity = "Mangalchitre Mahakali"
         )
     )
 
