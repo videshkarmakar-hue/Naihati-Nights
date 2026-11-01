@@ -338,7 +338,11 @@ private fun ThemePandelCard(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "Pandal: ${panel.pandal} • ${panel.deity}",
+                text = if (panel.deity.isNotBlank() && panel.deity != panel.pandal) {
+                    "Pandal: ${panel.pandal} • ${panel.deity}"
+                } else {
+                    "Pandal: ${panel.pandal}"
+                },
                 fontFamily = PlusJakartaSans,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Medium,

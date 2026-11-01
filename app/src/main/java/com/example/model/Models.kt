@@ -236,8 +236,10 @@ object ThemePandelData {
             committee = "Naihati Gopal Smriti Sangha",
             committeeBengali = "নৈহাটি গোপাল স্মৃতি সংঘ",
             pandal = "Wooden Mandap inspired by Nepal's Buddhist Temple",
-            pandalBengali = "নেপালের বৌদ্ধ মন্দিরের আদলে বিশেষ আকর্ষণ সম্পূর্ণ 'কাঠের তৈরী মণ্ডপ'",
-            deity = "Wooden Mandap"
+            pandalBengali = "নেপালের বৌদ্ধ মন্দিরের আদলে কাঠের মণ্ডপ",
+            deity = "Wooden Mandap",
+            specialAttraction = "বিশেষ আকর্ষণ: সম্পূর্ণ কাঠের তৈরী মণ্ডপ",
+            specialAttractionStyle = "amber"
         ),
         ThemePandel(
             id = "theme_10",
@@ -255,23 +257,23 @@ object ThemePandelData {
             edition = "91st Year",
             committee = "Naihati Katalpara",
             committeeBengali = "নৈহাটি কাটালপাড়া",
-            pandal = "Mahanayak 100",
+            pandal = "Mahanayak 100 - Uttam Kumar Centenary Tribute",
             pandalBengali = "মহানায়ক ১০০",
-            deity = "Mahanayak 100"
+            deity = "Mahanayak 100 - Uttam Kumar Centenary Tribute"
         ),
         ThemePandel(
             id = "theme_12",
-            edition = "50th Year",
+            edition = "50th Golden Jubilee",
             committee = "Naihati Samaj Kalyan Samiti",
             committeeBengali = "নৈহাটি সমাজ কল্যাণ সমিতি",
-            pandal = "Baba - Ek Nirab Yoddha",
+            pandal = "Baba - Ek Nirob Joddha",
             pandalBengali = "বাবা - এক নীরব যোদ্ধা",
-            deity = "Baba - Ek Nirab Yoddha"
+            deity = "Baba - Ek Nirob Joddha"
         ),
         ThemePandel(
             id = "theme_13",
-            edition = "Kali Puja 2026",
-            committee = "Naihati Gouripur Mirabagan Math",
+            edition = "Gouripur",
+            committee = "Naihati Gouripur Mirabagan Maath",
             committeeBengali = "নৈহাটি গৌরীপুর মীরাবাগান মাঠ",
             pandal = "Operation Sindoor",
             pandalBengali = "অপারেশন সিঁদুর",
@@ -281,33 +283,34 @@ object ThemePandelData {
         ThemePandel(
             id = "theme_14",
             edition = "62nd Year",
-            committee = "Naihati Sangha Association",
-            committeeBengali = "নৈহাটি সংঘ এসোসিয়েশন",
-            pandal = "Adishakta",
+            committee = "Naihati Sanghashree Association",
+            committeeBengali = "নৈহাটি সংঘশ্রী এসোসিয়েশন",
+            pandal = "Aadishakti",
             pandalBengali = "আদিশক্তি",
-            locationNote = "Bazarghat Road, Dhanakala, Naihati",
+            locationNote = "Bazarghat Road, Dhankol",
             locationNoteBengali = "বাজারঘাট রোড, ধানকল, নৈহাটি",
-            deity = "Adishakta"
+            deity = "Aadishakti",
+            specialAttraction = "বিশেষ আকর্ষণ কষ্টিপাথরের মূর্তির আদলে মায়ের মূর্তি",
+            specialAttractionStyle = "zinc"
         ),
         ThemePandel(
             id = "theme_15",
             edition = "37th Year",
-            committee = "Naihati Nav Yuba Samaj",
+            committee = "Naihati Naba Yubak Sangha",
             committeeBengali = "নৈহাটি নব যুবক সংঘ",
-            pandal = "Rupokhyo Debalok",
+            pandal = "Rupkothar Deblok",
             pandalBengali = "রূপকথার দেবলোক",
-            locationNote = "Piranos Registry Office, Littera School",
-            locationNoteBengali = "পিরনো রেজিস্ট্রি অফিসের সামনে, Littera স্কুলের পাশে",
-            deity = "Rupokhyo Debalok"
+            locationNoteBengali = "পুরনো রেজিস্ট্রি অফিসের সামনে, Littera স্কুলের পাশে",
+            deity = "Rupkothar Deblok"
         ),
         ThemePandel(
             id = "theme_16",
             edition = "45th Year",
-            committee = "Naihati 4 No. Bijoynagar Tarama Sangha Club",
-            committeeBengali = "নৈহাটী ৪ নং বিজয়নগর তারামা সংঘ ক্লাব",
-            pandal = "Mangalchitre Mahakali",
+            committee = "4 No. Bijoynagar Tarama Sangha Club",
+            committeeBengali = "৪ নং বিজয়নগর তারামা সংঘ ক্লাব",
+            pandal = "Mangolchitre Mahakali",
             pandalBengali = "মঙ্গলচিত্রে মহাকালী",
-            deity = "Mangalchitre Mahakali"
+            deity = "Mangolchitre Mahakali"
         )
     )
 
@@ -585,5 +588,9 @@ data class ThemePandel(
     val locationNote: String = "",
     val locationNoteBengali: String = "",
     val deity: String = "",
+    /** Verbatim Bengali special-attraction callout, e.g. a wooden mandap or stone-carved idol. */
+    val specialAttraction: String = "",
+    /** "amber" (no icon) or "zinc" (diamond icon) styling for [specialAttraction]. */
+    val specialAttractionStyle: String = "amber",
     val isNew: Boolean = false
 )

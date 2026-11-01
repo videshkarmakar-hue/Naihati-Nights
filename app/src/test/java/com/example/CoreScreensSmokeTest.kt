@@ -692,15 +692,20 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("theme_pandel_hero_card").assertIsDisplayed()
         composeRule.onNodeWithTag("theme_pandel_search_field").assertIsDisplayed()
         composeRule.onNodeWithTag("theme_pandel_card_theme_01").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("theme_pandel_map_chip").onFirst().assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_card_theme_13"))
         composeRule.onNodeWithTag("theme_pandel_card_theme_13").assertIsDisplayed()
-        composeRule.onNodeWithText("অপারেশন সিঁদুর").assertIsDisplayed()
+        composeRule.onNodeWithText("অপারেশন সিঁদুর", substring = true).assertIsDisplayed()
+        composeRule.onAllNodesWithText("PANDAL THEME").onFirst().assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_card_theme_14"))
         composeRule.onNodeWithTag("theme_pandel_card_theme_14").assertIsDisplayed()
+        composeRule.onAllNodesWithText("কষ্টিপাথরের মূর্তি", substring = true)
+            .onFirst()
+            .assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_card_theme_15"))
@@ -709,7 +714,17 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_card_theme_16"))
         composeRule.onNodeWithTag("theme_pandel_card_theme_16").assertIsDisplayed()
-        composeRule.onNodeWithText("মঙ্গলচিত্রে মহাকালী").assertIsDisplayed()
+        composeRule.onNodeWithText("মঙ্গলচিত্রে মহাকালী", substring = true).assertIsDisplayed()
+
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_09"))
+        composeRule.onAllNodesWithText("তৈরী মণ্ডপ", substring = true)
+            .onFirst()
+            .assertIsDisplayed()
+
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasText("Official Registry", substring = true))
+        composeRule.onNodeWithText("Naihati Kali Puja Official Registry • 2026").assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
             .performScrollToNode(hasTestTag("theme_pandel_search_field"))

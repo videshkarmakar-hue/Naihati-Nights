@@ -10,6 +10,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +28,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CallMade
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Search
@@ -386,8 +390,7 @@ private fun ThemePandelCard(
     context: Context,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(16.dp)
-    val accent = LocalAppPalette.current.accentBright
+    val shape = RoundedCornerShape(14.dp)
 
     Column(
         modifier = modifier
@@ -400,178 +403,193 @@ private fun ThemePandelCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(start = 16.dp, end = 12.dp, top = 14.dp),
             verticalAlignment = Alignment.Top
         ) {
-            Box(
-                modifier = Modifier
-                    .size(38.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                LocalAppPalette.current.accentDeep,
-                                LocalAppPalette.current.accentStrong
-                            )
-                        )
-                    )
-                    .border(
-                        1.dp,
-                        LocalAppPalette.current.accentBorderStrong,
-                        RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = displayNumber.toString().padStart(2, '0'),
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
+            Text(
+                text = displayNumber.toString().padStart(2, '0'),
+                fontFamily = PlusJakartaSans,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = TextZinc400,
+                modifier = Modifier.padding(top = 2.dp)
+            )
 
             Spacer(modifier = Modifier.width(12.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     Text(
-                        text = "THEME ${displayNumber.toString().padStart(2, '0')}",
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 9.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.9.sp,
-                        color = accent,
-                        maxLines = 1
+                        text = item.committeeBengali.ifBlank { item.committee },
+                        fontFamily = FontFamily.Default,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        lineHeight = 21.sp,
+                        color = TextZinc100
                     )
-                    Spacer(modifier = Modifier.width(7.dp))
                     EditionPill(text = item.edition)
                     if (item.isNew) {
-                        Spacer(modifier = Modifier.width(6.dp))
                         NewEntryChip()
                     }
                 }
 
-                Spacer(modifier = Modifier.height(5.dp))
-
-                Text(
-                    text = item.committeeBengali.ifBlank { item.committee },
-                    fontFamily = FontFamily.Default,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 20.sp,
-                    color = Color.White
-                )
-
                 if (item.committeeBengali.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = item.committee,
                         fontFamily = PlusJakartaSans,
-                        fontSize = 10.5.sp,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 14.sp,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        lineHeight = 15.sp,
                         color = TextZinc400
                     )
                 }
+            }
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            MapChip(
+                onClick = {
+                    openGoogleMaps(
+                        context = context,
+                        query = "${item.committee} Naihati Kali Puja"
+                    )
+                }
+            )
+        }
+
+        if (item.locationNote.isNotBlank() || item.locationNoteBengali.isNotBlank()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 9.dp)
+                    .testTag("theme_pandel_location_${item.id}"),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocationOn,
+                    contentDescription = null,
+                    tint = TextZinc400,
+                    modifier = Modifier.size(14.dp)
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                Text(
+                    text = item.locationNoteBengali,
+                    fontFamily = FontFamily.Default,
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp,
+                    color = TextZinc300
+                )
+                if (item.locationNote.isNotBlank()) {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(
+                        text = "(${item.locationNote})",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 10.sp,
+                        color = TextZinc500
+                    )
+                }
+            }
+        }
+
+        if (item.specialAttraction.isNotBlank() && item.specialAttractionStyle == "amber") {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 9.dp)
+                    .testTag("theme_pandel_special_${item.id}"),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = item.specialAttraction,
+                    fontFamily = FontFamily.Default,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 14.sp,
+                    color = Amber300
+                )
             }
         }
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 12.dp)
                 .height(1.dp)
-                .background(Color(0x0DFFFFFF))
+                .background(Color(0x0FFFFFFF))
         )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 13.dp, bottom = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 16.dp)
         ) {
             Text(
                 text = "PANDAL THEME",
                 fontFamily = PlusJakartaSans,
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Medium,
                 letterSpacing = 1.sp,
-                color = accent
+                color = TextZinc400
             )
 
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = item.pandalBengali.ifBlank { item.pandal },
+                text = "“${item.pandalBengali.ifBlank { item.pandal }}”",
                 fontFamily = FontFamily.Default,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                lineHeight = 22.sp,
-                color = Amber300
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 21.sp,
+                color = TextZinc100
             )
 
-            if (item.pandalBengali.isNotBlank() && item.pandal.isNotBlank()) {
+            if (item.pandal.isNotBlank()) {
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
                     text = item.pandal,
                     fontFamily = PlusJakartaSans,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    lineHeight = 15.sp,
-                    color = TextZinc300
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    lineHeight = 16.sp,
+                    color = TextZinc400
                 )
             }
 
-            if (item.locationNote.isNotBlank() || item.locationNoteBengali.isNotBlank()) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+            if (item.specialAttraction.isNotBlank() && item.specialAttractionStyle == "zinc") {
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Color(0x0FFFFFFF))
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("theme_pandel_special_${item.id}"),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
-                        imageVector = Icons.Default.LocationOn,
+                        imageVector = Icons.Default.Diamond,
                         contentDescription = null,
-                        tint = Amber400,
-                        modifier = Modifier.size(13.dp)
+                        tint = TextZinc300,
+                        modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     Text(
-                        text = listOf(item.locationNoteBengali, item.locationNote)
-                            .filter { it.isNotBlank() }
-                            .joinToString(" • "),
+                        text = item.specialAttraction,
                         fontFamily = FontFamily.Default,
-                        fontSize = 10.5.sp,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Medium,
                         lineHeight = 14.sp,
-                        color = TextZinc400
+                        color = TextZinc300
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "${item.edition} • Naihati",
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TextZinc500,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                MapChip(
-                    onClick = {
-                        openGoogleMaps(
-                            context = context,
-                            query = "${item.committee} Naihati Kali Puja"
-                        )
-                    }
-                )
             }
         }
     }
@@ -583,16 +601,17 @@ private fun EditionPill(text: String) {
     Box(
         modifier = Modifier
             .clip(shape)
-            .background(LocalAppPalette.current.accentSoft)
-            .border(1.dp, LocalAppPalette.current.accentBorder, shape)
-            .padding(horizontal = 7.dp, vertical = 2.dp)
+            .background(Color(0x05FFFFFF))
+            .border(1.dp, Color(0x1AFFFFFF), shape)
+            .padding(horizontal = 8.dp, vertical = 2.dp)
     ) {
         Text(
             text = text,
             fontFamily = PlusJakartaSans,
-            fontSize = 8.5.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = LocalAppPalette.current.accentBright,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = 0.4.sp,
+            color = TextZinc400,
             maxLines = 1
         )
     }
@@ -622,30 +641,31 @@ private fun NewEntryChip() {
 
 @Composable
 private fun MapChip(onClick: () -> Unit) {
-    val shape = RoundedCornerShape(10.dp)
+    val shape = RoundedCornerShape(7.dp)
     Row(
         modifier = Modifier
             .clip(shape)
-            .background(LocalAppPalette.current.accentDeep)
-            .border(1.dp, LocalAppPalette.current.accentBorderStrong, shape)
+            .background(Color(0x0AFFFFFF))
+            .border(1.dp, Color(0x1AFFFFFF), shape)
             .clickable(onClick = onClick)
-            .padding(horizontal = 11.dp, vertical = 6.dp)
+            .height(28.dp)
+            .padding(horizontal = 10.dp)
             .testTag("theme_pandel_map_chip"),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = Icons.Default.LocationOn,
+            imageVector = Icons.AutoMirrored.Filled.CallMade,
             contentDescription = null,
-            tint = Color.White,
-            modifier = Modifier.size(12.dp)
+            tint = TextZinc300,
+            modifier = Modifier.size(13.dp)
         )
-        Spacer(modifier = Modifier.width(5.dp))
+        Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = "Map",
             fontFamily = PlusJakartaSans,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            color = TextZinc100
         )
     }
 }
@@ -718,31 +738,26 @@ private fun ThemePandelFooter() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp, bottom = 28.dp),
+            .padding(top = 24.dp, bottom = 28.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .background(LocalAppPalette.current.accentDeep, CircleShape)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "• Jay Maa Boro Maa •",
-                fontFamily = PlusJakartaSans,
-                color = TextZinc300,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.4.sp
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .background(LocalAppPalette.current.accentDeep, CircleShape)
-            )
-        }
+        Text(
+            text = "✦ Jay Maa Boro Maa ✦",
+            fontFamily = PlusJakartaSans,
+            color = TextZinc500,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            letterSpacing = 2.5.sp
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = "Naihati Kali Puja Official Registry • 2026",
+            fontFamily = PlusJakartaSans,
+            color = TextZinc500,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Normal,
+            letterSpacing = 0.8.sp
+        )
         Spacer(modifier = Modifier.height(10.dp))
         SectionCreditFooter(
             topPadding = 0.dp,
