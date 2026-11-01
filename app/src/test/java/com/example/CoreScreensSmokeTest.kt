@@ -561,7 +561,7 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithText("Naihati Police Station Control Room").assertIsDisplayed()
         composeRule.onNodeWithText("Naihati Fire Station").assertDoesNotExist()
-        composeRule.onNodeWithText("IMPORTANT POLICE ASSISTANCE BOOTHS").assertIsDisplayed()
+        composeRule.onNodeWithText("ASSISTANCE & POLICE BOOTHS").assertIsDisplayed()
 
         composeRule.onNodeWithTag("helpline_search_field").performTextClearance()
         composeRule.waitForIdle()
@@ -569,14 +569,52 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithText("Women Helpline").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithText("Child Assistance").assertIsDisplayed()
         composeRule.onNodeWithTag("helpline_list").performScrollToNode(
-            hasText("IMPORTANT POLICE ASSISTANCE BOOTHS")
+            hasText("ASSISTANCE & POLICE BOOTHS")
         )
-        composeRule.onNodeWithText("IMPORTANT POLICE ASSISTANCE BOOTHS").assertIsDisplayed()
+        composeRule.onNodeWithText("ASSISTANCE & POLICE BOOTHS").assertIsDisplayed()
         composeRule.onNodeWithTag("helpline_list").performScrollToNode(
-            hasText("VISITOR GUIDELINES & SAFETY INSTRUCTIONS")
+            hasText("SAFETY PROTOCOL & INSTRUCTIONS")
         )
-        composeRule.onNodeWithText("VISITOR GUIDELINES & SAFETY INSTRUCTIONS")
+        composeRule.onNodeWithText("SAFETY PROTOCOL & INSTRUCTIONS")
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun helplineDirectory_rendersFinestaDirectoryChrome() {
+        composeRule.setContent {
+            MyApplicationTheme {
+                HelplineScreen(content = NaihatiDataProvider.content(), onBack = {})
+            }
+        }
+
+        composeRule.onNodeWithText("THANA").assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("HOSPITAL")
+        )
+        composeRule.onNodeWithText("TRUST").assertIsDisplayed()
+        composeRule.onNodeWithText("FIRE").assertIsDisplayed()
+        composeRule.onNodeWithText("HOSPITAL").assertIsDisplayed()
+        composeRule.onNodeWithText("CIVIC").assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("Women Helpline")
+        )
+        composeRule.onAllNodesWithText("24/7").onFirst().assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("General Desk")
+        )
+        composeRule.onNodeWithText("General Desk").assertIsDisplayed()
+        composeRule.onNodeWithText("Ambulance SOS").assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("FIELD UNITS")
+        )
+        composeRule.onNodeWithText("FIELD UNITS").assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("PUBLIC ADVISORY")
+        )
+        composeRule.onNodeWithText("PUBLIC ADVISORY").assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("\u2726 JAY BORO MAA \u2726")
+        )
     }
 
     @Test

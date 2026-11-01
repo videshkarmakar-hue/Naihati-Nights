@@ -5,11 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,13 +26,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,10 +40,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
@@ -71,45 +61,43 @@ import com.example.model.AppContent
 import com.example.model.HelplineItem
 import com.example.model.PoliceBooth
 import com.example.ui.components.AppBrandHeader
-import com.example.ui.components.SectionCreditFooter
-import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.PlusJakartaSans
 
-private val PageBlack = Color(0xFF050505)
-private val SurfaceLow = Color(0xFF0E0E14)
-private val SurfaceCard = Color(0xFF13131B)
-private val SurfaceHigh = Color(0xFF181824)
-private val RegalViolet: Color @Composable get() = LocalAppPalette.current.accentDeep
-private val Rose400 = Color(0xFFFB7185)
-private val Rose500 = Color(0xFFF43F5E)
-private val Rose600 = Color(0xFFE11D48)
-private val Amber400 = Color(0xFFFBBF24)
-private val Amber500 = Color(0xFFF59E0B)
-private val Violet300: Color @Composable get() = LocalAppPalette.current.accentBright
-private val Violet400: Color @Composable get() = LocalAppPalette.current.accentBright
-private val Pink300 = Color(0xFFF9A8D4)
-private val Pink400 = Color(0xFFF472B6)
-private val Emerald400 = Color(0xFF34D399)
-private val Orange400 = Color(0xFFFB923C)
-private val Blue400 = Color(0xFF60A5FA)
-private val Yellow400 = Color(0xFFFACC15)
+private val PageBlack = Color(0xFF0B0C0E)
+private val CardBg = Color(0xFF12141B)
+private val CardBorder = Color(0xFF22242F)
+private val InnerBg = Color(0xFF171922)
+private val InnerBorder = Color(0xFF232634)
+private val TagBg = Color(0xFF1B1E27)
+private val TagBorder = Color(0xFF2C303F)
+private val SearchBg = Color(0xFF12141A)
+private val SearchBorder = Color(0xFF242733)
+private val FocusBorder = Color(0xFFA1A1AA)
+private val BoothBg = Color(0xFF12141A)
+private val BoothBorder = Color(0xFF22242E)
+private val BadgeBg = Color(0xFF1A1C24)
+private val BadgeBorder = Color(0xFF2B2E3C)
+private val ButtonBg = Color(0xFF1D202B)
+private val ButtonBorder = Color(0xFF2E3243)
+private val NavyButtonBg = Color(0xFF222532)
+private val NavyButtonBorder = Color(0xFF2C3040)
+private val SoftButtonBg = Color(0xFF1E212C)
+private val SoftButtonBorder = Color(0xFF2B2E3E)
+private val SosButtonBg = Color(0xFFE4E4E7)
+private val DividerHairline = Color(0xFF1A1C24)
+private val AdvisoryHairline = Color(0xFF1C1E28)
+private val White = Color(0xFFFFFFFF)
+private val InkBlack = Color(0xFF0B0C0E)
+private val Zinc100 = Color(0xFFF4F4F5)
+private val Zinc200 = Color(0xFFE4E4E7)
 private val Zinc300 = Color(0xFFD4D4D8)
 private val Zinc400 = Color(0xFFA1A1AA)
 private val Zinc500 = Color(0xFF71717A)
-private val BorderSubtle = Color(0x14FFFFFF)
-private val BorderFaint = Color(0x0FFFFFFF)
-private val BorderRose = Color(0x4DF43F5E)
-private val BorderRoseButton = Color(0x66FB7185)
-private val BorderAmber = Color(0x4DF59E0B)
-private val BorderViolet: Color @Composable get() = LocalAppPalette.current.accentBorder
-private val BorderVioletButton: Color @Composable get() = LocalAppPalette.current.accentBorder
-private val BorderVioletSoft: Color @Composable get() = LocalAppPalette.current.accentBorder
-private val BorderPink = Color(0x4DEC4899)
-private val BorderAmbulance = Color(0x4DFB7185)
 
 private val CardShape16 = RoundedCornerShape(16.dp)
 private val CardShape12 = RoundedCornerShape(12.dp)
 private val CardShape8 = RoundedCornerShape(8.dp)
+private val TagShape = RoundedCornerShape(6.dp)
 
 @Composable
 fun HelplineScreen(
@@ -215,7 +203,7 @@ fun HelplineScreen(
                 }
 
                 item(key = "helpline_contacts_gap") {
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
                 }
 
                 if (hasVisibleContacts) {
@@ -224,12 +212,8 @@ fun HelplineScreen(
                             if (visiblePolice != null) {
                                 StandardHelplineCard(
                                     item = visiblePolice,
-                                    borderColor = BorderRose,
-                                    buttonBackground = Rose600,
-                                    buttonBorderColor = BorderRoseButton,
-                                    buttonIcon = R.drawable.ic_help_phone,
-                                    buttonIconTint = Color.White,
-                                    numberLetterSpacing = 0.4.sp,
+                                    tagLabel = "THANA",
+                                    solidAction = true,
                                     onCall = { dial(visiblePolice.dialNumber) }
                                 )
                             }
@@ -237,12 +221,8 @@ fun HelplineScreen(
                             if (visibleBoromaa != null) {
                                 StandardHelplineCard(
                                     item = visibleBoromaa,
-                                    borderColor = BorderAmber,
-                                    labelColor = Amber400.copy(alpha = 0.9f),
-                                    buttonBackground = RegalViolet,
-                                    buttonBorderColor = BorderVioletButton,
-                                    buttonIcon = R.drawable.ic_help_phone_badge,
-                                    buttonIconTint = Color(0xFFFCD34D),
+                                    tagLabel = "TRUST",
+                                    solidAction = false,
                                     onCall = { dial(visibleBoromaa.dialNumber) }
                                 )
                             }
@@ -258,10 +238,8 @@ fun HelplineScreen(
                             if (visibleFire != null) {
                                 StandardHelplineCard(
                                     item = visibleFire,
-                                    buttonBackground = SurfaceHigh,
-                                    buttonBorderColor = BorderSubtle,
-                                    buttonIcon = R.drawable.ic_help_fire,
-                                    buttonIconTint = Orange400,
+                                    tagLabel = "FIRE",
+                                    solidAction = false,
                                     onCall = { dial(visibleFire.dialNumber) }
                                 )
                             }
@@ -269,10 +247,8 @@ fun HelplineScreen(
                             if (visibleMunicipality != null) {
                                 StandardHelplineCard(
                                     item = visibleMunicipality,
-                                    buttonBackground = SurfaceHigh,
-                                    buttonBorderColor = BorderSubtle,
-                                    buttonIcon = R.drawable.ic_help_phone,
-                                    buttonIconTint = Blue400,
+                                    tagLabel = "CIVIC",
+                                    solidAction = false,
                                     onCall = { dial(visibleMunicipality.dialNumber) }
                                 )
                             }
@@ -295,10 +271,8 @@ fun HelplineScreen(
                             extraHelplines.forEach { extra ->
                                 StandardHelplineCard(
                                     item = extra,
-                                    buttonBackground = SurfaceHigh,
-                                    buttonBorderColor = BorderSubtle,
-                                    buttonIcon = R.drawable.ic_help_phone,
-                                    buttonIconTint = Violet300,
+                                    tagLabel = "SERVICE",
+                                    solidAction = false,
                                     onCall = { dial(extra.dialNumber) }
                                 )
                             }
@@ -322,11 +296,11 @@ fun HelplineScreen(
                 }
 
                 item(key = "helpline_booths_heading_gap") {
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
 
                 item(key = "helpline_booths") {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         content.policeBooths.forEach { booth ->
                             PoliceBoothRow(
                                 booth = booth,
@@ -379,8 +353,8 @@ private fun HelplineTopBar(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CardShape12)
-                        .background(SurfaceCard)
-                        .border(1.dp, BorderSubtle, CardShape12)
+                        .background(CardBg)
+                        .border(1.dp, CardBorder, CardShape12)
                         .clickable(role = Role.Button, onClick = onBack)
                         .testTag("helpline_back_button"),
                     contentAlignment = Alignment.Center
@@ -399,54 +373,7 @@ private fun HelplineTopBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(BorderFaint)
-        )
-    }
-}
-
-@Composable
-private fun EmergencyPulseDot() {
-    val transition = rememberInfiniteTransition(label = "helpline_emergency_pulse")
-    val pingScale by transition.animateFloat(
-        initialValue = 1f,
-        targetValue = 2.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1100, easing = LinearOutSlowInEasing)
-        ),
-        label = "ping_scale"
-    )
-    val pingAlpha by transition.animateFloat(
-        initialValue = 0.7f,
-        targetValue = 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1100, easing = LinearOutSlowInEasing)
-        ),
-        label = "ping_alpha"
-    )
-
-    Box(modifier = Modifier.size(8.dp), contentAlignment = Alignment.Center) {
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .graphicsLayer {
-                    scaleX = pingScale
-                    scaleY = pingScale
-                    alpha = pingAlpha
-                }
-                .clip(CircleShape)
-                .background(Rose400)
-        )
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .shadow(
-                    elevation = 4.dp,
-                    shape = CircleShape,
-                    ambientColor = Rose500,
-                    spotColor = Rose500
-                )
-                .clip(CircleShape)
-                .background(Rose500)
+                .background(BoothBorder)
         )
     }
 }
@@ -464,10 +391,10 @@ private fun HelplineSearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardShape12)
-            .background(SurfaceLow)
+            .background(SearchBg)
             .border(
                 width = 1.dp,
-                color = if (focused) RegalViolet else BorderSubtle,
+                color = if (focused) FocusBorder else SearchBorder,
                 shape = CardShape12
             )
     ) {
@@ -479,11 +406,11 @@ private fun HelplineSearchBar(
                 .testTag("helpline_search_field"),
             textStyle = TextStyle(
                 fontFamily = PlusJakartaSans,
-                color = Color.White,
+                color = Zinc200,
                 fontSize = 12.sp,
                 lineHeight = 16.sp
             ),
-            cursorBrush = SolidColor(Violet300),
+            cursorBrush = SolidColor(Zinc400),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
@@ -501,13 +428,13 @@ private fun HelplineSearchBar(
                     Icon(
                         painter = painterResource(R.drawable.ic_help_search),
                         contentDescription = null,
-                        tint = Violet300,
+                        tint = Zinc400,
                         modifier = Modifier.size(16.dp)
                     )
                     Box(modifier = Modifier.weight(1f)) {
                         if (value.isEmpty()) {
                             HelpText(
-                                text = "Search helpline or area (Police, Fire, Hospital, Booth)...",
+                                text = "Search helpline, thana, medical booth...",
                                 size = 12.sp,
                                 weight = FontWeight.Normal,
                                 color = Zinc500,
@@ -525,76 +452,90 @@ private fun HelplineSearchBar(
 }
 
 @Composable
+private fun CategoryTag(label: String) {
+    Box(
+        modifier = Modifier
+            .clip(TagShape)
+            .background(TagBg)
+            .border(1.dp, TagBorder, TagShape)
+            .padding(horizontal = 8.dp, vertical = 3.dp)
+    ) {
+        HelpText(
+            text = label,
+            size = 10.sp,
+            weight = FontWeight.SemiBold,
+            color = Zinc300,
+            letterSpacing = 0.5.sp,
+            lineHeight = 13.sp,
+            maxLines = 1
+        )
+    }
+}
+
+@Composable
 private fun StandardHelplineCard(
     item: HelplineItem,
-    borderColor: Color = BorderSubtle,
-    labelColor: Color = Zinc400,
-    numberColor: Color = Color.White,
-    buttonBackground: Color,
-    buttonBorderColor: Color,
-    buttonIcon: Int,
-    buttonIconTint: Color,
-    numberLetterSpacing: TextUnit = 0.sp,
+    tagLabel: String,
+    solidAction: Boolean,
     onCall: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardShape16)
-            .background(SurfaceLow)
-            .border(1.dp, borderColor, CardShape16)
+            .background(CardBg)
+            .border(1.dp, CardBorder, CardShape16)
             .padding(16.dp)
             .testTag("helpline_card_${item.id}")
     ) {
-        HelpText(
-            text = item.title,
-            size = 14.sp,
-            weight = FontWeight.Bold,
-            color = Color.White,
-            letterSpacing = (-0.35).sp,
-            lineHeight = 18.sp
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top
+        ) {
+            HelpText(
+                text = item.title,
+                size = 14.sp,
+                weight = FontWeight.SemiBold,
+                color = White,
+                letterSpacing = (-0.35).sp,
+                lineHeight = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            CategoryTag(label = tagLabel)
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(DividerHairline)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(CardShape12)
-                .background(SurfaceCard)
-                .border(1.dp, BorderFaint, CardShape12)
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                HelpText(
-                    text = item.subtitleLabel,
-                    size = 10.sp,
-                    weight = FontWeight.SemiBold,
-                    color = labelColor,
-                    letterSpacing = 0.5.sp,
-                    lineHeight = 14.sp
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                HelpText(
-                    text = item.numbers,
-                    size = 16.sp,
-                    weight = FontWeight.ExtraBold,
-                    color = numberColor,
-                    family = FontFamily.Monospace,
-                    letterSpacing = numberLetterSpacing,
-                    lineHeight = 21.sp
-                )
-            }
+            HelpText(
+                text = item.numbers,
+                size = 14.sp,
+                weight = FontWeight.Medium,
+                color = Zinc100,
+                family = FontFamily.Monospace,
+                letterSpacing = (-0.3).sp,
+                lineHeight = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            CallPill(
+            CallButton(
                 label = item.actionLabel,
-                background = buttonBackground,
-                borderColor = buttonBorderColor,
-                iconRes = buttonIcon,
-                iconTint = buttonIconTint,
+                solid = solidAction,
                 onClick = onCall,
                 testTag = "helpline_call_${item.id}"
             )
@@ -603,37 +544,26 @@ private fun StandardHelplineCard(
 }
 
 @Composable
-private fun CallPill(
+private fun CallButton(
     label: String,
-    background: Color,
-    borderColor: Color,
-    iconRes: Int,
-    iconTint: Color,
+    solid: Boolean,
     onClick: () -> Unit,
     testTag: String
 ) {
-    Row(
+    Box(
         modifier = Modifier
             .clip(CardShape12)
-            .background(background)
-            .border(1.dp, borderColor, CardShape12)
+            .background(if (solid) White else ButtonBg)
+            .border(1.dp, if (solid) White else ButtonBorder, CardShape12)
             .clickable(role = Role.Button, onClick = onClick)
             .testTag(testTag)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        Icon(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            tint = iconTint,
-            modifier = Modifier.size(14.dp)
-        )
         HelpText(
             text = label,
             size = 12.sp,
-            weight = FontWeight.Bold,
-            color = Color.White,
+            weight = if (solid) FontWeight.SemiBold else FontWeight.Medium,
+            color = if (solid) InkBlack else Zinc200,
             lineHeight = 16.sp,
             maxLines = 1
         )
@@ -650,35 +580,49 @@ private fun MedicalHelplineCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardShape16)
-            .background(SurfaceLow)
-            .border(1.dp, BorderSubtle, CardShape16)
+            .background(CardBg)
+            .border(1.dp, CardBorder, CardShape16)
             .padding(16.dp)
             .testTag("helpline_card_medical")
     ) {
-        HelpText(
-            text = hospital?.title ?: "Naihati State General Hospital",
-            size = 14.sp,
-            weight = FontWeight.Bold,
-            color = Color.White,
-            letterSpacing = (-0.35).sp,
-            lineHeight = 18.sp
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top
+        ) {
+            HelpText(
+                text = hospital?.title ?: "Naihati State General Hospital",
+                size = 14.sp,
+                weight = FontWeight.SemiBold,
+                color = White,
+                letterSpacing = (-0.35).sp,
+                lineHeight = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            CategoryTag(label = "HOSPITAL")
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(DividerHairline)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.Top
         ) {
             if (hospital != null) {
                 CompactContactCard(
                     item = hospital,
-                    numberColor = Color.White,
-                    iconRes = R.drawable.ic_help_hospital,
-                    buttonIconTint = Emerald400,
-                    buttonBackground = SurfaceHigh,
-                    buttonBorderColor = BorderSubtle,
+                    subtitle = "General Desk",
+                    sosStyle = false,
                     onClick = { onCall(hospital) },
                     modifier = Modifier.weight(1f)
                 )
@@ -686,11 +630,8 @@ private fun MedicalHelplineCard(
             if (ambulance != null) {
                 CompactContactCard(
                     item = ambulance,
-                    numberColor = Rose400,
-                    iconRes = R.drawable.ic_help_ambulance,
-                    buttonIconTint = Color.White,
-                    buttonBackground = Rose600,
-                    buttonBorderColor = BorderAmbulance,
+                    subtitle = "Ambulance SOS",
+                    sosStyle = true,
                     onClick = { onCall(ambulance) },
                     modifier = Modifier.weight(1f)
                 )
@@ -702,27 +643,24 @@ private fun MedicalHelplineCard(
 @Composable
 private fun CompactContactCard(
     item: HelplineItem,
-    numberColor: Color,
-    iconRes: Int,
-    buttonIconTint: Color,
-    buttonBackground: Color,
-    buttonBorderColor: Color,
+    subtitle: String,
+    sosStyle: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .clip(CardShape12)
-            .background(SurfaceCard)
-            .border(1.dp, BorderFaint, CardShape12)
+            .background(InnerBg)
+            .border(1.dp, InnerBorder, CardShape12)
             .padding(10.dp)
     ) {
         HelpText(
-            text = item.subtitleLabel.uppercase(),
+            text = subtitle,
             size = 9.sp,
             weight = FontWeight.SemiBold,
-            color = Zinc400,
-            letterSpacing = 0.45.sp,
+            color = Zinc500,
+            letterSpacing = 0.5.sp,
             lineHeight = 12.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -730,38 +668,34 @@ private fun CompactContactCard(
         Spacer(modifier = Modifier.height(2.dp))
         HelpText(
             text = item.numbers,
-            size = 12.sp,
-            weight = FontWeight.Bold,
-            color = numberColor,
+            size = 11.sp,
+            weight = FontWeight.Medium,
+            color = Zinc200,
             family = FontFamily.Monospace,
-            lineHeight = 16.sp,
+            lineHeight = 14.sp,
             maxLines = 1
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
+        Spacer(modifier = Modifier.height(10.dp))
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(CardShape8)
-                .background(buttonBackground)
-                .border(1.dp, buttonBorderColor, CardShape8)
+                .background(if (sosStyle) SosButtonBg else NavyButtonBg)
+                .border(
+                    1.dp,
+                    if (sosStyle) SosButtonBg else NavyButtonBorder,
+                    CardShape8
+                )
                 .clickable(role = Role.Button, onClick = onClick)
                 .testTag("helpline_call_${item.id}")
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .padding(vertical = 7.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                painter = painterResource(iconRes),
-                contentDescription = null,
-                tint = buttonIconTint,
-                modifier = Modifier.size(14.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
             HelpText(
                 text = item.actionLabel,
                 size = 11.sp,
-                weight = FontWeight.SemiBold,
-                color = Color.White,
+                weight = if (sosStyle) FontWeight.SemiBold else FontWeight.Medium,
+                color = if (sosStyle) InkBlack else Zinc200,
                 lineHeight = 14.sp,
                 maxLines = 1
             )
@@ -781,23 +715,17 @@ private fun WomenChildHelplineCard(
         verticalAlignment = Alignment.Top
     ) {
         if (women != null) {
-            CompactIconHelplineCard(
+            CompactGuardianCard(
                 item = women,
                 iconRes = R.drawable.ic_help_woman,
-                iconTint = Pink400,
-                iconBorder = BorderPink,
-                callIconTint = Pink300,
                 onClick = { onCall(women) },
                 modifier = Modifier.weight(1f)
             )
         }
         if (child != null) {
-            CompactIconHelplineCard(
+            CompactGuardianCard(
                 item = child,
                 iconRes = R.drawable.ic_help_child,
-                iconTint = Violet400,
-                iconBorder = BorderViolet,
-                callIconTint = Violet300,
                 onClick = { onCall(child) },
                 modifier = Modifier.weight(1f)
             )
@@ -806,36 +734,38 @@ private fun WomenChildHelplineCard(
 }
 
 @Composable
-private fun CompactIconHelplineCard(
+private fun CompactGuardianCard(
     item: HelplineItem,
     iconRes: Int,
-    iconTint: Color,
-    iconBorder: Color,
-    callIconTint: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .clip(CardShape16)
-            .background(SurfaceLow)
-            .border(1.dp, BorderSubtle, CardShape16)
+            .background(CardBg)
+            .border(1.dp, CardBorder, CardShape16)
             .padding(14.dp)
             .testTag("helpline_card_${item.id}")
     ) {
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .clip(CardShape8)
-                .background(SurfaceHigh)
-                .border(1.dp, iconBorder, CardShape8),
-            contentAlignment = Alignment.Center
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Icon(
                 painter = painterResource(iconRes),
                 contentDescription = null,
-                tint = iconTint,
+                tint = Zinc400,
                 modifier = Modifier.size(16.dp)
+            )
+            HelpText(
+                text = "24/7",
+                size = 9.sp,
+                weight = FontWeight.SemiBold,
+                color = Zinc500,
+                letterSpacing = 0.5.sp,
+                lineHeight = 12.sp
             )
         }
 
@@ -844,8 +774,9 @@ private fun CompactIconHelplineCard(
         HelpText(
             text = item.title,
             size = 12.sp,
-            weight = FontWeight.Bold,
-            color = Color.White,
+            weight = FontWeight.SemiBold,
+            color = White,
+            letterSpacing = (-0.3).sp,
             lineHeight = 16.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -855,40 +786,33 @@ private fun CompactIconHelplineCard(
 
         HelpText(
             text = item.numbers,
-            size = 14.sp,
-            weight = FontWeight.ExtraBold,
-            color = Color.White,
+            size = 16.sp,
+            weight = FontWeight.SemiBold,
+            color = Zinc100,
             family = FontFamily.Monospace,
-            lineHeight = 18.sp
+            letterSpacing = (-0.3).sp,
+            lineHeight = 20.sp
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(CardShape12)
-                .background(RegalViolet)
-                .border(1.dp, BorderVioletSoft, CardShape12)
+                .background(SoftButtonBg)
+                .border(1.dp, SoftButtonBorder, CardShape12)
                 .clickable(role = Role.Button, onClick = onClick)
                 .testTag("helpline_call_${item.id}")
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .padding(vertical = 7.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_help_phone),
-                contentDescription = null,
-                tint = callIconTint,
-                modifier = Modifier.size(12.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
             HelpText(
                 text = item.actionLabel,
-                size = 12.sp,
-                weight = FontWeight.Bold,
-                color = Color.White,
-                lineHeight = 16.sp,
+                size = 11.sp,
+                weight = FontWeight.Medium,
+                color = Zinc200,
+                lineHeight = 14.sp,
                 maxLines = 1
             )
         }
@@ -904,40 +828,42 @@ private fun TrafficHelplineCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardShape16)
-            .background(SurfaceLow)
-            .border(1.dp, BorderSubtle, CardShape16)
-            .padding(16.dp)
+            .background(CardBg)
+            .border(1.dp, CardBorder, CardShape16)
+            .padding(14.dp)
             .testTag("helpline_card_${item.id}"),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
             HelpText(
                 text = item.title,
-                size = 14.sp,
-                weight = FontWeight.Bold,
-                color = Color.White,
-                letterSpacing = (-0.35).sp,
-                lineHeight = 18.sp
+                size = 12.sp,
+                weight = FontWeight.SemiBold,
+                color = Zinc100,
+                letterSpacing = (-0.3).sp,
+                lineHeight = 16.sp
             )
             Spacer(modifier = Modifier.height(2.dp))
             HelpText(
                 text = item.numbers,
                 size = 12.sp,
-                weight = FontWeight.Bold,
-                color = Color.White,
+                weight = FontWeight.Normal,
+                color = Zinc300,
                 family = FontFamily.Monospace,
-                lineHeight = 16.sp
+                lineHeight = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(10.dp))
 
         Box(
             modifier = Modifier
-                .size(38.dp)
+                .size(40.dp)
                 .clip(CardShape12)
-                .background(SurfaceHigh)
-                .border(1.dp, BorderSubtle, CardShape12)
+                .background(TagBg)
+                .border(1.dp, BadgeBorder, CardShape12)
                 .clickable(role = Role.Button, onClick = onCall)
                 .testTag("helpline_call_${item.id}"),
             contentAlignment = Alignment.Center
@@ -945,7 +871,7 @@ private fun TrafficHelplineCard(
             Icon(
                 painter = painterResource(R.drawable.ic_help_phone),
                 contentDescription = "Call ${item.title}",
-                tint = Yellow400,
+                tint = Zinc300,
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -957,24 +883,37 @@ private fun PoliceBoothsHeading() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp),
+            .padding(horizontal = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .clip(CircleShape)
-                .background(RegalViolet)
-        )
-        Spacer(modifier = Modifier.width(6.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier.weight(1f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .clip(RoundedCornerShape(percent = 50))
+                    .background(Zinc400)
+            )
+            HelpText(
+                text = "ASSISTANCE & POLICE BOOTHS",
+                size = 11.sp,
+                weight = FontWeight.Medium,
+                color = Zinc400,
+                letterSpacing = 0.6.sp,
+                lineHeight = 15.sp,
+                maxLines = 1
+            )
+        }
         HelpText(
-            text = "IMPORTANT POLICE ASSISTANCE BOOTHS",
-            size = 12.sp,
-            weight = FontWeight.Bold,
-            color = Zinc400,
-            letterSpacing = 0.6.sp,
-            lineHeight = 16.sp,
-            maxLines = 1
+            text = "FIELD UNITS",
+            size = 10.sp,
+            weight = FontWeight.Normal,
+            color = Zinc500,
+            letterSpacing = 0.4.sp,
+            lineHeight = 14.sp
         )
     }
 }
@@ -984,65 +923,69 @@ private fun PoliceBoothRow(
     booth: PoliceBooth,
     onClick: () -> Unit
 ) {
-    val boothIcon = when (booth.number) {
-        1 -> R.drawable.ic_help_booth_clock
-        2 -> R.drawable.ic_help_booth_route
-        else -> R.drawable.ic_help_booth_star
+    val boothSubtitle = when (booth.number) {
+        1 -> "24h Medical + Missing Person Kiosk"
+        2 -> "River Police & First Aid Responder"
+        else -> "Crowd Diversion & Rapid Response"
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardShape12)
-            .background(SurfaceLow)
-            .border(1.dp, BorderSubtle, CardShape12)
+            .background(BoothBg)
+            .border(1.dp, BoothBorder, CardShape12)
             .clickable(
                 role = Role.Button,
                 onClickLabel = "Open ${booth.name} in Maps",
                 onClick = onClick
             )
             .testTag("helpline_booth_${booth.number}")
-            .padding(12.dp),
+            .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(28.dp)
+                .size(24.dp)
                 .clip(CardShape8)
-                .background(SurfaceHigh)
-                .border(1.dp, BorderViolet, CardShape8),
+                .background(BadgeBg)
+                .border(1.dp, BadgeBorder, CardShape8),
             contentAlignment = Alignment.Center
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                Icon(
-                    painter = painterResource(boothIcon),
-                    contentDescription = null,
-                    tint = Violet400,
-                    modifier = Modifier.size(12.dp)
-                )
-                HelpText(
-                    text = booth.number.toString(),
-                    size = 12.sp,
-                    weight = FontWeight.Bold,
-                    color = Violet300,
-                    lineHeight = 14.sp
-                )
-            }
+            HelpText(
+                text = booth.number.toString().padStart(2, '0'),
+                size = 10.sp,
+                weight = FontWeight.Medium,
+                color = Zinc300,
+                family = FontFamily.Monospace,
+                lineHeight = 13.sp
+            )
         }
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(12.dp))
 
-        HelpText(
-            text = booth.name,
-            size = 12.sp,
-            weight = FontWeight.Bold,
-            color = Color.White,
-            lineHeight = 16.sp,
-            modifier = Modifier.weight(1f)
-        )
+        Column(modifier = Modifier.weight(1f)) {
+            HelpText(
+                text = booth.name,
+                size = 12.sp,
+                weight = FontWeight.SemiBold,
+                color = Zinc200,
+                letterSpacing = (-0.3).sp,
+                lineHeight = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(1.dp))
+            HelpText(
+                text = boothSubtitle,
+                size = 10.sp,
+                weight = FontWeight.Normal,
+                color = Zinc400,
+                lineHeight = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -1050,7 +993,7 @@ private fun PoliceBoothRow(
             painter = painterResource(R.drawable.ic_help_chevron_right),
             contentDescription = null,
             tint = Zinc500,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(14.dp)
         )
     }
 }
@@ -1061,32 +1004,49 @@ private fun SafetyGuidelinesCard(guidelines: List<String>) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardShape16)
-            .background(SurfaceLow)
-            .border(1.dp, BorderSubtle, CardShape16)
+            .background(BoothBg)
+            .border(1.dp, BoothBorder, CardShape16)
             .padding(16.dp)
             .testTag("helpline_guidelines")
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_help_shield_alert),
                 contentDescription = null,
-                tint = Amber400,
-                modifier = Modifier.size(16.dp)
+                tint = Zinc400,
+                modifier = Modifier.size(14.dp)
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             HelpText(
-                text = "VISITOR GUIDELINES & SAFETY INSTRUCTIONS",
-                size = 12.sp,
-                weight = FontWeight.Bold,
-                color = Amber400,
-                letterSpacing = 0.6.sp,
-                lineHeight = 16.sp,
+                text = "SAFETY PROTOCOL & INSTRUCTIONS",
+                size = 10.sp,
+                weight = FontWeight.SemiBold,
+                color = Zinc300,
+                letterSpacing = 0.4.sp,
+                lineHeight = 14.sp,
                 modifier = Modifier.weight(1f)
             )
+            HelpText(
+                text = "PUBLIC ADVISORY",
+                size = 9.sp,
+                weight = FontWeight.Medium,
+                color = Zinc500,
+                letterSpacing = 0.4.sp,
+                lineHeight = 12.sp
+            )
         }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(AdvisoryHairline)
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -1096,13 +1056,13 @@ private fun SafetyGuidelinesCard(guidelines: List<String>) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Top
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_help_check_circle),
-                        contentDescription = null,
-                        tint = Amber500.copy(alpha = 0.9f),
-                        modifier = Modifier
-                            .padding(top = 1.dp)
-                            .size(14.dp)
+                    HelpText(
+                        text = "\u2022",
+                        size = 10.sp,
+                        weight = FontWeight.Normal,
+                        color = Zinc400,
+                        lineHeight = 14.sp,
+                        modifier = Modifier.padding(top = 1.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     HelpText(
@@ -1110,7 +1070,7 @@ private fun SafetyGuidelinesCard(guidelines: List<String>) {
                         size = 11.sp,
                         weight = FontWeight.Normal,
                         color = Zinc300,
-                        lineHeight = 16.5.sp,
+                        lineHeight = 16.sp,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -1128,8 +1088,8 @@ private fun NoHelplineResults(
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardShape16)
-            .background(SurfaceLow)
-            .border(1.dp, BorderSubtle, CardShape16)
+            .background(BoothBg)
+            .border(1.dp, BoothBorder, CardShape16)
             .padding(20.dp)
             .testTag("helpline_no_results"),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -1137,15 +1097,15 @@ private fun NoHelplineResults(
         Icon(
             painter = painterResource(R.drawable.ic_help_search),
             contentDescription = null,
-            tint = Violet300,
+            tint = Zinc400,
             modifier = Modifier.size(22.dp)
         )
         Spacer(modifier = Modifier.height(10.dp))
         HelpText(
             text = "No emergency contact found",
             size = 13.sp,
-            weight = FontWeight.Bold,
-            color = Color.White,
+            weight = FontWeight.SemiBold,
+            color = White,
             lineHeight = 17.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -1154,15 +1114,15 @@ private fun NoHelplineResults(
             size = 11.sp,
             weight = FontWeight.Normal,
             color = Zinc400,
-            lineHeight = 16.5.sp,
+            lineHeight = 16.sp,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(12.dp))
         Box(
             modifier = Modifier
-                .clip(CircleShape)
-                .background(SurfaceHigh)
-                .border(1.dp, BorderSubtle, CircleShape)
+                .clip(CardShape12)
+                .background(BadgeBg)
+                .border(1.dp, BadgeBorder, CardShape12)
                 .clickable(role = Role.Button, onClick = onClear)
                 .testTag("helpline_clear_search")
                 .padding(horizontal = 14.dp, vertical = 7.dp)
@@ -1170,8 +1130,8 @@ private fun NoHelplineResults(
             HelpText(
                 text = "Clear search",
                 size = 12.sp,
-                weight = FontWeight.SemiBold,
-                color = Color.White,
+                weight = FontWeight.Medium,
+                color = Zinc200,
                 lineHeight = 16.sp
             )
         }
@@ -1186,36 +1146,21 @@ private fun HelplineFooter() {
             .padding(bottom = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .clip(CircleShape)
-                    .background(RegalViolet)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            HelpText(
-                text = "\u2022 Jay Boro Maa \u2022",
-                size = 11.sp,
-                weight = FontWeight.Medium,
-                color = Zinc400,
-                letterSpacing = 0.55.sp,
-                lineHeight = 15.sp
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .clip(CircleShape)
-                    .background(RegalViolet)
-            )
-        }
-        SectionCreditFooter(
-            topPadding = 10.dp,
-            bottomPadding = 0.dp
+        HelpText(
+            text = "\u2726 JAY BORO MAA \u2726",
+            size = 11.sp,
+            weight = FontWeight.Medium,
+            color = Zinc400,
+            letterSpacing = 1.sp,
+            lineHeight = 15.sp
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        HelpText(
+            text = "\u00A9 Crafted by Videsh Karmakar",
+            size = 10.sp,
+            weight = FontWeight.Normal,
+            color = Zinc500,
+            lineHeight = 14.sp
         )
     }
 }
