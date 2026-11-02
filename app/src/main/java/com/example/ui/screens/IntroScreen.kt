@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -39,7 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -49,6 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -56,19 +58,27 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
-import com.example.ui.components.SectionCreditFooter
-import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.PlusJakartaSans
-import com.example.ui.theme.TextHighWhite
-import com.example.ui.theme.TextSoftZinc
-import com.example.ui.theme.TextMutedZinc
+
+private val OuterCanvas = Color(0xFF050608)
+private val InnerCanvas = Color(0xFF090A0D)
+private val WidgetTile = Color(0xFF11141B)
+private val WidgetInner = Color(0xFF0C0E14)
+private val WidgetBorder = Color(0xFF232836)
+private val CtaSurface = Color(0xFF141720)
+private val CtaBorder = Color(0xFF242938)
+private val IntroAccent = Color(0xFF4FDBC8)
+private val TextPrimary = Color(0xFFF5F5F5)
+private val TextSoft = Color(0xFFD4D4D4)
+private val TextMuted = Color(0xFFA3A3A3)
 
 /**
  * Launch / splash screen — the branded Continue gate.
  *
- * Design: a single centered emblem, a wordmark, a quiet subtitle, credits, and one clear CTA.
- * No ambient orbs, orbit rings, shimmer gradients, or infinite loops. One gentle entrance
- * fade, then stillness. [motionReduction] (from Settings) skips even that.
+ * Reev Dark / Finesta KWGT lockup: a matte obsidian canvas with two barely-visible ambient
+ * vignettes, a tactile emblem widget, a live status chip, the wordmark and one high-contrast
+ * "Continue your journey" call to action. One gentle entrance fade, then stillness.
+ * [motionReduction] (from Settings) skips even that.
  */
 @Composable
 fun IntroScreen(
@@ -76,8 +86,6 @@ fun IntroScreen(
     modifier: Modifier = Modifier,
     motionReduction: Boolean = false
 ) {
-    val palette = LocalAppPalette.current
-
     // One-shot entrance: fade + rise, 600ms, then done. Respects reduced motion.
     val entrance = remember { Animatable(if (motionReduction) 1f else 0f) }
     LaunchedEffect(motionReduction) {
@@ -96,153 +104,170 @@ fun IntroScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF060608))
+            .background(OuterCanvas)
             .testTag("intro_screen"),
         contentAlignment = Alignment.Center
     ) {
-        // Subtle brand-tinted vertical wash — no orbs, no star grid.
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF060608),
-                            palette.accentSurface.copy(alpha = 0.35f),
-                            Color(0xFF060608)
-                        )
-                    )
-                )
-        )
-
         Column(
             modifier = Modifier
+                .widthIn(max = 420.dp)
                 .fillMaxSize()
+                .drawBehind {
+                    // Ambient matte depth: a faint white bloom top-right and a teal bloom
+                    // low on the left, both barely above the canvas.
+                    drawRect(
+                        Brush.verticalGradient(
+                            colors = listOf(InnerCanvas, Color(0xFF08090D), InnerCanvas)
+                        )
+                    )
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(Color(0x08FFFFFF), Color.Transparent)
+                        ),
+                        radius = size.width * 0.85f,
+                        center = Offset(size.width, size.height * 0.04f)
+                    )
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(Color(0x0D4FDBC8), Color.Transparent)
+                        ),
+                        radius = size.width * 0.72f,
+                        center = Offset(0f, size.height * 0.72f)
+                    )
+                }
+                .padding(horizontal = 24.dp)
                 .statusBarsPadding()
                 .navigationBarsPadding()
                 .alpha(alpha)
                 .graphicsLayer { translationY = riseOffset },
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
-            // ── Emblem ──────────────────────────────────────────────
-            // Clean emblem on a white tile with a hairline ring. No glass pedestal, no glow.
+            // ── Emblem widget ───────────────────────────────────────
             Box(
                 modifier = Modifier
-                    .size(152.dp)
-                    .shadow(elevation = 6.dp, shape = RoundedCornerShape(36.dp), ambientColor = Color.Black, spotColor = Color.Black)
-                    .clip(RoundedCornerShape(36.dp))
-                    .background(Color.White)
-                    .border(1.dp, palette.accentBorder, RoundedCornerShape(36.dp)),
+                    .size(112.dp)
+                    .shadow(
+                        elevation = 12.dp,
+                        shape = RoundedCornerShape(16.dp),
+                        ambientColor = Color.Black,
+                        spotColor = Color.Black
+                    )
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(WidgetTile)
+                    .border(1.dp, WidgetBorder, RoundedCornerShape(16.dp))
+                    .padding(1.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.splash_trishul),
-                    contentDescription = "Naihati Nights emblem",
-                    modifier = Modifier.size(112.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(WidgetInner),
+                    contentAlignment = Alignment.Center
+                ) {
+                    // Subtle top hairline edge on the tile.
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(horizontal = 12.dp)
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(
+                                Brush.horizontalGradient(
+                                    listOf(
+                                        Color.Transparent,
+                                        Color(0x33FFFFFF),
+                                        Color.Transparent
+                                    )
+                                )
+                            )
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.splash_trishul),
+                        contentDescription = "Naihati Nights emblem",
+                        modifier = Modifier.size(80.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // ── Edition badge ───────────────────────────────────────
+            // ── Live status chip ────────────────────────────────────
             Row(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(Color(0x0AFFFFFF))
-                    .border(1.dp, Color(0x1AFFFFFF), CircleShape)
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                    .background(WidgetTile)
+                    .border(1.dp, WidgetBorder, CircleShape)
+                    .padding(horizontal = 12.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(6.dp)
+                        .size(8.dp)
                         .clip(CircleShape)
-                        .background(palette.accent)
+                        .background(IntroAccent)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "OFFICIAL 2026 EDITION",
+                    text = "Videsh Karmakar Project",
                     fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 10.sp,
-                    lineHeight = 14.sp,
-                    letterSpacing = 0.8.sp,
-                    color = TextSoftZinc
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "\u2022",
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 10.sp,
-                    color = TextMutedZinc
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Naihati Kali Puja",
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 10.sp,
-                    lineHeight = 14.sp,
-                    color = TextMutedZinc
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 11.sp,
+                    lineHeight = 15.sp,
+                    letterSpacing = 0.2.sp,
+                    color = TextSoft
                 )
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // ── Wordmark ────────────────────────────────────────────
             Text(
                 text = "NAIHATI NIGHTS",
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 30.sp,
-                lineHeight = 36.sp,
-                letterSpacing = (-0.5).sp,
-                color = TextHighWhite,
+                fontSize = 26.sp,
+                lineHeight = 33.sp,
+                letterSpacing = 2.8.sp,
+                color = TextPrimary,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Visible
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // ── Accent rule ─────────────────────────────────────────
-            Box(
-                modifier = Modifier
-                    .width(48.dp)
-                    .height(2.dp)
-                    .clip(CircleShape)
-                    .background(palette.accent)
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             // ── Subtitle ────────────────────────────────────────────
             Text(
-                text = "Naihati Kali Puja 2026 \u2022 Official Parikrama & Guide",
+                text = "Best Guidance App For Naihati Kali Puja Pandals Hopping Guides.",
                 fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.Medium,
-                fontSize = 13.sp,
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.5.sp,
                 lineHeight = 20.sp,
-                letterSpacing = 0.2.sp,
-                color = TextSoftZinc,
+                color = TextMuted,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.widthIn(max = 300.dp)
+                modifier = Modifier.widthIn(max = 290.dp)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Primary call to action ──────────────────────────────
+            BeginJourneyButton(onClick = onBeginExperience)
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // ── Credits ─────────────────────────────────────────────
+            // ── Devotion footer ─────────────────────────────────────
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = buildAnnotatedString {
                         append("Architected by ")
                         withStyle(
                             SpanStyle(
-                                color = TextHighWhite,
-                                fontWeight = FontWeight.SemiBold
+                                color = TextPrimary,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 0.3.sp
                             )
                         ) {
                             append("Videsh Karmakar")
@@ -252,71 +277,69 @@ fun IntroScreen(
                     fontWeight = FontWeight.Medium,
                     fontSize = 11.sp,
                     lineHeight = 16.sp,
-                    letterSpacing = (-0.2).sp,
-                    color = TextMutedZinc,
+                    color = TextMuted,
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(6.dp))
                 Icon(
                     imageVector = Icons.Default.Verified,
-                    contentDescription = "Verified",
-                    tint = palette.accentBright,
-                    modifier = Modifier.size(14.dp)
+                    contentDescription = "Verified creator",
+                    tint = IntroAccent,
+                    modifier = Modifier.size(13.dp)
                 )
             }
 
+            Spacer(modifier = Modifier.height(2.dp))
+
             Text(
-                text = "Jay Maa Boro Maa \u2022 Naihati Kali Puja 2026",
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.Medium,
-                fontSize = 9.5.sp,
+                text = "JAY BORO MAA \u2022 NAIHATI 2026",
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 9.sp,
                 lineHeight = 14.sp,
-                letterSpacing = 0.5.sp,
-                color = TextMutedZinc,
+                letterSpacing = 1.4.sp,
+                color = TextMuted,
                 textAlign = TextAlign.Center
             )
 
-            SectionCreditFooter(
-                topPadding = 2.dp,
-                bottomPadding = 0.dp,
-                color = TextMutedZinc
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Native-style home indicator.
+            Box(
+                modifier = Modifier
+                    .width(112.dp)
+                    .height(4.dp)
+                    .clip(CircleShape)
+                    .background(Color(0x33FFFFFF))
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // ── CTA ─────────────────────────────────────────────────
-            ContinueButton(onClick = onBeginExperience)
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(6.dp))
         }
     }
 }
 
 /**
- * The single primary action: a surface-filled pill with a leading explore chip, the label,
- * and a trailing accent arrow chip — press-scale feedback only, no sweep or glow.
+ * The single primary action: a matte card with the journey label and a teal arrow chip.
+ * Press-scale feedback only, no sweep or glow.
  */
 @Composable
-private fun ContinueButton(onClick: () -> Unit) {
-    val palette = LocalAppPalette.current
-    val shape = RoundedCornerShape(16.dp)
+private fun BeginJourneyButton(onClick: () -> Unit) {
+    val shape = RoundedCornerShape(12.dp)
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .height(64.dp)
+            .height(56.dp)
             .graphicsLayer {
-                val s = if (pressed) 0.985f else 1f
-                scaleX = s
-                scaleY = s
+                val scale = if (pressed) 0.99f else 1f
+                scaleX = scale
+                scaleY = scale
             }
-            .shadow(elevation = 6.dp, shape = shape, ambientColor = Color.Black, spotColor = Color.Black)
             .clip(shape)
-            .background(palette.accentSurface)
-            .border(1.dp, palette.accentBorder, shape)
+            .background(CtaSurface)
+            .border(1.dp, CtaBorder, shape)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -325,53 +348,33 @@ private fun ContinueButton(onClick: () -> Unit) {
                 onClick = onClick
             )
             .testTag("begin_parikrama_button")
-            .padding(horizontal = 12.dp),
+            .padding(start = 14.dp, end = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Leading explore chip.
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(palette.accentSoft)
-                .border(1.dp, palette.accentBorder, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Explore,
-                contentDescription = null,
-                tint = palette.accentBright,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
         Text(
-            text = "CONTINUE",
+            text = "CONTINUE YOUR JOURNEY",
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Bold,
-            fontSize = 15.sp,
-            lineHeight = 20.sp,
-            letterSpacing = 1.sp,
-            color = TextHighWhite
+            fontSize = 13.sp,
+            lineHeight = 18.sp,
+            letterSpacing = 1.3.sp,
+            color = TextPrimary
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Trailing arrow chip.
         Box(
             modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(palette.accent),
+                .size(36.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(IntroAccent),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
-                tint = palette.onAccent,
-                modifier = Modifier.size(18.dp)
+                tint = InnerCanvas,
+                modifier = Modifier.size(19.dp)
             )
         }
     }

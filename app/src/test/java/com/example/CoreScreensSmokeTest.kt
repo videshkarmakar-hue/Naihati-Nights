@@ -87,9 +87,13 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithTag("intro_screen").assertIsDisplayed()
         composeRule.onNodeWithText("NAIHATI NIGHTS").assertIsDisplayed()
-        composeRule.onNodeWithText("CONTINUE").assertIsDisplayed()
+        composeRule.onNodeWithText("Videsh Karmakar Project").assertIsDisplayed()
+        composeRule.onNodeWithText("CONTINUE YOUR JOURNEY").assertIsDisplayed()
+        composeRule.onNodeWithText(
+            "Best Guidance App For Naihati Kali Puja Pandals Hopping Guides."
+        ).assertExists()
         composeRule.onNodeWithText("Architected by Videsh Karmakar").assertExists()
-        composeRule.onNodeWithText("©Crafted by VIDESH KARMAKAR").assertExists()
+        composeRule.onNodeWithText("JAY BORO MAA \u2022 NAIHATI 2026").assertExists()
         composeRule.onNodeWithTag("begin_parikrama_button").assertHasClickAction()
 
         composeRule.onNodeWithTag("begin_parikrama_button").performClick()
