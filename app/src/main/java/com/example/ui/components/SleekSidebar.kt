@@ -90,12 +90,13 @@ enum class SidebarNavItem(
     APP_INFO_CREDIT("App Info & Developer Credit", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_app_info_credit"),
     CHECK_UPDATES("Check Updates", Icons.Filled.SystemUpdate, Icons.Outlined.SystemUpdate, "sidebar_item_check_updates"),
     DEVELOPER_CREDITS("Developer Credits", Icons.Filled.Verified, Icons.Outlined.Verified, "sidebar_item_developer_credits"),
-    SETTINGS("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, "sidebar_item_settings");
+    SETTINGS("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, "sidebar_item_settings"),
+    EXTRA_TRAINS("Extra Trains", Icons.Filled.SystemUpdate, Icons.Outlined.SystemUpdate, "sidebar_item_extra_trains");
 
     companion object {
         val primaryItems = listOf(ROUTE, RESTAURANT, HELPLINE)
         val themeItems = listOf(THEME_PANDEL, BORMA_PUJO_SCHEDULE, SPECIAL_NOTICE)
-        val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS)
+        val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS, EXTRA_TRAINS)
         val developerItems = listOf(DEVELOPER_CREDITS)
     }
 }

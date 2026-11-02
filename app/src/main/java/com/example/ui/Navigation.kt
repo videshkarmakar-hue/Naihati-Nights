@@ -13,5 +13,6 @@ enum class NavigationScreen {
     PROFILE,
     APP_DETAILS,
     DEVELOPER_CREDITS,
-    SIDEBAR_SHOWCASE
+    SIDEBAR_SHOWCASE,
+    EXTRA_TRAINS
 }

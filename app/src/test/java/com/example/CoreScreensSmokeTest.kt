@@ -805,6 +805,10 @@ class CoreScreensSmokeTest {
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.CHECK_UPDATES, selected)
 
+        composeRule.onNodeWithTag("sidebar_item_extra_trains").performClick()
+        composeRule.waitForIdle()
+        assertEquals(SidebarNavItem.EXTRA_TRAINS, selected)
+
         composeRule.onNodeWithTag("sidebar_item_settings").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.SETTINGS, selected)
