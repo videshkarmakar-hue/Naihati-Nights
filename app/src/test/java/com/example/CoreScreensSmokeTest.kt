@@ -925,6 +925,16 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("check_updates_screen")
             .performScrollToNode(hasTestTag("check_updates_notes"))
         composeRule.onNodeWithTag("check_updates_notes").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("check_updates_screen")
+            .performScrollToNode(hasTestTag("check_updates_telemetry"))
+        composeRule.onNodeWithTag("check_updates_telemetry").assertIsDisplayed()
+        composeRule.onNodeWithTag("check_updates_auto_toggle").assertExists()
+
+        composeRule.onNodeWithTag("check_updates_screen")
+            .performScrollToNode(hasTestTag("check_updates_footer"))
+        composeRule.onNodeWithTag("check_updates_footer").assertIsDisplayed()
+        composeRule.onNodeWithText("ENGINEERED & ARCHITECTED BY").assertExists()
     }
 
     @Test
@@ -950,15 +960,19 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithText("You're up to date").assertIsDisplayed()
         composeRule.onNodeWithText("CHECK FOR UPDATES").assertIsDisplayed()
-        composeRule.onNodeWithText("Automatic updates").assertIsDisplayed()
-        composeRule.onNodeWithText("REQUIRED").assertIsDisplayed()
-        composeRule.onNodeWithTag("check_updates_auto_toggle").assertExists()
+        composeRule.onNodeWithText("View Detailed Release Notes").assertIsDisplayed()
 
         composeRule.onNodeWithTag("check_updates_button").performClick()
         composeRule.waitForIdle()
 
         assertEquals(1, checked)
         assertEquals(0, updated)
+
+        composeRule.onNodeWithTag("check_updates_screen")
+            .performScrollToNode(hasTestTag("check_updates_telemetry"))
+        composeRule.onNodeWithText("UPDATE POLICY").assertIsDisplayed()
+        composeRule.onNodeWithText("Required • Automatic").assertIsDisplayed()
+        composeRule.onNodeWithTag("check_updates_auto_toggle").assertExists()
     }
 
     @Test
