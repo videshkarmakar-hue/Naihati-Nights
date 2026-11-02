@@ -297,11 +297,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                     )
                 }
 
-                NavigationScreen.EXTRA_TRAINS -> {
-                    currentScreen = NavigationScreen.EXTRA_TRAINS
-                    isDrawerOpen = false
-                }
-
                 NavigationScreen.PROFILE -> {
                     DeveloperProfileScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
@@ -424,10 +419,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             }
                             SidebarNavItem.SPECIAL_NOTICE -> {
                                 currentScreen = NavigationScreen.SPECIAL_NOTICE
-                                isDrawerOpen = false
-                            }
-                            SidebarNavItem.EXTRA_TRAINS -> {
-                                currentScreen = NavigationScreen.EXTRA_TRAINS
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.THEME_PANDEL -> {

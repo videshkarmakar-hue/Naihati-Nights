@@ -594,20 +594,7 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
-            SidebarNavItem.EXTRA_TRAINS -> {
-                Text(
-                    text = "Extra Trains",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = LocalAppPalette.current.accentBright
-                )
-                Text(
-                    text = "Mid-night extra EMU special trains for the Naihati parikrama route.",
-                    fontSize = 11.5.sp,
-                    color = TextSoftZinc,
-                    lineHeight = 16.sp
-                )
-            }
+            
         }
         Spacer(modifier = Modifier.height(4.dp))
         SectionCreditFooter(
