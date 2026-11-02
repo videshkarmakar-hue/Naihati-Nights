@@ -49,7 +49,7 @@ const val APP_BRAND_NAME = "Naihati Nights"
 
 /** Remote logo supplied by the product owner. */
 const val APP_BRAND_LOGO_URL =
-    "https://cdn.phototourl.com/member/2026-10-07-3560ff11-c4ca-4914-ada1-bb03390ea789.png"
+    "https://cdn.phototourl.com/member/2026-11-02-40639aca-e488-453e-8f8f-0627a6692e2f.png"
 
 private val BrandLogoShape = RoundedCornerShape(11.dp)
 private val BrandLogoBackground: Color @Composable get() = LocalAppPalette.current.accentSoft

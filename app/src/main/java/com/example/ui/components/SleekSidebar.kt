@@ -73,7 +73,7 @@ import com.example.model.ThemePandelData
 
 /** Brand mark shown at the top of the sidebar header. */
 private const val SIDEBAR_BRAND_LOGO_URL =
-    "https://cdn.phototourl.com/member/2026-10-07-3560ff11-c4ca-4914-ada1-bb03390ea789.png"
+    "https://cdn.phototourl.com/member/2026-11-02-40639aca-e488-453e-8f8f-0627a6692e2f.png"
 
 enum class SidebarNavItem(
     val label: String,
