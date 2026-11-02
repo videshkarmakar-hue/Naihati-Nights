@@ -144,45 +144,47 @@ fun IntroScreen(
             // ── Emblem widget ───────────────────────────────────────
             Box(
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(112.dp)
                     .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(16.dp),
+                        elevation = 12.dp,
+                        shape = RoundedCornerShape(28.dp),
                         ambientColor = Color.Black,
                         spotColor = Color.Black
                     )
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(28.dp))
                     .background(NeuBase)
                     .border(
                         width = 1.dp,
                         brush = Brush.linearGradient(listOf(NeuEdgeLight, NeuEdgeDark)),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(28.dp)
                     )
-                    .padding(10.dp),
+                    .padding(14.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(NeuSunken)
                         .border(
                             width = 1.dp,
                             brush = Brush.linearGradient(listOf(NeuEdgeDark, NeuEdgeLight)),
-                            shape = RoundedCornerShape(12.dp)
+                            shape = RoundedCornerShape(16.dp)
                         )
-                        .padding(4.dp),
+                        .padding(8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.splash_trishul),
                         contentDescription = "Naihati Nights emblem",
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp))
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // ── Live status chip ────────────────────────────────────
             Row(
@@ -231,7 +233,7 @@ fun IntroScreen(
 
             // ── Subtitle ────────────────────────────────────────────
             Text(
-                text = "Best Guide App For Hopping Kali Puja on Naihati Area.",
+                text = "Just One Tap To Explore Whole Naihati Kali Puja Pandals With Map.",
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Normal,
                 fontSize = 11.5.sp,
@@ -253,7 +255,7 @@ fun IntroScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = buildAnnotatedString {
-                        append("Architected by ")
+                        append("Crafted by ")
                         withStyle(
                             SpanStyle(
                                 color = TextSoft,
@@ -329,14 +331,29 @@ private fun BeginJourneyButton(onClick: () -> Unit) {
                 scaleY = scale
             }
             .shadow(
-                elevation = if (pressed) 2.dp else 10.dp,
+                elevation = if (pressed) 2.dp else 8.dp,
                 shape = shape,
                 ambientColor = Color.Black,
                 spotColor = Color.Black
             )
             .clip(shape)
             .background(Brush.linearGradient(listOf(NeuGradientStart, NeuGradientEnd)))
-            .border(1.dp, Color(0x99272A35), shape)
+            .drawBehind {
+                // Raised top-edge highlight, inset from both ends of the capsule.
+                val inset = 16.dp.toPx()
+                val y = 1.dp.toPx()
+                drawLine(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(Color.Transparent, Color(0x33FFFFFF), Color.Transparent),
+                        startX = inset,
+                        endX = size.width - inset
+                    ),
+                    start = Offset(inset, y),
+                    end = Offset(size.width - inset, y),
+                    strokeWidth = 1.dp.toPx()
+                )
+            }
+            .border(1.dp, Color(0xB3373B49), shape)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -366,7 +383,7 @@ private fun BeginJourneyButton(onClick: () -> Unit) {
                 .size(32.dp)
                 .clip(CircleShape)
                 .background(NeuSunken)
-                .border(1.dp, Color(0xFF23262F), CircleShape),
+                .border(1.dp, Color(0x99282B36), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
