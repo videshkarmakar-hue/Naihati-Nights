@@ -9,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,24 +59,26 @@ import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui.theme.PlusJakartaSans
 
-private val OuterCanvas = Color(0xFF050608)
-private val InnerCanvas = Color(0xFF090A0D)
-private val WidgetTile = Color(0xFF11141B)
-private val WidgetInner = Color(0xFF0C0E14)
-private val WidgetBorder = Color(0xFF232836)
-private val CtaSurface = Color(0xFF141720)
-private val CtaBorder = Color(0xFF242938)
-private val IntroAccent = Color(0xFF4FDBC8)
+private val OuterCanvas = Color(0xFF121318)
+private val InnerCanvas = Color(0xFF1A1C23)
+private val NeuBase = Color(0xFF1B1D24)
+private val NeuSunken = Color(0xFF16181F)
+private val NeuSunkenPill = Color(0xFF14161C)
+private val NeuGradientStart = Color(0xFF20232C)
+private val NeuGradientEnd = Color(0xFF181921)
+private val NeuEdgeLight = Color(0xFF2A2E38)
+private val NeuEdgeDark = Color(0xFF14161C)
+private val EmeraldActive = Color(0xFF34D399)
 private val TextPrimary = Color(0xFFF5F5F5)
 private val TextSoft = Color(0xFFD4D4D4)
 private val TextMuted = Color(0xFFA3A3A3)
+private val TextDim = Color(0xFF71717A)
 
 /**
  * Launch / splash screen — the branded Continue gate.
  *
- * Reev Dark / Finesta KWGT lockup: a matte obsidian canvas with two barely-visible ambient
- * vignettes, a tactile emblem widget, a live status chip, the wordmark and one high-contrast
- * "Continue your journey" call to action. One gentle entrance fade, then stillness.
+ * Dark neumorphic lockup: a raised emblem squircle, a sunken status pill, the wordmark and a
+ * capsule "CONTINUE" action with a recessed arrow well. One gentle entrance fade, then stillness.
  * [motionReduction] (from Settings) skips even that.
  */
 @Composable
@@ -110,29 +111,25 @@ fun IntroScreen(
     ) {
         Column(
             modifier = Modifier
-                .widthIn(max = 420.dp)
+                .widthIn(max = 412.dp)
                 .fillMaxSize()
                 .drawBehind {
-                    // Ambient matte depth: a faint white bloom top-right and a teal bloom
-                    // low on the left, both barely above the canvas.
-                    drawRect(
-                        Brush.verticalGradient(
-                            colors = listOf(InnerCanvas, Color(0xFF08090D), InnerCanvas)
-                        )
+                    // Soft ambient lighting: a faint white bloom top-left, a deeper shade
+                    // bottom-right, both barely above the canvas.
+                    drawRect(InnerCanvas)
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(Color(0x0AFFFFFF), Color.Transparent)
+                        ),
+                        radius = size.width * 0.62f,
+                        center = Offset(0f, 0f)
                     )
                     drawCircle(
                         brush = Brush.radialGradient(
-                            colors = listOf(Color(0x08FFFFFF), Color.Transparent)
+                            colors = listOf(Color(0x66000000), Color.Transparent)
                         ),
-                        radius = size.width * 0.85f,
-                        center = Offset(size.width, size.height * 0.04f)
-                    )
-                    drawCircle(
-                        brush = Brush.radialGradient(
-                            colors = listOf(Color(0x0D4FDBC8), Color.Transparent)
-                        ),
-                        radius = size.width * 0.72f,
-                        center = Offset(0f, size.height * 0.72f)
+                        radius = size.width * 0.78f,
+                        center = Offset(size.width, size.height)
                     )
                 }
                 .padding(horizontal = 24.dp)
@@ -147,116 +144,110 @@ fun IntroScreen(
             // ── Emblem widget ───────────────────────────────────────
             Box(
                 modifier = Modifier
-                    .size(112.dp)
+                    .size(64.dp)
                     .shadow(
-                        elevation = 12.dp,
+                        elevation = 10.dp,
                         shape = RoundedCornerShape(16.dp),
                         ambientColor = Color.Black,
                         spotColor = Color.Black
                     )
                     .clip(RoundedCornerShape(16.dp))
-                    .background(WidgetTile)
-                    .border(1.dp, WidgetBorder, RoundedCornerShape(16.dp))
-                    .padding(1.dp),
+                    .background(NeuBase)
+                    .border(
+                        width = 1.dp,
+                        brush = Brush.linearGradient(listOf(NeuEdgeLight, NeuEdgeDark)),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(WidgetInner),
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(NeuSunken)
+                        .border(
+                            width = 1.dp,
+                            brush = Brush.linearGradient(listOf(NeuEdgeDark, NeuEdgeLight)),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .padding(4.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Subtle top hairline edge on the tile.
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(horizontal = 12.dp)
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(
-                                        Color.Transparent,
-                                        Color(0x33FFFFFF),
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                    )
                     Image(
                         painter = painterResource(id = R.drawable.splash_trishul),
                         contentDescription = "Naihati Nights emblem",
-                        modifier = Modifier.size(80.dp)
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             // ── Live status chip ────────────────────────────────────
             Row(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(WidgetTile)
-                    .border(1.dp, WidgetBorder, CircleShape)
+                    .background(NeuSunkenPill)
+                    .border(1.dp, Color(0xFF21232C), CircleShape)
                     .padding(horizontal = 12.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .size(8.dp)
+                        .size(6.dp)
                         .clip(CircleShape)
-                        .background(IntroAccent)
+                        .background(EmeraldActive)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Videsh Karmakar Project",
+                    text = "Videsh Karmakar Projects",
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 11.sp,
-                    lineHeight = 15.sp,
+                    fontSize = 10.sp,
+                    lineHeight = 14.sp,
                     letterSpacing = 0.2.sp,
-                    color = TextSoft
+                    color = TextMuted
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // ── Wordmark ────────────────────────────────────────────
             Text(
                 text = "NAIHATI NIGHTS",
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 26.sp,
-                lineHeight = 33.sp,
-                letterSpacing = 2.8.sp,
+                fontSize = 20.sp,
+                lineHeight = 26.sp,
+                letterSpacing = 3.6.sp,
                 color = TextPrimary,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Visible
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // ── Subtitle ────────────────────────────────────────────
             Text(
-                text = "Best Guidance App For Naihati Kali Puja Pandals Hopping Guides.",
+                text = "Best Guide App For Hopping Kali Puja on Naihati Area.",
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Normal,
-                fontSize = 12.5.sp,
-                lineHeight = 20.sp,
+                fontSize = 11.5.sp,
+                lineHeight = 18.sp,
+                letterSpacing = 0.2.sp,
                 color = TextMuted,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.widthIn(max = 290.dp)
+                modifier = Modifier.widthIn(max = 270.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             // ── Primary call to action ──────────────────────────────
             BeginJourneyButton(onClick = onBeginExperience)
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // ── Devotion footer ─────────────────────────────────────
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -265,7 +256,7 @@ fun IntroScreen(
                         append("Architected by ")
                         withStyle(
                             SpanStyle(
-                                color = TextPrimary,
+                                color = TextSoft,
                                 fontWeight = FontWeight.SemiBold,
                                 letterSpacing = 0.3.sp
                             )
@@ -284,7 +275,7 @@ fun IntroScreen(
                 Icon(
                     imageVector = Icons.Default.Verified,
                     contentDescription = "Verified creator",
-                    tint = IntroAccent,
+                    tint = TextMuted,
                     modifier = Modifier.size(13.dp)
                 )
             }
@@ -298,11 +289,11 @@ fun IntroScreen(
                 fontSize = 9.sp,
                 lineHeight = 14.sp,
                 letterSpacing = 1.4.sp,
-                color = TextMuted,
+                color = TextDim,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Native-style home indicator.
             Box(
@@ -310,36 +301,42 @@ fun IntroScreen(
                     .width(112.dp)
                     .height(4.dp)
                     .clip(CircleShape)
-                    .background(Color(0x33FFFFFF))
+                    .background(Color(0x4D525252))
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
 
 /**
- * The single primary action: a matte card with the journey label and a teal arrow chip.
+ * The single primary action: a raised capsule with the continue label and a recessed arrow well.
  * Press-scale feedback only, no sweep or glow.
  */
 @Composable
 private fun BeginJourneyButton(onClick: () -> Unit) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = CircleShape
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(52.dp)
             .graphicsLayer {
-                val scale = if (pressed) 0.99f else 1f
+                val scale = if (pressed) 0.98f else 1f
                 scaleX = scale
                 scaleY = scale
             }
+            .shadow(
+                elevation = if (pressed) 2.dp else 10.dp,
+                shape = shape,
+                ambientColor = Color.Black,
+                spotColor = Color.Black
+            )
             .clip(shape)
-            .background(CtaSurface)
-            .border(1.dp, CtaBorder, shape)
+            .background(Brush.linearGradient(listOf(NeuGradientStart, NeuGradientEnd)))
+            .border(1.dp, Color(0x99272A35), shape)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -348,33 +345,35 @@ private fun BeginJourneyButton(onClick: () -> Unit) {
                 onClick = onClick
             )
             .testTag("begin_parikrama_button")
-            .padding(start = 14.dp, end = 10.dp),
+            .padding(start = 24.dp, end = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "CONTINUE YOUR JOURNEY",
+            text = "CONTINUE",
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Bold,
             fontSize = 13.sp,
             lineHeight = 18.sp,
-            letterSpacing = 1.3.sp,
-            color = TextPrimary
+            letterSpacing = 1.56.sp,
+            color = TextPrimary,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            modifier = Modifier.weight(1f)
         )
-
-        Spacer(modifier = Modifier.weight(1f))
 
         Box(
             modifier = Modifier
-                .size(36.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(IntroAccent),
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(NeuSunken)
+                .border(1.dp, Color(0xFF23262F), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
-                tint = InnerCanvas,
-                modifier = Modifier.size(19.dp)
+                tint = TextSoft,
+                modifier = Modifier.size(17.dp)
             )
         }
     }

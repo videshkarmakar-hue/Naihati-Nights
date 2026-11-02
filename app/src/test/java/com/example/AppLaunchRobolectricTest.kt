@@ -40,7 +40,7 @@ class AppLaunchRobolectricTest {
                 composeRule.waitForIdle()
 
                 composeRule.onNodeWithTag("intro_screen").assertIsDisplayed()
-                composeRule.onNodeWithText("CONTINUE YOUR JOURNEY").assertIsDisplayed()
+                composeRule.onNodeWithText("CONTINUE").assertIsDisplayed()
                 composeRule.onNodeWithTag("begin_parikrama_button").performClick()
                 composeRule.waitForIdle()
 
