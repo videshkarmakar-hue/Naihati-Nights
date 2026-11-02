@@ -559,6 +559,8 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithTag("app_brand_header").assertIsDisplayed()
         composeRule.onNodeWithTag("app_brand_title").assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_section_title").assertIsDisplayed()
+        composeRule.onNodeWithText("EMERGENCY HELPLINE").assertIsDisplayed()
         composeRule.onNodeWithText("Naihati Police Station Control Room").assertIsDisplayed()
         composeRule.onNodeWithText("Boro Maa Trust Emergency Service").assertIsDisplayed()
         composeRule.onNodeWithText("Naihati State General Hospital").assertIsDisplayed()
@@ -584,6 +586,12 @@ class CoreScreensSmokeTest {
         )
         composeRule.onNodeWithText("SAFETY PROTOCOL & INSTRUCTIONS")
             .assertIsDisplayed()
+        composeRule.onNodeWithText(
+            "Strictly follow designated one-way barricaded entry/exit routes."
+        ).assertExists()
+        composeRule.onNodeWithText(
+            "Report unattended baggage immediately to nearest police assistance booth."
+        ).assertExists()
     }
 
     @Test
@@ -618,6 +626,11 @@ class CoreScreensSmokeTest {
             hasText("FIELD UNITS")
         )
         composeRule.onNodeWithText("FIELD UNITS").assertIsDisplayed()
+        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
+            hasText("Power House More & Bijoynagar Crossing")
+        )
+        composeRule.onNodeWithText("Power House More & Bijoynagar Crossing")
+            .assertIsDisplayed()
         composeRule.onNodeWithTag("helpline_list").performScrollToNode(
             hasText("PUBLIC ADVISORY")
         )

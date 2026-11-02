@@ -784,14 +784,14 @@ object NaihatiDataProvider {
     val policeBooths = listOf(
         PoliceBooth(1, "Naihati Station Platform 1 & Exit Booth", "Platform 1 Gate Concourse"),
         PoliceBooth(2, "Ferryghat More & River Ghat Booth", "Aurobindo Road End"),
-        PoliceBooth(3, "Power House More & Bijoynagar Cross Point", "Major Traffic Intersection")
+        PoliceBooth(3, "Power House More & Bijoynagar Crossing", "Major Traffic Intersection")
     )
 
     val safetyGuidelines = listOf(
-        "Keep a slip of paper with guardian phone numbers in children's pockets.",
-        "Avoid excessive pushing and strictly follow the designated one-way route guidelines.",
-        "Report any suspicious unattended items immediately to the police booth.",
-        "Contact nearest volunteer camp or call 102 in case of medical emergency."
+        "Keep a paper slip with guardian contact number inside children's pockets.",
+        "Strictly follow designated one-way barricaded entry/exit routes.",
+        "Report unattended baggage immediately to nearest police assistance booth.",
+        "Contact nearest volunteer camp or dial 102 in case of medical distress."
     )
 
     val announcements = listOf(

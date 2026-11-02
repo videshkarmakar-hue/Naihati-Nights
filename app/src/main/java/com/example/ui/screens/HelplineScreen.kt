@@ -375,6 +375,24 @@ private fun HelplineTopBar(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 2.dp, bottom = 10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            HelpText(
+                text = "EMERGENCY HELPLINE",
+                size = 12.sp,
+                weight = FontWeight.SemiBold,
+                color = Zinc200,
+                letterSpacing = 0.6.sp,
+                lineHeight = 16.sp,
+                maxLines = 1,
+                modifier = Modifier.testTag("helpline_section_title")
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
                 .height(1.dp)
                 .background(BoothBorder)
         )
