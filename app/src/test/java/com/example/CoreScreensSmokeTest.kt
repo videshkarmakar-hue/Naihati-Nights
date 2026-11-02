@@ -978,6 +978,7 @@ class CoreScreensSmokeTest {
     @Test
     fun appUpdateDialog_isMandatoryAndCannotBeDismissed() {
         var updateTapped = 0
+        var releaseOpened = 0
 
         composeRule.setContent {
             MyApplicationTheme {
@@ -986,23 +987,64 @@ class CoreScreensSmokeTest {
                     state = AppUpdateState.Available(availableRelease),
                     notice = null,
                     onUpdateNow = { updateTapped++ },
-                    onOpenRelease = {}
+                    onOpenRelease = { releaseOpened++ }
                 )
             }
         }
 
         composeRule.onNodeWithTag("app_update_dialog").assertIsDisplayed()
-        composeRule.onNodeWithText("UPDATE REQUIRED").assertIsDisplayed()
+        composeRule.onNodeWithText("Update Available").assertIsDisplayed()
         composeRule.onNodeWithTag("app_update_required_note").assertIsDisplayed()
         composeRule.onNodeWithText("This update is required to keep using Naihati Nights. " +
             "It downloads automatically and Android asks you to confirm the install.")
             .assertIsDisplayed()
+        composeRule.onNodeWithText("WHAT'S NEW").assertIsDisplayed()
+        composeRule.onNodeWithText("Preparing Download").assertIsDisplayed()
+        composeRule.onNodeWithText("Starts automatically").assertIsDisplayed()
         composeRule.onNodeWithText("UPDATE NOW").assertIsDisplayed()
 
         composeRule.onNodeWithTag("app_update_now").performClick()
         composeRule.waitForIdle()
 
         assertEquals(1, updateTapped)
+        assertEquals(0, releaseOpened)
+
+        composeRule.onNodeWithTag("app_update_notes").performClick()
+        composeRule.waitForIdle()
+
+        assertEquals(1, releaseOpened)
+    }
+
+    @Test
+    fun appUpdateDialog_showsInstallWhenDownloadIsReady() {
+        var updated = 0
+        var releaseOpened = 0
+
+        composeRule.setContent {
+            MyApplicationTheme {
+                AppUpdateDialog(
+                    visible = true,
+                    state = AppUpdateState.Ready(
+                        availableRelease,
+                        java.io.File("ready.apk")
+                    ),
+                    notice = null,
+                    onUpdateNow = { updated++ },
+                    onOpenRelease = { releaseOpened++ }
+                )
+            }
+        }
+
+        composeRule.onAllNodesWithText("Ready to Install").assertCountEquals(2)
+        composeRule.onNodeWithText("100%").assertIsDisplayed()
+        composeRule.onNodeWithText("Download Complete").assertIsDisplayed()
+        composeRule.onNodeWithText("INSTALL UPDATE").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("app_update_install").performClick()
+        composeRule.waitForIdle()
+
+        assertEquals(1, updated)
+        assertEquals(0, releaseOpened)
     }
 
     @Test
