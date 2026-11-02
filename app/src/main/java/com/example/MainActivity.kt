@@ -51,7 +51,6 @@ import com.example.ui.screens.BormaPujoScheduleScreen
 import com.example.ui.screens.CheckUpdatesScreen
 import com.example.ui.screens.DeveloperCreditsScreen
 import com.example.ui.screens.DeveloperProfileScreen
-import com.example.ui.screens.FeedbackScreen
 import com.example.ui.screens.HelplineScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.IntroScreen
@@ -155,7 +154,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.CHECK_UPDATES,
             NavigationScreen.BORMA_PUJO_SCHEDULE,
             NavigationScreen.SPECIAL_NOTICE,
-            NavigationScreen.FEEDBACK,
             NavigationScreen.HELPLINE,
             NavigationScreen.THEME_PANDEL,
             NavigationScreen.RESTAURANT,
@@ -179,7 +177,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.CHECK_UPDATES -> SidebarNavItem.CHECK_UPDATES
             NavigationScreen.BORMA_PUJO_SCHEDULE -> SidebarNavItem.BORMA_PUJO_SCHEDULE
             NavigationScreen.SPECIAL_NOTICE -> SidebarNavItem.SPECIAL_NOTICE
-            NavigationScreen.FEEDBACK -> SidebarNavItem.REPORT_FEEDBACK
             else -> null
         }
         isDrawerOpen = true
@@ -249,30 +246,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                     )
                 }
 
-                NavigationScreen.FEEDBACK -> {
-                    FeedbackScreen(
-                        content = content,
-                        onBack = { currentScreen = NavigationScreen.HOME },
-                        onOpenSidebar = openSidebar,
-                        onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS },
-                        onSubmitFeedback = { inquiryType, zone, relatedLandmark, reporterName, contactNumber, incidentDetails, urgencyLevel, hasAttachedPhoto ->
-                            try {
-                                viewModel.submitFeedback(
-                                    inquiryType = inquiryType.name,
-                                    zone = zone,
-                                    relatedLandmark = relatedLandmark,
-                                    reporterName = reporterName,
-                                    contactNumber = contactNumber,
-                                    incidentDetails = incidentDetails,
-                                    urgencyLevel = urgencyLevel.name,
-                                    hasAttachedPhoto = hasAttachedPhoto
-                                )
-                            } catch (e: Exception) {
-                            }
-                        }
-                    )
-                }
-
                 NavigationScreen.SETTINGS -> {
                     SettingsScreen(
                         appSettings = appSettings,
@@ -327,7 +300,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                 NavigationScreen.PROFILE -> {
                     DeveloperProfileScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
-                        onOpenFeedback = { currentScreen = NavigationScreen.FEEDBACK },
                         onOpenAppDetails = {
                             appDetailsBackTarget = NavigationScreen.PROFILE
                             currentScreen = NavigationScreen.APP_DETAILS
@@ -340,7 +312,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                 NavigationScreen.APP_DETAILS -> {
                     AppDetailsScreen(
                         onBack = { currentScreen = appDetailsBackTarget },
-                        onOpenFeedback = { currentScreen = NavigationScreen.FEEDBACK },
                         onOpenHome = { currentScreen = NavigationScreen.HOME },
                         onOpenSidebar = openSidebar,
                         onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
@@ -350,7 +321,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                 NavigationScreen.DEVELOPER_CREDITS -> {
                     DeveloperCreditsScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
-                        onOpenFeedback = { currentScreen = NavigationScreen.FEEDBACK },
                         onOpenSidebar = openSidebar,
                         onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
                     )
@@ -450,11 +420,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             SidebarNavItem.SPECIAL_NOTICE -> {
                                 currentScreen = NavigationScreen.SPECIAL_NOTICE
                                 isDrawerOpen = false
-                            }
-                            SidebarNavItem.REPORT_FEEDBACK -> {
-                                currentScreen = NavigationScreen.FEEDBACK
-                                isDrawerOpen = false
-
                             }
                             SidebarNavItem.THEME_PANDEL -> {
                                 currentScreen = NavigationScreen.THEME_PANDEL

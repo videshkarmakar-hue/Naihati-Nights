@@ -474,17 +474,6 @@ fun SettingsScreen(
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "JAY BORO MAA",
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 11.sp,
-                    lineHeight = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.75.sp,
-                    color = SettingsLavender,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
                     text = "Crafted with Devotion in Naihati",
                     fontFamily = PlusJakartaSans,
                     fontSize = 11.sp,
@@ -1152,13 +1141,13 @@ private fun UpdateStatusChip(updateCheck: UpdateCheckState) {
             chipBorder = LocalAppPalette.current.accentBorder
         }
         is UpdateCheckState.Synced -> {
-            label = "✓ Up to date"
+            label = "Up to date"
             tone = SettingsEmerald
             chipBackground = Color(0x1A34D399)
             chipBorder = Color(0x4D34D399)
         }
         is UpdateCheckState.Offline -> {
-            label = "⚠ Offline copy"
+            label = "Offline copy"
             tone = SettingsRose
             chipBackground = Color(0x1AF43F5E)
             chipBorder = Color(0x33F43F5E)

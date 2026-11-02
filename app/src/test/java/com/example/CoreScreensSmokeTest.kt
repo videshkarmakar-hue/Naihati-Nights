@@ -41,7 +41,6 @@ import com.example.ui.screens.BormaPujoScheduleScreen
 import com.example.ui.screens.CheckUpdatesScreen
 import com.example.ui.screens.DeveloperCreditsScreen
 import com.example.ui.screens.DeveloperProfileScreen
-import com.example.ui.screens.FeedbackScreen
 import com.example.ui.screens.HelplineScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.IntroScreen
@@ -93,7 +92,7 @@ class CoreScreensSmokeTest {
             "Just One Tap To Explore Whole Naihati Kali Puja Pandals With Map."
         ).assertExists()
         composeRule.onNodeWithText("Crafted by Videsh Karmakar").assertExists()
-        composeRule.onNodeWithText("JAY BORO MAA \u2022 NAIHATI 2026").assertExists()
+        composeRule.onAllNodesWithText("JAY BORO MAA", substring = true).assertCountEquals(0)
         composeRule.onNodeWithTag("begin_parikrama_button").assertHasClickAction()
 
         composeRule.onNodeWithTag("begin_parikrama_button").performClick()
@@ -272,9 +271,10 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("settings_link_instagram").assertIsDisplayed()
 
         composeRule.onNodeWithTag("settings_list")
-            .performScrollToNode(hasText("JAY BORO MAA"))
+            .performScrollToNode(hasTestTag("settings_devotional_footer"))
         composeRule.onNodeWithText("Crafted with Devotion in Naihati").assertIsDisplayed()
         composeRule.onNodeWithText("©Crafted by VIDESH KARMAKAR").assertIsDisplayed()
+        composeRule.onAllNodesWithText("JAY BORO MAA", substring = true).assertCountEquals(0)
     }
 
     @Test
@@ -361,89 +361,14 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun feedbackScreen_validatesAndSubmits() {
-        var submitted = false
-        composeRule.setContent {
-            MyApplicationTheme {
-                FeedbackScreen(
-                    content = NaihatiDataProvider.content(),
-                    onSubmitFeedback = { _, _, _, _, _, _, _, _ -> submitted = true }
-                )
-            }
-        }
-
-        composeRule.onNodeWithTag("header_sidebar_button").assertIsDisplayed()
-
-        composeRule.onNodeWithTag("feedback_details_field")
-            .performScrollTo()
-            .performTextInput("Temporary barricade blocking the main route near the station.")
-        composeRule.onNodeWithTag("feedback_submit_button")
-            .performScrollTo()
-            .performClick()
-
-        composeRule.waitUntil(timeoutMillis = 3_000) { submitted }
-        assertTrue(submitted)
-    }
-
-    @Test
-    fun feedbackScreen_submitsWithDesignControlsAndShowsTicket() {
-        var captured = ""
-        composeRule.setContent {
-            MyApplicationTheme {
-                FeedbackScreen(
-                    content = NaihatiDataProvider.content(),
-                    onSubmitFeedback = { type, zone, _, _, _, details, urgency, _ ->
-                        captured = "${type.name}|$zone|$details|${urgency.name}"
-                    }
-                )
-            }
-        }
-
-        composeRule.onNodeWithTag("app_brand_header").assertIsDisplayed()
-        composeRule.onNodeWithTag("app_brand_title").assertIsDisplayed()
-        composeRule.onNodeWithText("Select Inquiry Type").assertIsDisplayed()
-        composeRule.onNodeWithText("Route 1 (Station PF1)").assertIsDisplayed()
-        composeRule.onNodeWithText("Route 3 (Park Rd)").assertExists()
-        composeRule.onNodeWithText("General App").assertDoesNotExist()
-
-        composeRule.onNodeWithTag("feedback_type_pandal_update").performClick()
-        composeRule.onNodeWithTag("feedback_details_field")
-            .performScrollTo()
-            .performTextInput("Queue is spilling onto the main road near Boro Maa.")
-        composeRule.onNodeWithTag("feedback_urgency_urgent_diversion")
-            .performScrollTo()
-            .performClick()
-        composeRule.onNodeWithText("Urgent / Diversion").assertIsDisplayed()
-        composeRule.onNodeWithTag("feedback_submit_button")
-            .performScrollTo()
-            .performClick()
-
-        composeRule.waitUntil(timeoutMillis = 3_000) {
-            composeRule.onAllNodesWithTag("feedback_success_notice")
-                .fetchSemanticsNodes().isNotEmpty()
-        }
-
-        assertEquals(
-            "PANDAL_UPDATE|Route 1 (Station PF1)|Queue is spilling onto the main road near Boro Maa.|URGENT_DIVERSION",
-            captured
-        )
-        composeRule.onNodeWithText("Report Dispatched Successfully").assertIsDisplayed()
-        composeRule.onNodeWithTag("feedback_ticket_id").assertIsDisplayed()
-        composeRule.onNodeWithText("✦ JAY BORO MAA ✦").assertExists()
-        composeRule.onNodeWithText("Verified by Videsh Karmakar").assertExists()
-    }
-
-    @Test
     fun appDetails_rebuiltDesignAndActionsWork() {
         var backPressed = false
-        var feedbackOpened = false
         var homeOpened = false
 
         composeRule.setContent {
             MyApplicationTheme {
                 AppDetailsScreen(
                     onBack = { backPressed = true },
-                    onOpenFeedback = { feedbackOpened = true },
                     onOpenHome = { homeOpened = true }
                 )
             }
@@ -475,21 +400,11 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("app_details_info_dialog").assertDoesNotExist()
 
         composeRule.onNodeWithTag("app_details_list")
-            .performScrollToNode(hasTestTag("app_details_feedback_button"))
-        composeRule.onNodeWithTag("app_details_feedback_button").performClick()
-        composeRule.waitForIdle()
-        assertTrue(feedbackOpened)
-
-        composeRule.onNodeWithTag("app_details_list")
             .performScrollToNode(hasText("©Crafted by VIDESH KARMAKAR"))
         composeRule.onNodeWithText("©Crafted by VIDESH KARMAKAR").assertIsDisplayed()
-        composeRule.onNodeWithText("• JAY MAA BORO MAA •").assertExists()
-
-        composeRule.onNodeWithTag("app_details_list")
-            .performScrollToNode(hasTestTag("app_details_legal_report"))
-        composeRule.onNodeWithTag("app_details_legal_report").performClick()
-        composeRule.waitForIdle()
-        assertTrue(feedbackOpened)
+        composeRule.onAllNodesWithText("JAY MAA BORO MAA", substring = true).assertCountEquals(0)
+        composeRule.onAllNodesWithText("Report a Problem").assertCountEquals(0)
+        composeRule.onAllNodesWithText("Send Feedback or Suggestions").assertCountEquals(0)
 
         composeRule.onNodeWithTag("app_details_list")
             .performScrollToNode(hasTestTag("app_details_back_button"))
@@ -524,10 +439,9 @@ class CoreScreensSmokeTest {
                     )
                     "profile" -> DeveloperProfileScreen(
                         onBack = {},
-                        onOpenFeedback = {},
                         onOpenAppDetails = { openAppDetails = true }
                     )
-                    else -> AppDetailsScreen(onBack = {}, onOpenFeedback = {})
+                    else -> AppDetailsScreen(onBack = {})
                 }
             }
         }
@@ -636,13 +550,11 @@ class CoreScreensSmokeTest {
         )
         composeRule.onNodeWithText("PUBLIC ADVISORY").assertIsDisplayed()
         composeRule.onNodeWithTag("helpline_list").performScrollToNode(
-            hasText("\u2726 JAY BORO MAA \u2726")
-        )
-        composeRule.onNodeWithTag("helpline_list").performScrollToNode(
             hasText("\u00A9 Crafted by VIDESH KARMAKAR")
         )
         composeRule.onNodeWithText("\u00A9 Crafted by VIDESH KARMAKAR")
             .assertIsDisplayed()
+        composeRule.onAllNodesWithText("JAY BORO MAA", substring = true).assertCountEquals(0)
     }
 
     @Test
@@ -747,7 +659,7 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun themePandelScreen_rendersThemesAndFilters() {
+    fun themePandelScreen_rendersDirectoryDesign() {
         composeRule.setContent {
             MyApplicationTheme {
                 ThemePandelScreen()
@@ -755,62 +667,54 @@ class CoreScreensSmokeTest {
         }
 
         composeRule.onNodeWithTag("theme_pandel_screen").assertIsDisplayed()
-        composeRule.onNodeWithTag("theme_pandel_hero_card").assertIsDisplayed()
-        composeRule.onNodeWithTag("theme_pandel_search_field").assertIsDisplayed()
         composeRule.onNodeWithTag("theme_pandel_card_theme_01").assertIsDisplayed()
         composeRule.onAllNodesWithTag("theme_pandel_map_chip").onFirst().assertIsDisplayed()
-
-        composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasTestTag("theme_pandel_card_theme_13"))
-        composeRule.onNodeWithTag("theme_pandel_card_theme_13").assertIsDisplayed()
-        composeRule.onNodeWithText("অপারেশন সিঁদুর", substring = true).assertIsDisplayed()
         composeRule.onAllNodesWithText("PANDAL THEME").onFirst().assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasTestTag("theme_pandel_card_theme_14"))
-        composeRule.onNodeWithTag("theme_pandel_card_theme_14").assertIsDisplayed()
-        composeRule.onAllNodesWithText("কষ্টিপাথরের মূর্তি", substring = true)
-            .onFirst()
-            .assertIsDisplayed()
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_04"))
+        composeRule.onNodeWithText("76th Year Heritage").assertExists()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasTestTag("theme_pandel_card_theme_15"))
-        composeRule.onNodeWithTag("theme_pandel_card_theme_15").assertIsDisplayed()
+            .performScrollToNode(hasTestTag("theme_pandel_location_theme_05"))
+        composeRule.onNodeWithTag("theme_pandel_location_theme_05").assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasTestTag("theme_pandel_card_theme_16"))
-        composeRule.onNodeWithTag("theme_pandel_card_theme_16").assertIsDisplayed()
-        composeRule.onNodeWithText("মঙ্গলচিত্রে মহাকালী", substring = true).assertIsDisplayed()
-
-        composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasTestTag("theme_pandel_card_theme_09"))
+            .performScrollToNode(hasTestTag("theme_pandel_special_theme_09"))
         composeRule.onAllNodesWithText("তৈরী মণ্ডপ", substring = true)
             .onFirst()
             .assertIsDisplayed()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasText("Official Registry", substring = true))
-        composeRule.onNodeWithText("Naihati Kali Puja Official Registry • 2026").assertIsDisplayed()
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_11"))
+        composeRule.onNodeWithText("91st Year Heritage").assertExists()
 
         composeRule.onNodeWithTag("theme_pandel_screen")
-            .performScrollToNode(hasTestTag("theme_pandel_search_field"))
-        composeRule.onNodeWithTag("theme_pandel_search_field")
-            .performTextInput("Mahakal")
-        composeRule.waitForIdle()
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_12"))
+        composeRule.onNodeWithText("50th Golden Jubilee").assertExists()
 
-        composeRule.onNodeWithTag("theme_pandel_card_theme_10").assertIsDisplayed()
-        composeRule.onAllNodesWithTag("theme_pandel_card_theme_01").assertCountEquals(0)
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_13"))
+        composeRule.onNodeWithText("অপারেশন সিঁদুর", substring = true).assertIsDisplayed()
 
-        composeRule.onNodeWithTag("theme_pandel_search_field")
-            .performTextClearance()
-        composeRule.onNodeWithTag("theme_pandel_search_field")
-            .performTextInput("zzzz-no-match")
-        composeRule.waitForIdle()
-        composeRule.onNodeWithTag("theme_pandel_empty").assertIsDisplayed()
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_special_theme_14"))
+        composeRule.onAllNodesWithText("কষ্টিপাথরের মূর্তি", substring = true)
+            .onFirst()
+            .assertIsDisplayed()
 
-        composeRule.onNodeWithTag("theme_pandel_search_clear").performClick()
-        composeRule.waitForIdle()
-        composeRule.onNodeWithTag("theme_pandel_card_theme_01").assertIsDisplayed()
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_location_theme_15"))
+        composeRule.onNodeWithTag("theme_pandel_location_theme_15").assertIsDisplayed()
+
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_card_theme_16"))
+        composeRule.onNodeWithText("মঙ্গলচিত্রে মহাকালী", substring = true).assertIsDisplayed()
+
+        composeRule.onNodeWithTag("theme_pandel_screen")
+            .performScrollToNode(hasTestTag("theme_pandel_footer"))
+        composeRule.onNodeWithText("© Crafted BY VIDESH KARMAKAR").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Jay Maa Boro Maa", substring = true).assertCountEquals(0)
     }
 
     @Test
@@ -837,8 +741,7 @@ class CoreScreensSmokeTest {
             "sidebar_item_special_notice" to "বিশেষ ঘোষণা",
             "sidebar_item_app_info_credit" to "App Info & Developer Credit",
             "sidebar_item_check_updates" to "Check Updates",
-            "sidebar_item_settings" to "Settings",
-            "sidebar_item_report_feedback" to "Report & Feedback"
+            "sidebar_item_settings" to "Settings"
         ).forEach { (tag, label) ->
             composeRule.onNodeWithTag(tag).assertIsDisplayed()
             composeRule.onNodeWithText(label).assertIsDisplayed()
@@ -896,9 +799,7 @@ class CoreScreensSmokeTest {
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.APP_INFO_CREDIT, selected)
 
-        composeRule.onNodeWithTag("sidebar_item_report_feedback").performClick()
-        composeRule.waitForIdle()
-        assertEquals(SidebarNavItem.REPORT_FEEDBACK, selected)
+        composeRule.onAllNodesWithText("Report & Feedback").assertCountEquals(0)
 
         composeRule.onNodeWithTag("sidebar_item_check_updates").performClick()
         composeRule.waitForIdle()
@@ -1195,7 +1096,7 @@ class CoreScreensSmokeTest {
     fun developerCreditsScreen_rendersProfileSectionsAndSharedCredit() {
         composeRule.setContent {
             MyApplicationTheme {
-                DeveloperCreditsScreen(onBack = {}, onOpenFeedback = {})
+                DeveloperCreditsScreen(onBack = {})
             }
         }
 
@@ -1218,13 +1119,13 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithText("Android · iOS Soon").assertExists()
 
         composeRule.onNodeWithTag("dev_credits_screen")
-            .performScrollToNode(hasTestTag("dev_credits_feedback_button"))
+            .performScrollToNode(hasText("ACKNOWLEDGEMENT"))
         composeRule.waitForIdle()
-        composeRule.onNodeWithTag("dev_credits_feedback_button").assertIsDisplayed()
         composeRule.onNodeWithText("ACKNOWLEDGEMENT").assertExists()
         composeRule.onNodeWithText("Crafted with devotion by VIDESH KARMAKAR").assertExists()
         composeRule.onNodeWithText("© 2026 Videsh Karmakar. All Rights Reserved.").assertExists()
-        composeRule.onNodeWithText("• JAY BORO MAA •").assertExists()
+        composeRule.onAllNodesWithText("JAY BORO MAA", substring = true).assertCountEquals(0)
+        composeRule.onAllNodesWithText("Send Feedback or Suggestions").assertCountEquals(0)
 
         composeRule.onNodeWithTag("dev_credits_screen")
             .performScrollToNode(hasText("©Crafted by VIDESH KARMAKAR"))
@@ -1232,17 +1133,15 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun developerCreditsScreen_actionsOpenLinksFeedbackAndBack() {
+    fun developerCreditsScreen_actionsOpenLinksAndBack() {
         val recordingContext = RecordingContext(RuntimeEnvironment.getApplication())
         var backPressed = false
-        var feedbackOpened = false
 
         composeRule.setContent {
             CompositionLocalProvider(LocalContext provides recordingContext) {
                 MyApplicationTheme {
                     DeveloperCreditsScreen(
-                        onBack = { backPressed = true },
-                        onOpenFeedback = { feedbackOpened = true }
+                        onBack = { backPressed = true }
                     )
                 }
             }
@@ -1255,12 +1154,6 @@ class CoreScreensSmokeTest {
             "https://videshkarmakar.carrd.co/",
             recordingContext.lastIntent?.dataString
         )
-
-        composeRule.onNodeWithTag("dev_credits_screen")
-            .performScrollToNode(hasTestTag("dev_credits_feedback_button"))
-        composeRule.onNodeWithTag("dev_credits_feedback_button").performClick()
-        composeRule.waitForIdle()
-        assertTrue(feedbackOpened)
 
         composeRule.onNodeWithTag("dev_credits_screen")
             .performScrollToNode(hasTestTag("dev_credits_back_button"))

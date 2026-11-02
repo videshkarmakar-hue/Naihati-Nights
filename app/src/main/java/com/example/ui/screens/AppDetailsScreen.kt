@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,7 +38,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material.icons.outlined.Sms
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -59,7 +56,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -101,9 +97,9 @@ private val PrivacyPolicy = LegalInfo(
 
         The app does not sell personal data, show targeted advertising, or collect precise location in the background.
 
-        When you submit a report through the Feedback screen, the details you enter — inquiry type, zone, landmark, name, contact number, report details, urgency and an optional photo — are stored on this device and may be sent to the developer only to review and resolve that report. Photos are never uploaded automatically.
+        When you send a report or suggestion to the developer, the details you choose to provide are used only to review and resolve that report. Photos are never uploaded automatically.
 
-        You can remove locally stored reports by clearing the app's data in Android settings. Map links open your installed maps application under that app's own privacy policy.
+        You can remove locally stored data by clearing the app's data in Android settings. Map links open your installed maps application under that app's own privacy policy.
     """.trimIndent()
 )
 
@@ -150,7 +146,6 @@ private val CopyrightInformation = LegalInfo(
 @Composable
 fun AppDetailsScreen(
     onBack: () -> Unit,
-    onOpenFeedback: () -> Unit,
     onOpenHome: () -> Unit = {},
     onOpenSidebar: () -> Unit = {},
     onOpenDeveloperCredits: () -> Unit = {},
@@ -209,7 +204,6 @@ fun AppDetailsScreen(
                 item {
                     LegalAndSupportSection(
                         onOpenLegal = { legalInfo = it },
-                        onOpenFeedback = onOpenFeedback,
                         onOpenContact = {
                             openExternalUrl(
                                 context = context,
@@ -221,7 +215,7 @@ fun AppDetailsScreen(
                 }
                 item { Spacer(modifier = Modifier.height(20.dp)) }
                 item { AcknowledgementSection() }
-                item { AppDetailsFooter(onOpenFeedback = onOpenFeedback) }
+                item { AppDetailsFooter() }
             }
 
             legalInfo?.let { info ->
@@ -815,7 +809,6 @@ private fun DiscoverItem(
 @Composable
 private fun LegalAndSupportSection(
     onOpenLegal: (LegalInfo) -> Unit,
-    onOpenFeedback: () -> Unit,
     onOpenContact: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -868,12 +861,6 @@ private fun LegalAndSupportSection(
                 description = "Get in touch with the Naihati Nights support team for assistance.",
                 testTag = "app_details_legal_contact",
                 onClick = onOpenContact
-            )
-            LegalItem(
-                title = "Report a Problem",
-                description = "Report bugs, incorrect information, technical issues, or unexpected behavior.",
-                testTag = "app_details_legal_report",
-                onClick = onOpenFeedback
             )
             LegalItem(
                 title = "Copyright Information",
@@ -972,7 +959,7 @@ private fun AcknowledgementSection() {
 }
 
 @Composable
-private fun AppDetailsFooter(onOpenFeedback: () -> Unit) {
+private fun AppDetailsFooter() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -980,80 +967,11 @@ private fun AppDetailsFooter(onOpenFeedback: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FeedbackButton(onClick = onOpenFeedback)
         VersionCard()
         SectionCreditFooter(
             topPadding = 0.dp,
             bottomPadding = 0.dp
         )
-        Text(
-            text = "• JAY MAA BORO MAA •",
-            fontSize = 10.sp,
-            lineHeight = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = DetailsLightViolet,
-            letterSpacing = 1.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-private fun FeedbackButton(onClick: () -> Unit) {
-    val shape = RoundedCornerShape(12.dp)
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.99f else 1f,
-        animationSpec = tween(durationMillis = 100),
-        label = "appDetailsFeedbackScale"
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .shadow(
-                elevation = 10.dp,
-                shape = shape,
-                ambientColor = LocalAppPalette.current.accentSoft,
-                spotColor = LocalAppPalette.current.accentSoft
-            )
-            .clip(shape)
-            .background(DetailsViolet)
-            .border(1.dp, LocalAppPalette.current.accentBorder, shape)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onClick
-            )
-            .testTag("app_details_feedback_button")
-            .padding(horizontal = 16.dp, vertical = 14.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Sms,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(16.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Send Feedback or Suggestions",
-                fontSize = 12.sp,
-                lineHeight = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
-            )
-        }
     }
 }
 

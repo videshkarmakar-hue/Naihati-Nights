@@ -1166,15 +1166,6 @@ private fun HelplineFooter() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HelpText(
-            text = "\u2726 JAY BORO MAA \u2726",
-            size = 11.sp,
-            weight = FontWeight.Medium,
-            color = Zinc400,
-            letterSpacing = 1.sp,
-            lineHeight = 15.sp
-        )
-        Spacer(modifier = Modifier.height(5.dp))
-        HelpText(
             text = "\u00A9 Crafted by VIDESH KARMAKAR",
             size = 10.sp,
             weight = FontWeight.Normal,

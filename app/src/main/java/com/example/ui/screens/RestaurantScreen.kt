@@ -338,14 +338,6 @@ fun RestaurantScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "✦ Jay Maa Boro Maa ✦",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 1.5.sp,
-                    color = RestaurantZinc
-                )
-                Spacer(modifier = Modifier.height(7.dp))
-                Text(
                     text = "Naihati Kali Puja Food Guide • Curated by Videsh Karmakar",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,

@@ -90,7 +90,7 @@ class AppLaunchRobolectricTest {
     }
 
     @Test
-    fun sidebar_navigatesToReportFeedbackAndSettings() {
+    fun sidebar_navigatesToSettings() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         runBlocking {
             SettingsDataStore(context).setOnboardingComplete(false)
@@ -102,20 +102,11 @@ class AppLaunchRobolectricTest {
                 composeRule.onNodeWithTag("begin_parikrama_button").performClick()
                 composeRule.waitForIdle()
 
-                // Open the sidebar from Home and route to Report & Feedback.
+                // Open the sidebar from Home and confirm the removed feedback destination is gone.
                 composeRule.onNodeWithTag("header_sidebar_button").performClick()
                 composeRule.waitForIdle()
-                composeRule.onNodeWithTag("sidebar_item_report_feedback").assertIsDisplayed()
+                composeRule.onAllNodesWithText("Report & Feedback").assertCountEquals(0)
                 composeRule.onNodeWithTag("sidebar_item_settings").assertIsDisplayed()
-                composeRule.onNodeWithTag("sidebar_item_report_feedback").performClick()
-                composeRule.waitForIdle()
-                composeRule.onNodeWithText("Select Inquiry Type").assertIsDisplayed()
-
-                // Return Home, then open the sidebar again and route to Settings.
-                composeRule.onNodeWithTag("nav_home").performClick()
-                composeRule.waitForIdle()
-                composeRule.onNodeWithTag("header_sidebar_button").performClick()
-                composeRule.waitForIdle()
                 composeRule.onNodeWithTag("sidebar_item_settings").performClick()
                 composeRule.waitForIdle()
                 composeRule.onNodeWithTag("reset_settings_button").assertIsDisplayed()
@@ -192,7 +183,6 @@ class AppLaunchRobolectricTest {
                     "App Info & Developer Credit",
                     "Developer Credits",
                     "Settings",
-                    "Report & Feedback",
                     "©Videsh Karmakar Project"
                 ).forEach { label ->
                     composeRule.onNodeWithText(label).assertIsDisplayed()

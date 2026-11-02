@@ -357,7 +357,7 @@ fun SidebarShowcaseScreen(
                         SleekSidebar(
                             isExpanded = false,
                             isDarkMode = true,
-                            selectedItem = SidebarNavItem.REPORT_FEEDBACK,
+                            selectedItem = SidebarNavItem.SETTINGS,
                             onSelectItem = {},
                             onToggleExpand = {}
                         )
@@ -375,7 +375,7 @@ fun SidebarShowcaseScreen(
                         SleekSidebar(
                             isExpanded = true,
                             isDarkMode = true,
-                            selectedItem = SidebarNavItem.REPORT_FEEDBACK,
+                            selectedItem = SidebarNavItem.SETTINGS,
                             onSelectItem = {},
                             onToggleExpand = {}
                         )
@@ -589,20 +589,6 @@ fun SidebarContentDisplay(
                 )
                 Text(
                     text = "Ask the release feed for a newer Naihati Nights build, read the release notes, and install the update without leaving the app.",
-                    fontSize = 11.5.sp,
-                    color = TextSoftZinc,
-                    lineHeight = 16.sp
-                )
-            }
-            SidebarNavItem.REPORT_FEEDBACK -> {
-                Text(
-                    text = "Report & Feedback",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = LocalAppPalette.current.accentBright
-                )
-                Text(
-                    text = "Raise route issues, pandal updates, lost & found reports, or suggestions for the Naihati Nights guide.",
                     fontSize = 11.5.sp,
                     color = TextSoftZinc,
                     lineHeight = 16.sp

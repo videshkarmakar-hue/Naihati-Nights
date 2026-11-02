@@ -917,8 +917,6 @@ private fun RouteFacilitiesCard(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "🍛", fontSize = 12.sp, lineHeight = 15.sp)
-                Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = facilities.delicaciesTitle,
                     color = Amber300,
@@ -972,12 +970,6 @@ private fun CorridorFacilityRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = if (facility.icon == "stay") "🏨" else "🍽️",
-                    fontSize = 12.sp,
-                    lineHeight = 15.sp
-                )
-                Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = facility.name,
                     color = Color.White,
@@ -1148,29 +1140,6 @@ private fun HomeFooter() {
             .padding(top = 20.dp, bottom = 28.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .background(RegalViolet, CircleShape)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "✦ JAY MAA BORO MAA ✦",
-                color = TextZinc100,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = FontFamily.Monospace,
-                letterSpacing = 1.4.sp
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .background(RegalViolet, CircleShape)
-            )
-        }
-        Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = "Crafted with devotion by VIDESH KARMAKAR • Naihati Kali Puja Guide",
             color = TextZinc500,

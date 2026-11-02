@@ -26,7 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
@@ -66,7 +65,6 @@ import com.example.ui.theme.TextSoftZinc
 @Composable
 fun DeveloperProfileScreen(
     onBack: () -> Unit,
-    onOpenFeedback: () -> Unit,
     onOpenAppDetails: () -> Unit,
     onOpenSidebar: () -> Unit = {},
     onOpenDeveloperCredits: () -> Unit = {},
@@ -361,36 +359,6 @@ fun DeveloperProfileScreen(
             }
         }
 
-        // Action Button: Send Feedback or Suggestions
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(LocalAppPalette.current.accentDeep)
-                    .clickable { onOpenFeedback() }
-                    .padding(vertical = 14.dp)
-                    .testTag("dev_profile_feedback_button"),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.ChatBubble,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Send Feedback or Suggestions",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-            }
-        }
-
         // Devotional Signature & Copyright
         item {
             Column(
@@ -408,14 +376,6 @@ fun DeveloperProfileScreen(
                     text = "© 2026 Videsh Karmakar. All Rights Reserved.",
                     color = TextMutedZinc,
                     fontSize = 10.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "• JAY MAA BORO MAA •",
-                    color = LocalAppPalette.current.accentBright,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.15.sp
                 )
             }
         }

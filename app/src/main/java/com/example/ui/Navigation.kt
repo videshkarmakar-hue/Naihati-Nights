@@ -6,7 +6,6 @@ enum class NavigationScreen {
     RESTAURANT,
     HELPLINE,
     THEME_PANDEL,
-    FEEDBACK,
     SETTINGS,
     CHECK_UPDATES,
     BORMA_PUJO_SCHEDULE,

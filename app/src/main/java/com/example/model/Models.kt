@@ -185,23 +185,25 @@ object ThemePandelData {
         ),
         ThemePandel(
             id = "theme_04",
-            edition = "76th Year",
+            edition = "76th Year Heritage",
             committee = "Naihati 7 No. Bijoynagar Kathgola",
             committeeBengali = "নৈহাটি ৭ নং বিজয় নগর কাঠগোলা",
             pandal = "Maharanir Darbare",
             pandalBengali = "মহারানীর দরবারে",
-            deity = "Maharanir Darbare"
+            deity = "Maharanir Darbare",
+            cardAccent = "amber"
         ),
         ThemePandel(
             id = "theme_05",
-            edition = "78th Year",
+            edition = "78th Year Heritage",
             committee = "Naihati Deshbandhu Pally \"Amra Sabai Club\"",
             committeeBengali = "নৈহাটি দেশবন্ধু পল্লী \"আমরা সবাই ক্লাব\"",
             pandal = "Aranyer Ashru",
             pandalBengali = "অরণ্যের অশ্রু",
             locationNote = "Near Netralok Eye Hospital",
             locationNoteBengali = "নেত্রলোক চক্ষু হাসপাতাল নিকট",
-            deity = "Aranyer Ashru"
+            deity = "Aranyer Ashru",
+            cardAccent = "amber"
         ),
         ThemePandel(
             id = "theme_06",
@@ -254,12 +256,13 @@ object ThemePandelData {
         ),
         ThemePandel(
             id = "theme_11",
-            edition = "91st Year",
+            edition = "91st Year Heritage",
             committee = "Naihati Katalpara",
             committeeBengali = "নৈহাটি কাটালপাড়া",
             pandal = "Mahanayak 100 - Uttam Kumar Centenary Tribute",
             pandalBengali = "মহানায়ক ১০০",
-            deity = "Mahanayak 100 - Uttam Kumar Centenary Tribute"
+            deity = "Mahanayak 100 - Uttam Kumar Centenary Tribute",
+            cardAccent = "amber"
         ),
         ThemePandel(
             id = "theme_12",
@@ -268,7 +271,8 @@ object ThemePandelData {
             committeeBengali = "নৈহাটি সমাজ কল্যাণ সমিতি",
             pandal = "Baba - Ek Nirob Joddha",
             pandalBengali = "বাবা - এক নীরব যোদ্ধা",
-            deity = "Baba - Ek Nirob Joddha"
+            deity = "Baba - Ek Nirob Joddha",
+            cardAccent = "purple"
         ),
         ThemePandel(
             id = "theme_13",
@@ -290,8 +294,9 @@ object ThemePandelData {
             locationNote = "Bazarghat Road, Dhankol",
             locationNoteBengali = "বাজারঘাট রোড, ধানকল, নৈহাটি",
             deity = "Aadishakti",
-            specialAttraction = "বিশেষ আকর্ষণ কষ্টিপাথরের মূর্তির আদলে মায়ের মূর্তি",
-            specialAttractionStyle = "zinc"
+            specialAttraction = "বিশেষ আকর্ষণ: কষ্টিপাথরের মূর্তির আদলে মায়ের মূর্তি",
+            specialAttractionStyle = "amber",
+            specialAttractionBelowTheme = true
         ),
         ThemePandel(
             id = "theme_15",
@@ -592,5 +597,9 @@ data class ThemePandel(
     val specialAttraction: String = "",
     /** "amber" (no icon) or "zinc" (diamond icon) styling for [specialAttraction]. */
     val specialAttractionStyle: String = "amber",
+    /** True when the special attraction renders under the theme copy instead of above it. */
+    val specialAttractionBelowTheme: Boolean = false,
+    /** Card accent: "zinc", "amber", or "purple". */
+    val cardAccent: String = "zinc",
     val isNew: Boolean = false
 )

@@ -29,7 +29,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -134,7 +133,6 @@ private val designFacts = listOf(
 @Composable
 fun DeveloperCreditsScreen(
     onBack: () -> Unit,
-    onOpenFeedback: () -> Unit,
     onOpenSidebar: () -> Unit = {},
     onOpenDeveloperCredits: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -391,39 +389,9 @@ fun DeveloperCreditsScreen(
             }
         }
 
-        // ============ FOOTER CTA & SIGNATURE ============
+        // ============ FOOTER SIGNATURE ============
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(CreditsViolet)
-                        .border(1.dp, LocalAppPalette.current.accentBorder, RoundedCornerShape(14.dp))
-                        .clickable(onClick = onOpenFeedback)
-                        .padding(vertical = 14.dp)
-                        .testTag("dev_credits_feedback_button"),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ChatBubble,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(15.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Send Feedback or Suggestions",
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -451,18 +419,6 @@ fun DeveloperCreditsScreen(
                         textAlign = TextAlign.Center
                     )
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "• JAY BORO MAA •",
-                    modifier = Modifier.fillMaxWidth(),
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 10.sp,
-                    letterSpacing = 1.2.sp,
-                    color = CreditsTextMuted,
-                    textAlign = TextAlign.Center
-                )
 
                 SectionCreditFooter()
             }

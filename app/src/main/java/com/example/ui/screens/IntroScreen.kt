@@ -49,7 +49,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -72,7 +71,6 @@ private val EmeraldActive = Color(0xFF34D399)
 private val TextPrimary = Color(0xFFF5F5F5)
 private val TextSoft = Color(0xFFD4D4D4)
 private val TextMuted = Color(0xFFA3A3A3)
-private val TextDim = Color(0xFF71717A)
 
 /**
  * Launch / splash screen — the branded Continue gate.
@@ -281,19 +279,6 @@ fun IntroScreen(
                     modifier = Modifier.size(13.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.height(2.dp))
-
-            Text(
-                text = "JAY BORO MAA \u2022 NAIHATI 2026",
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 9.sp,
-                lineHeight = 14.sp,
-                letterSpacing = 1.4.sp,
-                color = TextDim,
-                textAlign = TextAlign.Center
-            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
