@@ -1274,6 +1274,35 @@ class CoreScreensSmokeTest {
         assertTrue(backPressed)
     }
 
+    @Test
+    fun bottomBar_staysWithinScreenWithMidNightTrainsLabel() {
+        composeRule.setContent {
+            MyApplicationTheme {
+                CapsuleBottomBar(
+                    currentScreen = NavigationScreen.MID_NIGHT_TRAINS,
+                    onNavigate = { }
+                )
+            }
+        }
+
+        val home = composeRule.onNodeWithTag("nav_home").getUnclippedBoundsInRoot()
+        val midNightTrains = composeRule.onNodeWithTag("nav_mid_night_trains").getUnclippedBoundsInRoot()
+        val borma = composeRule.onNodeWithTag("nav_borma_pujo").getUnclippedBoundsInRoot()
+
+        assertTrue(
+            "Dock should start inside the screen, home=$home",
+            home.left >= 0.dp
+        )
+        assertTrue(
+            "Dock should not overflow the screen width with the Mid-Night Trains label, borma=$borma",
+            borma.right <= 350.dp
+        )
+        assertTrue(
+            "Mid-Night Trains slot should keep its label inside the dock, midNightTrains=$midNightTrains",
+            midNightTrains.right <= borma.left
+        )
+    }
+
     private class RecordingContext(base: Context) : ContextWrapper(base) {        var lastIntent: Intent? = null
 
         override fun startActivity(intent: Intent?) {
