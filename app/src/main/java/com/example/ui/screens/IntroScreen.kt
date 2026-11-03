@@ -1,10 +1,21 @@
 package com.example.ui.screens
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +32,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -194,14 +206,59 @@ fun IntroScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // CONTINUE pill
+            // CONTINUE button (AnimatedButton-style: shine sweep + spring press)
+            val interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+            val isPressed by interactionSource.collectIsPressedAsState()
+            val pressScale by androidx.compose.animation.core.animateFloatAsState(
+                targetValue = if (isPressed) 0.97f else 1f,
+                animationSpec = androidx.compose.animation.core.spring(
+                    stiffness = 500f,
+                    dampingRatio = 0.95f
+                ),
+                label = "pressScale"
+            )
+            val transition = rememberInfiniteTransition(label = "shine")
+            val shinePhase by transition.animateFloat(
+                initialValue = 0f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1000, delayMillis = 1000),
+                    repeatMode = RepeatMode.Restart
+                ),
+                label = "shinePhase"
+            )
+            val effectivePhase = if (motionReduction) 0f else shinePhase
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .width(250.dp)
+                    .scale(pressScale)
                     .clip(RoundedCornerShape(999.dp))
                     .background(Color.White)
-                    .clickable { onBeginExperience() }
+                    .drawBehind {
+                        val shineWidth = size.width * 0.35f
+                        val x = (effectivePhase * (size.width + shineWidth)) - shineWidth
+                        val opacity = kotlin.math.sin(effectivePhase * Math.PI).toFloat().coerceIn(0f, 1f)
+                        if (opacity > 0f) {
+                            drawRect(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        Color.White.copy(alpha = 0.55f * opacity),
+                                        Color.Transparent
+                                    ),
+                                    start = androidx.compose.ui.geometry.Offset(x, 0f),
+                                    end = androidx.compose.ui.geometry.Offset(x + shineWidth, 0f)
+                                ),
+                                size = size
+                            )
+                        }
+                    }
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) { onBeginExperience() }
                     .padding(vertical = 10.dp, horizontal = 24.dp)
                     .testTag("begin_parikrama_button"),
                 contentAlignment = Alignment.Center
