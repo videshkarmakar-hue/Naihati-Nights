@@ -1,10 +1,5 @@
 package com.example.ui.screens
 
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -41,7 +35,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
-import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.PlusJakartaSans
 
 /**
@@ -55,23 +48,6 @@ fun IntroScreen(
     onBeginExperience: () -> Unit,
     motionReduction: Boolean = false
 ) {
-    val palette = LocalAppPalette.current
-
-    // Liquid-metal shimmer for the CONTINUE button.
-    val transition = rememberInfiniteTransition(label = "liquidMetal")
-    val phase by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2400),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "metalPhase"
-    )
-    val metalA = lerp(Color(0xFF5A5A5E), Color(0xFFB8B8BC), phase)
-    val metalB = lerp(Color(0xFFD8D8DC), Color(0xFFFFFFFF), phase)
-    val metalC = lerp(Color(0xFF6E6E72), Color(0xFF9A9A9E), phase)
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -218,25 +194,25 @@ fun IntroScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Liquid-metal CONTINUE button
+            // CONTINUE pill
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .width(260.dp)
+                    .width(250.dp)
                     .clip(RoundedCornerShape(999.dp))
-                    .background(Brush.linearGradient(colors = listOf(metalA, metalB, metalC, metalB, metalA)))
+                    .background(Color.White)
                     .clickable { onBeginExperience() }
-                    .padding(vertical = 12.dp, horizontal = 24.dp)
+                    .padding(vertical = 10.dp, horizontal = 24.dp)
                     .testTag("begin_parikrama_button"),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "CONTINUE",
                     fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    letterSpacing = 2.sp,
-                    color = Color.Black
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    letterSpacing = 2.64.sp,
+                    color = Color(0xFF171717)
                 )
             }
 
@@ -249,17 +225,17 @@ fun IntroScreen(
                 Text(
                     text = "Crafted by Videsh Karmakar",
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Normal,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 8.5.sp,
-                    letterSpacing = 1.5.sp,
-                    color = palette.accentBright,
+                    letterSpacing = 1.98.sp,
+                    color = Color.Black,
                     textAlign = TextAlign.Center
                 )
                 Box(
                     modifier = Modifier
-                        .size(8.dp)
+                        .size(10.dp)
                         .clip(CircleShape)
-                        .background(palette.accentBright)
+                        .background(Color.Black)
                 )
             }
         }
