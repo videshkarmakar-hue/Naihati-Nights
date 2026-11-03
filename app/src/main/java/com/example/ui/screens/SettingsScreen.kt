@@ -34,6 +34,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
@@ -447,6 +448,32 @@ fun SettingsScreen(
                 onDownload = onDownloadAppUpdate,
                 onOpenReleases = onOpenReleases
             )
+        }
+
+        item(key = "settings_share_app") {
+            SettingsGroupCard(
+                title = "SHARE APP",
+                icon = Icons.Outlined.Share,
+                iconBackground = Color(0x0AFFFFFF),
+                iconBorder = Color(0x1AFFFFFF)
+            ) {
+                SettingsAdvanceRow(
+                    label = "Share Naihati Nights",
+                    testTag = "settings_share_app",
+                    onClick = {
+                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, "https://naihatinights.pages.dev/")
+                            putExtra(Intent.EXTRA_SUBJECT, "Naihati Nights")
+                        }
+                        try {
+                            context.startActivity(Intent.createChooser(shareIntent, "Share Naihati Nights"))
+                        } catch (e: ActivityNotFoundException) {
+                            // no-op
+                        }
+                    }
+                )
+            }
         }
 
         item(key = "settings_footer") {

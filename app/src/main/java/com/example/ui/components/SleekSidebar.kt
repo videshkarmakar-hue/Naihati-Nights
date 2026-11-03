@@ -37,6 +37,7 @@ import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.SystemUpdate
 import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material.icons.outlined.Verified
@@ -87,13 +88,15 @@ enum class SidebarNavItem(
     APP_INFO_CREDIT("App Info & Developer Credit", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_app_info_credit"),
     CHECK_UPDATES("Check Updates", Icons.Filled.SystemUpdate, Icons.Outlined.SystemUpdate, "sidebar_item_check_updates"),
     DEVELOPER_CREDITS("Developer Credits", Icons.Filled.Verified, Icons.Outlined.Verified, "sidebar_item_developer_credits"),
-    SETTINGS("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, "sidebar_item_settings");
+    SETTINGS("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, "sidebar_item_settings"),
+    SHARE_APP("Share App", Icons.Outlined.Share, Icons.Outlined.Share, "sidebar_item_share_app");
 
     companion object {
         val primaryItems = listOf(ROUTE)
         val themeItems = listOf(THEME_PANDEL, MID_NIGHT_TRAINS, BORMA_PUJO_SCHEDULE, SPECIAL_NOTICE)
         val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS)
         val developerItems = listOf(DEVELOPER_CREDITS)
+        val shareItems = listOf(SHARE_APP)
     }
 }
 
@@ -264,6 +267,30 @@ fun SleekSidebar(
             // Developer credits
             SidebarItemGroup(
                 items = SidebarNavItem.developerItems,
+                isExpanded = isExpanded,
+                selectedItem = selectedItem,
+                activePillBg = activePillBg,
+                activeContentColor = activeContentColor,
+                unselectedColor = unselectedColor,
+                onSelectItem = onSelectItem
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Divider before share
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = if (isExpanded) 8.dp else 12.dp)
+                    .height(1.dp)
+                    .background(unselectedColor.copy(alpha = 0.18f))
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Share App
+            SidebarItemGroup(
+                items = SidebarNavItem.shareItems,
                 isExpanded = isExpanded,
                 selectedItem = selectedItem,
                 activePillBg = activePillBg,

@@ -1,5 +1,6 @@
 package com.example
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -88,6 +90,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NaihatiNightsApp(viewModel: AppViewModel) {
     val appSettings by viewModel.settings.collectAsState()
+    val context = LocalContext.current
     val content by viewModel.content.collectAsState()
     val updateCheck by viewModel.updateCheck.collectAsState()
     val appUpdate by viewModel.appUpdate.collectAsState()
@@ -476,6 +479,15 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             }
                             SidebarNavItem.DEVELOPER_CREDITS -> {
                                 currentScreen = NavigationScreen.DEVELOPER_CREDITS
+                                isDrawerOpen = false
+                            }
+                            SidebarNavItem.SHARE_APP -> {
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, "https://naihatinights.pages.dev/")
+                                    putExtra(Intent.EXTRA_SUBJECT, "Naihati Nights")
+                                }
+                                context.startActivity(Intent.createChooser(shareIntent, "Share Naihati Nights"))
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.SETTINGS -> {

@@ -1,5 +1,6 @@
 package com.example.ui.components
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +45,9 @@ import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.PlusJakartaSans
 import com.example.ui.theme.TextHighWhite
 import com.example.ui.theme.TextSoftZinc
+
+/** URL shared when the user taps "Share App". */
+const val APP_SHARE_URL = "https://naihatinights.pages.dev/"
 
 /** Brand shown in the top header of every section. */
 const val APP_BRAND_NAME = "Naihati Nights"
@@ -119,6 +124,9 @@ fun AppBrandHeader(
                 Spacer(modifier = Modifier.width(4.dp))
                 HeaderDeveloperCreditButton(onClick = onOpenDeveloperCredits)
             }
+
+            Spacer(modifier = Modifier.width(4.dp))
+            HeaderShareButton()
 
             if (onOpenSidebar != null) {
                 Spacer(modifier = Modifier.width(4.dp))
@@ -206,6 +214,36 @@ private fun HeaderDeveloperCreditButton(onClick: () -> Unit) {
             color = TextHighWhite,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+/** The recurring "Share App" affordance: launches the system share sheet with the app link. */
+@Composable
+private fun HeaderShareButton() {
+    val context = LocalContext.current
+    Box(
+        modifier = Modifier
+            .size(32.dp)
+            .clip(HeaderActionShape)
+            .background(Color(0x14FFFFFF))
+            .border(1.dp, Color(0x26FFFFFF), HeaderActionShape)
+            .clickable(role = Role.Button) {
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, APP_SHARE_URL)
+                    putExtra(Intent.EXTRA_SUBJECT, APP_BRAND_NAME)
+                }
+                context.startActivity(Intent.createChooser(shareIntent, "Share Naihati Nights"))
+            }
+            .testTag("header_share_button"),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Share,
+            contentDescription = "Share app",
+            tint = TextHighWhite,
+            modifier = Modifier.size(17.dp)
         )
     }
 }

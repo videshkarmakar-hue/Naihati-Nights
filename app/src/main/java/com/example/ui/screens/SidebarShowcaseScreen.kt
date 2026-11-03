@@ -580,6 +580,20 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
+            SidebarNavItem.SHARE_APP -> {
+                Text(
+                    text = "Share App",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = LocalAppPalette.current.accentBright
+                )
+                Text(
+                    text = "Share the Naihati Nights app link with friends and family so they can join the parikrama.",
+                    fontSize = 11.5.sp,
+                    color = TextSoftZinc,
+                    lineHeight = 16.sp
+                )
+            }
             
         }
         Spacer(modifier = Modifier.height(4.dp))
