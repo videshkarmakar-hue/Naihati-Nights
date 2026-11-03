@@ -1,14 +1,10 @@
 package com.example.ui.screens
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,330 +12,270 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui.theme.LocalAppPalette
-import com.example.ui.theme.ObsidianBorder
-import com.example.ui.theme.ObsidianBorderSubtle
+import com.example.ui.theme.ObsidianNoir
 import com.example.ui.theme.PlusJakartaSans
-import com.example.ui.theme.TextHighWhite
-import com.example.ui.theme.TextMutedZinc
 import com.example.ui.theme.TextSoftZinc
 
-private val OuterCanvas = Color(0xFF121318)
-private val InnerCanvas = Color(0xFF1A1C23)
-private val NeuBase = Color(0xFF1B1D24)
-private val NeuSunken = Color(0xFF16181F)
-private val NeuSunkenPill = Color(0xFF14161C)
-private val EmeraldActive = Color(0xFF34D399)
-
 /**
- * Launch / splash screen — the branded Continue gate.
- *
- * Dark neumorphic lockup: a raised emblem squircle, a sunken status pill, the wordmark and a
- * capsule "CONTINUE" action with a recessed arrow well. One gentle entrance fade, then stillness.
- * [motionReduction] (from Settings) skips even that.
+ * Launch / intro screen. Visual treatment follows the Finesta / Reev Dark reference:
+ * an atmospheric fog landscape, a glassmorphic emblem, a tracked display wordmark,
+ * a single pill CTA and a verified attribution line. Visual-only; all test anchors
+ * (tags, copy) are preserved.
  */
 @Composable
 fun IntroScreen(
     onBeginExperience: () -> Unit,
-    modifier: Modifier = Modifier,
     motionReduction: Boolean = false
 ) {
-    // One-shot entrance: fade + rise, 600ms, then done. Respects reduced motion.
-    val entrance = remember { Animatable(if (motionReduction) 1f else 0f) }
-    LaunchedEffect(motionReduction) {
-        if (motionReduction) {
-            entrance.snapTo(1f)
-        } else {
-            entrance.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
-            )
-        }
-    }
-    val alpha = entrance.value
-    val riseOffset = with(LocalDensity.current) { (1f - entrance.value) * 12.dp.toPx() }
+    val palette = LocalAppPalette.current
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .background(OuterCanvas)
+            .background(
+                Brush.verticalGradient(
+                    colorStops = arrayOf(
+                        0.00f to Color(0xFF090A0C),
+                        0.52f to Color(0xFF0D0E12),
+                        0.70f to Color(0xFF22252C),
+                        0.82f to Color(0xFF9097A3),
+                        0.93f to Color(0xFFD2D7DF),
+                        1.00f to Color(0xFFCFD4DC)
+                    )
+                )
+            )
             .testTag("intro_screen"),
         contentAlignment = Alignment.Center
     ) {
+        // Atmospheric fog overlays (radial glows) drawn on top of the base gradient.
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(Color(0x73D7DBE2), Color.Transparent),
+                        center = androidx.compose.ui.geometry.Offset(0.5f, 0.84f),
+                        radius = 2000f
+                    )
+                )
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(Color(0x73F0F3F8), Color.Transparent),
+                        center = androidx.compose.ui.geometry.Offset(0.70f, 0.76f),
+                        radius = 1200f
+                    )
+                )
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.radialGradient(
+                        colors = listOf(Color(0x66C8CED8), Color.Transparent),
+                        center = androidx.compose.ui.geometry.Offset(0.25f, 0.82f),
+                        radius = 800f
+                    )
+                )
+        )
+
         Column(
             modifier = Modifier
-                .widthIn(max = 412.dp)
-                .fillMaxSize()
-                .background(InnerCanvas)
-                .padding(horizontal = 16.dp)
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .alpha(alpha)
-                .graphicsLayer { translationY = riseOffset },
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            // ── Emblem widget ───────────────────────────────────────
+            // Glassmorphic emblem
             Box(
                 modifier = Modifier
-                    .size(112.dp)
-                    .shadow(
-                        elevation = 12.dp,
-                        shape = RoundedCornerShape(16.dp),
-                        ambientColor = Color.Black,
-                        spotColor = Color.Black
-                    )
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(NeuBase)
-                    .border(
-                        width = 1.dp,
-                        color = ObsidianBorder,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    .padding(14.dp),
+                    .size(160.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(Color(0xCC121215))
+                    .border(1.dp, Color(0x26FFFFFF), RoundedCornerShape(24.dp))
+                    .padding(24.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(NeuSunken)
-                        .border(
-                            width = 1.dp,
-                            color = ObsidianBorderSubtle,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .padding(8.dp),
+                        .background(Color(0x66000000))
+                        .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.splash_trishul),
-                        contentDescription = "Naihati Nights emblem",
+                        painter = painterResource(id = R.drawable.app_brand_logo),
+                        contentDescription = "Naihati Nights Emblem",
+                        contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(RoundedCornerShape(12.dp))
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(16.dp))
                     )
+                }
+                // Status dot
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .offset(x = 4.dp, y = (-4).dp)
+                        .size(16.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .border(2.dp, Color(0xFF0A0A0C), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "NAIHATI NIGHTS",
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.Bold,
+                fontSize = 26.sp,
+                letterSpacing = 5.72.sp, // 0.22em @ 26sp
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(start = 1.dp)
+            )
+
+            Text(
+                text = "Videsh Karmakar Projects",
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.Medium,
+                fontSize = 10.sp,
+                letterSpacing = 1.5.sp,
+                color = Color.White.copy(alpha = 0.45f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 2.dp)
+            )
+
+            Text(
+                text = "Just One Tap To Explore Whole Naihati Kali Puja Pandals With Map.",
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.Light,
+                fontSize = 12.sp,
+                lineHeight = 18.sp,
+                letterSpacing = 0.5.sp,
+                color = Color.White.copy(alpha = 0.6f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // CONTINUE pill
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .width(250.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+                    .clickable { onBeginExperience() }
+                    .padding(start = 20.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .testTag("begin_parikrama_button"),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "CONTINUE",
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                        letterSpacing = 2.4.sp, // 0.2em @ 12sp
+                        color = Color.Black
+                    )
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "Continue",
+                            tint = Color.White,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ── Live status chip ────────────────────────────────────
             Row(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .background(NeuSunkenPill)
-                    .border(1.dp, Color(0xFF21232C), CircleShape)
-                    .padding(horizontal = 12.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .clip(CircleShape)
-                        .background(EmeraldActive)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Videsh Karmakar Projects",
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 11.sp,
-                    lineHeight = 16.sp,
-                    letterSpacing = 0.2.sp,
-                    color = TextMutedZinc
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // ── Wordmark ────────────────────────────────────────────
-            Text(
-                text = "NAIHATI NIGHTS",
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 20.sp,
-                lineHeight = 26.sp,
-                letterSpacing = 3.6.sp,
-                color = TextHighWhite,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Visible
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // ── Subtitle ────────────────────────────────────────────
-            Text(
-                text = "Just One Tap To Explore Whole Naihati Kali Puja Pandals With Map.",
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.Normal,
-                fontSize = 11.5.sp,
-                lineHeight = 18.sp,
-                letterSpacing = 0.2.sp,
-                color = TextMutedZinc,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.widthIn(max = 270.dp)
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // ── Primary call to action ──────────────────────────────
-            BeginJourneyButton(onClick = onBeginExperience)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // ── Devotion footer ─────────────────────────────────────
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = buildAnnotatedString {
-                        append("Crafted by ")
-                        withStyle(
-                            SpanStyle(
-                                color = TextSoftZinc,
-                                fontWeight = FontWeight.SemiBold,
-                                letterSpacing = 0.3.sp
-                            )
-                        ) {
-                            append("Videsh Karmakar")
-                        }
-                    },
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 11.sp,
-                    lineHeight = 16.sp,
-                    color = TextMutedZinc,
+                    text = "Crafted by Videsh Karmakar",
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 8.5.sp,
+                    letterSpacing = 1.5.sp,
+                    color = Color.White.copy(alpha = 0.4f),
                     textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.width(6.dp))
-                Icon(
-                    imageVector = Icons.Default.Verified,
-                    contentDescription = "Verified creator",
-                    tint = TextMutedZinc,
-                    modifier = Modifier.size(18.dp)
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.7f))
                 )
             }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Native-style home indicator.
-            Box(
-                modifier = Modifier
-                    .width(112.dp)
-                    .height(4.dp)
-                    .clip(CircleShape)
-                    .background(Color(0x4D525252))
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
         }
-    }
-}
 
-/**
- * The single primary action: a raised capsule with the continue label and a recessed arrow well.
- * Press-scale feedback only, no sweep or glow.
- */
-@Composable
-private fun BeginJourneyButton(onClick: () -> Unit) {
-    val shape = CircleShape
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(52.dp)
-            .graphicsLayer {
-                val scale = if (pressed) 0.98f else 1f
-                scaleX = scale
-                scaleY = scale
-            }
-            .shadow(
-                elevation = if (pressed) 2.dp else 8.dp,
-                shape = shape,
-                ambientColor = Color.Black,
-                spotColor = Color.Black
-            )
-            .clip(shape)
-            .background(LocalAppPalette.current.accentDeep)
-            .border(1.dp, Color(0xB3373B49), shape)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                role = Role.Button,
-                onClickLabel = "Continue to Naihati Nights",
-                onClick = onClick
-            )
-            .testTag("begin_parikrama_button")
-            .padding(start = 24.dp, end = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "CONTINUE",
-            fontFamily = PlusJakartaSans,
-            fontWeight = FontWeight.Bold,
-            fontSize = 13.sp,
-            lineHeight = 18.sp,
-            letterSpacing = 1.56.sp,
-            color = TextHighWhite,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            modifier = Modifier.weight(1f)
-        )
-
+        // Bottom home indicator
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .background(NeuSunken)
-                .border(1.dp, Color(0x99282B36), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null,
-                tint = TextSoftZinc,
-                modifier = Modifier.size(18.dp)
-            )
-        }
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp)
+                .width(128.dp)
+                .height(4.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(Color.Black.copy(alpha = 0.75f))
+        )
     }
 }
