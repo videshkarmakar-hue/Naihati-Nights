@@ -37,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -136,7 +135,7 @@ fun DeveloperProfileScreen(
         // Profile Hero Card
         item {
             Card(
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = ObsidianBase),
                 border = androidx.compose.foundation.BorderStroke(1.dp, LocalAppPalette.current.accentBorder),
                 modifier = Modifier.fillMaxWidth()
@@ -150,13 +149,11 @@ fun DeveloperProfileScreen(
                         Box(
                             modifier = Modifier
                                 .size(100.dp)
-                                .clip(RoundedCornerShape(22.dp))
+                                .clip(RoundedCornerShape(16.dp))
                                 .background(
-                                    Brush.linearGradient(
-                                        colors = listOf(LocalAppPalette.current.accentSurface, LocalAppPalette.current.accentStrong)
-                                    )
+                                    LocalAppPalette.current.accentSurface
                                 )
-                                .border(1.dp, Color(0x66FFFFFF), RoundedCornerShape(22.dp))
+                                .border(1.dp, Color(0x66FFFFFF), RoundedCornerShape(16.dp))
                                 .padding(2.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -166,7 +163,7 @@ fun DeveloperProfileScreen(
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .clip(RoundedCornerShape(20.dp))
+                                    .clip(RoundedCornerShape(16.dp))
                         )
                     }
 

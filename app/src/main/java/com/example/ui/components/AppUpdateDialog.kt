@@ -31,11 +31,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
@@ -50,6 +47,7 @@ import com.example.data.update.formatBytesCompact
 import com.example.data.update.releaseInfo
 import com.example.data.update.releaseNoteLines
 import com.example.ui.theme.LocalAppPalette
+import com.example.ui.theme.ObsidianNoir
 import com.example.ui.theme.PlusJakartaSans
 
 private val DialogCard = Color(0xF2111216)
@@ -158,27 +156,7 @@ fun AppUpdateDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .drawBehind {
-                    drawRect(
-                        brush = Brush.radialGradient(
-                            0f to Color(0xFFE2E4E9),
-                            0.18f to Color(0xFFA4A9B3),
-                            0.42f to Color(0xFF363A45),
-                            0.70f to Color(0xFF14161A),
-                            1f to Color(0xFF08090B),
-                            center = Offset(size.width * 0.5f, size.height * 1.2f),
-                            radius = size.height * 1.25f
-                        )
-                    )
-                    drawRect(
-                        brush = Brush.verticalGradient(
-                            0f to Color(0xFF0A0B0D),
-                            0.5f to Color(0xBF0A0B0D),
-                            1f to Color(0x000A0B0D)
-                        ),
-                        size = Size(size.width, size.height * 0.45f)
-                    )
-                },
+                .background(ObsidianNoir),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -192,14 +170,14 @@ fun AppUpdateDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(
-                            elevation = 24.dp,
-                            shape = RoundedCornerShape(24.dp),
+                            elevation = 16.dp,
+                            shape = RoundedCornerShape(16.dp),
                             ambientColor = Color.Black,
                             spotColor = Color.Black
                         )
-                        .clip(RoundedCornerShape(24.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(DialogCard)
-                        .border(1.dp, DialogCardBorder, RoundedCornerShape(24.dp))
+                        .border(1.dp, DialogCardBorder, RoundedCornerShape(16.dp))
                         .padding(20.dp)
                         .testTag("app_update_dialog")
                 ) {

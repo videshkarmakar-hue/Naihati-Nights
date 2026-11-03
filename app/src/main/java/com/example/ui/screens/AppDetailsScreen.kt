@@ -375,7 +375,7 @@ private fun AppDetailsHeroCard() {
                 ) {
                     Text(
                         text = "OFFICIAL GUIDE",
-                        fontSize = 9.sp,
+                        fontSize = 11.sp,
                         lineHeight = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = DetailsLightViolet,
@@ -620,7 +620,7 @@ private fun PlatformValue() {
         ) {
             Text(
                 text = "iOS Soon",
-                fontSize = 9.sp,
+                fontSize = 11.sp,
                 lineHeight = 11.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = DetailsAccentViolet

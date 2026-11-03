@@ -60,11 +60,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -91,19 +88,16 @@ import com.example.ui.components.AppBrandHeader
 import com.example.ui.components.SectionCreditFooter
 import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.ObsidianNoir
+import com.example.ui.theme.TextHighWhite
+import com.example.ui.theme.TextMutedZinc
+import com.example.ui.theme.TextSoftZinc
 
 private val SurfaceLow = Color(0xFF0E0E14)
 private val SurfaceCard = Color(0xFF13131B)
 private val SurfaceHigh = Color(0xFF181824)
 private val RegalViolet: Color @Composable get() = LocalAppPalette.current.accentDeep
-private val RegalVioletBorder: Color @Composable get() = LocalAppPalette.current.accentStrong
 private val VioletBorderSoft: Color @Composable get() = LocalAppPalette.current.accentBorder
 private val PaleLavender: Color @Composable get() = LocalAppPalette.current.accentBright
-private val TextZinc100 = Color(0xFFF4F4F5)
-private val TextZinc200 = Color(0xFFE4E4E7)
-private val TextZinc300 = Color(0xFFD4D4D8)
-private val TextZinc400 = Color(0xFFA1A1AA)
-private val TextZinc500 = Color(0xFF71717A)
 private val CardBorder = Color(0x14FFFFFF)
 private val StatusGreen = Color(0xFF34D399)
 private val Rose300 = Color(0xFFFDA4AF)
@@ -151,10 +145,6 @@ fun HomeScreen(
                 onOpenSidebar = onOpenSidebar,
                 onOpenDeveloperCredits = onOpenDeveloperCredits
             )
-        }
-
-        item(key = "home_micro_header") {
-            RoutesMicroHeader()
         }
 
         item(key = "home_hero") {
@@ -218,26 +208,6 @@ fun HomeScreen(
 }
 
 @Composable
-private fun RoutesMicroHeader() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 4.dp)
-            .testTag("home_routes_micro_header"),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "ROUTES",
-            color = TextZinc400,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = FontFamily.Monospace,
-            letterSpacing = 2.sp
-        )
-    }
-}
-
-@Composable
 private fun RoutesDirectoryHeader(
     sectorCount: Int,
     allExpanded: Boolean,
@@ -257,7 +227,7 @@ private fun RoutesDirectoryHeader(
         ) {
             Text(
                 text = "DIRECTION DIRECTORY",
-                color = TextZinc400,
+                color = TextSoftZinc,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = FontFamily.Monospace,
@@ -271,7 +241,7 @@ private fun RoutesDirectoryHeader(
             ) {
                 Text(
                     text = "$sectorCount SECTORS",
-                    color = TextZinc300,
+                    color = TextHighWhite,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = FontFamily.Monospace
@@ -281,7 +251,7 @@ private fun RoutesDirectoryHeader(
 
         Text(
             text = if (allExpanded) "COLLAPSE ALL" else "EXPAND ALL",
-            color = TextZinc400,
+            color = TextSoftZinc,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             fontFamily = FontFamily.Monospace,
@@ -314,29 +284,11 @@ private fun RoutesHero(
     onQueryChange: (String) -> Unit
 ) {
     val shape = RoundedCornerShape(16.dp)
-    // Read outside drawBehind: the draw scope is not composable.
-    val glowTint = LocalAppPalette.current.accentBorder
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
             .background(SurfaceLow)
-            .drawBehind {
-                // Decorative glow anchored to the top-right corner. Drawn behind the content so it
-                // never inflates the card height (which previously left a large blank band under
-                // the search field).
-                val glowRadius = 72.dp.toPx()
-                val glowCenter = Offset(size.width - 26.dp.toPx(), 26.dp.toPx())
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(glowTint, Color.Transparent),
-                        center = glowCenter,
-                        radius = glowRadius
-                    ),
-                    radius = glowRadius,
-                    center = glowCenter
-                )
-            }
             .border(1.dp, CardBorder, shape)
             .testTag("home_hero_card")
     ) {
@@ -399,7 +351,7 @@ private fun HomeSearchBox(
                     if (query.isEmpty()) {
                         Text(
                             text = "Search pandal, route, or committee...",
-                            color = TextZinc500,
+                            color = TextMutedZinc,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 1,
@@ -423,7 +375,7 @@ private fun HomeSearchBox(
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Clear search",
-                    tint = TextZinc400,
+                    tint = TextSoftZinc,
                     modifier = Modifier.size(15.dp)
                 )
             }
@@ -506,7 +458,7 @@ private fun RouteAccordionCard(
                 Spacer(modifier = Modifier.height(1.dp))
                 Text(
                     text = route.subtitle,
-                    color = TextZinc400,
+                    color = TextSoftZinc,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     lineHeight = 14.sp
@@ -525,7 +477,7 @@ private fun RouteAccordionCard(
                 Icon(
                     imageVector = Icons.Default.ExpandMore,
                     contentDescription = if (expanded) "Collapse route" else "Expand route",
-                    tint = TextZinc400,
+                    tint = TextSoftZinc,
                     modifier = Modifier
                         .size(16.dp)
                         .rotate(chevronRotation)
@@ -623,8 +575,8 @@ private fun RouteCategoryPill(route: PandalRoute) {
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = route.categoryBadge,
-            color = if (isRose) Rose300 else TextZinc300,
-            fontSize = 9.sp,
+            color = if (isRose) Rose300 else TextHighWhite,
+            fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1
         )
@@ -642,11 +594,7 @@ private fun PandalStopRow(
     val isRose = stop.highlighted && stop.highlightAccent == "rose"
 
     val backgroundModifier = when {
-        isAmber -> Modifier.background(
-            Brush.horizontalGradient(
-                colors = listOf(AmberCardStart, SurfaceHigh, SurfaceCard)
-            )
-        )
+        isAmber -> Modifier.background(AmberCardStart)
         isRose -> Modifier.background(RoseCard)
         else -> Modifier.background(SurfaceCard)
     }
@@ -662,8 +610,8 @@ private fun PandalStopRow(
     }
     val bengaliColor = when {
         isAmber -> Color(0xCCFDE68A)
-        isRose -> TextZinc300
-        else -> TextZinc400
+        isRose -> TextHighWhite
+        else -> TextSoftZinc
     }
 
     Row(
@@ -689,7 +637,7 @@ private fun PandalStopRow(
                         Text(
                             text = "$number.",
                             color = Color.Black,
-                            fontSize = 9.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -731,7 +679,7 @@ private fun PandalStopRow(
             if (stop.description.isNotBlank()) {
                 Text(
                     text = stop.description,
-                    color = if (stop.highlighted) TextZinc300 else TextZinc400,
+                    color = if (stop.highlighted) TextHighWhite else TextSoftZinc,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     lineHeight = 14.sp,
@@ -817,7 +765,7 @@ private fun RouteNoteCard(note: RouteNote) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = noteBody(note),
-                    color = TextZinc300,
+                    color = TextHighWhite,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     lineHeight = 16.sp
@@ -833,7 +781,7 @@ private fun RouteNoteCard(note: RouteNote) {
                             withStyle(
                                 SpanStyle(
                                     fontWeight = FontWeight.Bold,
-                                    color = TextZinc300
+                                    color = TextHighWhite
                                 )
                             ) {
                                 append(note.label)
@@ -842,7 +790,7 @@ private fun RouteNoteCard(note: RouteNote) {
                         }
                         appendWithBoldPhrases(note.text, note.boldPhrases)
                     },
-                    color = TextZinc300,
+                    color = TextHighWhite,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     lineHeight = 16.sp
@@ -885,7 +833,7 @@ private fun RouteFacilitiesCard(
             )
             Text(
                 text = facilities.headerSubtitle,
-                color = TextZinc400,
+                color = TextSoftZinc,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Medium,
                 maxLines = 1,
@@ -941,8 +889,8 @@ private fun RouteFacilitiesCard(
                     ) {
                         Text(
                             text = delicacy,
-                            color = TextZinc200,
-                            fontSize = 9.sp,
+                            color = TextHighWhite,
+                            fontSize = 11.sp,
                             fontWeight = FontWeight.Medium,
                             lineHeight = 12.sp
                         )
@@ -981,7 +929,7 @@ private fun CorridorFacilityRow(
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = facility.description,
-                color = TextZinc400,
+                color = TextSoftZinc,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Normal,
                 lineHeight = 13.sp,
@@ -1050,7 +998,7 @@ private fun MapChip(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(if (emphasized) RegalViolet else SurfaceHigh)
+            .background(if (emphasized) LocalAppPalette.current.accentDeep else SurfaceHigh)
             .border(
                 width = 1.dp,
                 color = if (emphasized) LocalAppPalette.current.accentSoft else CardBorder,
@@ -1065,7 +1013,7 @@ private fun MapChip(
     ) {
         Text(
             text = label,
-            color = if (emphasized) Color.White else TextZinc200,
+            color = if (emphasized) Color.White else TextHighWhite,
             fontSize = 10.sp,
             fontWeight = FontWeight.SemiBold,
             lineHeight = 12.sp
@@ -1092,7 +1040,7 @@ private fun EmptyRoutes(
         Icon(
             imageVector = Icons.Default.Search,
             contentDescription = null,
-            tint = TextZinc500,
+            tint = TextMutedZinc,
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -1110,7 +1058,7 @@ private fun EmptyRoutes(
             } else {
                 "Pull the latest guide from Settings and try again."
             },
-            color = TextZinc400,
+            color = TextSoftZinc,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center
@@ -1142,7 +1090,7 @@ private fun HomeFooter() {
     ) {
         Text(
             text = "Crafted with devotion by VIDESH KARMAKAR • Naihati Kali Puja Guide",
-            color = TextZinc500,
+            color = TextMutedZinc,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             fontFamily = FontFamily.Monospace,
@@ -1184,7 +1132,7 @@ private fun AnnotatedString.Builder.appendWithBoldPhrases(
         }
 
         append(text.substring(cursor, next.first))
-        withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = TextZinc100)) {
+        withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = TextHighWhite)) {
             append(text.substring(next.first, next.first + next.second.length))
         }
         cursor = next.first + next.second.length

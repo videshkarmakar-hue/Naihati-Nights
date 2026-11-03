@@ -40,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
@@ -145,24 +144,6 @@ fun RestaurantScreen(
                 onOpenSidebar = onOpenSidebar,
                 onOpenDeveloperCredits = onOpenDeveloperCredits
             )
-        }
-
-        // ============ MICRO HEADER ============
-        item(key = "restaurant_micro_header") {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 6.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "EATS",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 2.sp,
-                    color = RestaurantZincMuted
-                )
-            }
         }
 
         // ============ SEARCH ============
@@ -364,7 +345,7 @@ private fun RestaurantCard(
     onMap: () -> Unit,
     onCall: () -> Unit
 ) {
-    val shape = RoundedCornerShape(24.dp)
+    val shape = RoundedCornerShape(16.dp)
     val sacred = place.name.startsWith("Boro Maa")
 
     Box(
@@ -381,15 +362,7 @@ private fun RestaurantCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(
-                        Brush.horizontalGradient(
-                            listOf(
-                                Color.Transparent,
-                                Color(0x66FFFFFF),
-                                Color.Transparent
-                            )
-                        )
-                    )
+                    .background(Color(0x33FFFFFF))
             )
         }
 

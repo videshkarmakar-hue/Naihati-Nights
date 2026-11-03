@@ -48,6 +48,7 @@ import com.example.model.ThemePandelData
 import com.example.ui.components.AppBrandHeader
 import com.example.ui.theme.ObsidianNoir
 import com.example.ui.theme.PlusJakartaSans
+import com.example.ui.theme.TextSoftZinc
 
 private val CardSurface = Color(0xFF111217)
 private val CardBorder = Color(0x14FFFFFF)
@@ -55,7 +56,6 @@ private val DividerColor = Color(0x0FFFFFFF)
 private val TextZinc100 = Color(0xFFF4F4F5)
 private val TextZinc200 = Color(0xFFE4E4E7)
 private val TextZinc300 = Color(0xFFD4D4D8)
-private val TextZinc400 = Color(0xFFA1A1AA)
 private val TextZinc500 = Color(0xFF71717A)
 private val Amber200 = Color(0xFFFDE68A)
 private val Amber300 = Color(0xFFFCD34D)
@@ -170,7 +170,7 @@ private fun ThemePandelCard(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         lineHeight = 16.sp,
-                        color = TextZinc400
+                        color = TextSoftZinc
                     )
                 }
             }
@@ -220,7 +220,7 @@ private fun ThemePandelCard(
             Text(
                 text = "PANDAL THEME",
                 fontFamily = PlusJakartaSans,
-                fontSize = 9.sp,
+                fontSize = 11.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 1.2.sp,
                 color = Color(0xE6FDE68A)
@@ -245,7 +245,7 @@ private fun ThemePandelCard(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Normal,
                     lineHeight = 17.sp,
-                    color = TextZinc400
+                    color = TextSoftZinc
                 )
             }
 
@@ -330,7 +330,7 @@ private fun NewEntryChip() {
         Text(
             text = "NEW",
             fontFamily = PlusJakartaSans,
-            fontSize = 8.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = 0.5.sp,
             color = Color(0xFF0B0B10),
@@ -350,7 +350,7 @@ private fun LocationRow(item: ThemePandel, modifier: Modifier = Modifier) {
         Icon(
             imageVector = Icons.Default.LocationOn,
             contentDescription = null,
-            tint = TextZinc400,
+            tint = TextSoftZinc,
             modifier = Modifier.size(14.dp)
         )
         Spacer(modifier = Modifier.width(5.dp))
@@ -450,7 +450,7 @@ private fun ThemePandelFooter() {
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 1.1.sp,
-            color = TextZinc400,
+            color = TextSoftZinc,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))

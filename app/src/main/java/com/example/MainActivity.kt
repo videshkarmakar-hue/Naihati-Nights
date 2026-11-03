@@ -14,6 +14,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,17 +30,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlin.math.abs
 import kotlinx.coroutines.launch
 import com.example.data.update.AppUpdateState
 import com.example.ui.components.AppUpdateDialog
@@ -126,7 +131,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     }
 
     // The branded Continue gate is the entry point for every fresh launch.
-    // The branded Continue gate is the entry point for every fresh launch.
     // It is saveable only so a configuration change doesn't replay the splash.
     var currentScreen by rememberSaveable { mutableStateOf(NavigationScreen.INTRO) }
 
@@ -170,7 +174,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
         activeSidebarItem = when (currentScreen) {
             NavigationScreen.HOME -> SidebarNavItem.ROUTE
             NavigationScreen.RESTAURANT -> SidebarNavItem.RESTAURANT
-            NavigationScreen.HELPLINE -> SidebarNavItem.HELPLINE
             NavigationScreen.MID_NIGHT_TRAINS -> SidebarNavItem.MID_NIGHT_TRAINS
             NavigationScreen.THEME_PANDEL -> SidebarNavItem.THEME_PANDEL
             NavigationScreen.APP_DETAILS -> SidebarNavItem.APP_INFO_CREDIT
@@ -184,6 +187,16 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
         }
         isDrawerOpen = true
     }
+
+    // Left-edge swipe: a rightward drag that starts within 28dp of the left edge opens the Sidebar
+    // through the same entry point as the header button (so the current section stays highlighted).
+    // A leftward drag while the Sidebar is open closes it. Skipped on the intro gate, the sidebar
+    // showcase and while the mandatory update dialog owns the screen.
+    val edgeSwipeEnabled = currentScreen != NavigationScreen.INTRO &&
+        currentScreen != NavigationScreen.SIDEBAR_SHOWCASE &&
+        !updatePromptVisible
+    val edgeSwipeState = rememberUpdatedState(edgeSwipeEnabled)
+    val openSidebarState = rememberUpdatedState(openSidebar)
 
     val baseDensity = LocalDensity.current
     val legibilityScale = when (appSettings.textLegibilityScale) {
@@ -202,6 +215,53 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(ObsidianNoir)
+                .pointerInput(Unit) {
+                    val edgePx = with(density) { 28.dp.toPx() }
+                    val slop = viewConfiguration.touchSlop
+                    awaitEachGesture {
+                        // Find the touch this gesture starts from. Raw awaitPointerEvent is used so
+                        // the swipe still works when the touch begins on a clickable child (cards,
+                        // header buttons), which may consume the down event first.
+                        var start: PointerInputChange? = null
+                        var firstEvent = true
+                        while (start == null) {
+                            val event = awaitPointerEvent()
+                            start = event.changes.firstOrNull {
+                                it.pressed && (firstEvent || !it.previousPressed)
+                            }
+                            firstEvent = false
+                            if (start == null && event.changes.none { it.pressed }) break
+                        }
+                        val gesture = start ?: return@awaitEachGesture
+
+                        var totalDx = 0f
+                        var totalDy = 0f
+                        var handled = false
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            val change = event.changes.firstOrNull { it.id == gesture.id } ?: break
+                            if (!change.pressed) break
+                            totalDx += change.position.x - change.previousPosition.x
+                            totalDy += change.position.y - change.previousPosition.y
+                            // Only a horizontally dominant drag past the touch slop counts, so
+                            // vertical scrolling that starts near the edge never opens the drawer.
+                            if (!handled && abs(totalDx) > abs(totalDy) && abs(totalDx) > slop) {
+                                when {
+                                    edgeSwipeState.value && !isDrawerOpen &&
+                                        gesture.position.x <= edgePx && totalDx > 0f -> {
+                                        openSidebarState.value()
+                                        handled = true
+                                    }
+                                    edgeSwipeState.value && isDrawerOpen && totalDx < 0f -> {
+                                        isDrawerOpen = false
+                                        handled = true
+                                    }
+                                }
+                            }
+                            if (handled) change.consume()
+                        }
+                    }
+                }
         ) {
         // Screen Content
         Crossfade(targetState = currentScreen, label = "screenTransition") { screen ->
@@ -401,10 +461,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             }
                             SidebarNavItem.RESTAURANT -> {
                                 currentScreen = NavigationScreen.RESTAURANT
-                                isDrawerOpen = false
-                            }
-                            SidebarNavItem.HELPLINE -> {
-                                currentScreen = NavigationScreen.HELPLINE
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.MID_NIGHT_TRAINS -> {

@@ -32,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
@@ -118,13 +117,11 @@ fun SpecialNoticeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(
-                            Brush.linearGradient(
-                                listOf(palette.accentSurfaceStrong, NoticeCard)
-                            )
+                            palette.accentSurfaceStrong
                         )
-                        .border(1.dp, palette.accentBorder, RoundedCornerShape(20.dp))
+                        .border(1.dp, palette.accentBorder, RoundedCornerShape(16.dp))
                         .padding(16.dp)
                         .testTag("special_notice_hero"),
                     verticalAlignment = Alignment.CenterVertically
@@ -182,9 +179,9 @@ fun SpecialNoticeScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(NoticeInset)
-                        .border(1.dp, NoticeHairline, RoundedCornerShape(20.dp))
+                        .border(1.dp, NoticeHairline, RoundedCornerShape(16.dp))
                         .padding(vertical = 4.dp)
                         .testTag("special_notice_card")
                 ) {

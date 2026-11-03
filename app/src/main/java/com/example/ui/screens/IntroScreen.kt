@@ -37,10 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
@@ -56,21 +53,20 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
+import com.example.ui.theme.LocalAppPalette
+import com.example.ui.theme.ObsidianBorder
+import com.example.ui.theme.ObsidianBorderSubtle
 import com.example.ui.theme.PlusJakartaSans
+import com.example.ui.theme.TextHighWhite
+import com.example.ui.theme.TextMutedZinc
+import com.example.ui.theme.TextSoftZinc
 
 private val OuterCanvas = Color(0xFF121318)
 private val InnerCanvas = Color(0xFF1A1C23)
 private val NeuBase = Color(0xFF1B1D24)
 private val NeuSunken = Color(0xFF16181F)
 private val NeuSunkenPill = Color(0xFF14161C)
-private val NeuGradientStart = Color(0xFF20232C)
-private val NeuGradientEnd = Color(0xFF181921)
-private val NeuEdgeLight = Color(0xFF2A2E38)
-private val NeuEdgeDark = Color(0xFF14161C)
 private val EmeraldActive = Color(0xFF34D399)
-private val TextPrimary = Color(0xFFF5F5F5)
-private val TextSoft = Color(0xFFD4D4D4)
-private val TextMuted = Color(0xFFA3A3A3)
 
 /**
  * Launch / splash screen — the branded Continue gate.
@@ -111,26 +107,8 @@ fun IntroScreen(
             modifier = Modifier
                 .widthIn(max = 412.dp)
                 .fillMaxSize()
-                .drawBehind {
-                    // Soft ambient lighting: a faint white bloom top-left, a deeper shade
-                    // bottom-right, both barely above the canvas.
-                    drawRect(InnerCanvas)
-                    drawCircle(
-                        brush = Brush.radialGradient(
-                            colors = listOf(Color(0x0AFFFFFF), Color.Transparent)
-                        ),
-                        radius = size.width * 0.62f,
-                        center = Offset(0f, 0f)
-                    )
-                    drawCircle(
-                        brush = Brush.radialGradient(
-                            colors = listOf(Color(0x66000000), Color.Transparent)
-                        ),
-                        radius = size.width * 0.78f,
-                        center = Offset(size.width, size.height)
-                    )
-                }
-                .padding(horizontal = 24.dp)
+                .background(InnerCanvas)
+                .padding(horizontal = 16.dp)
                 .statusBarsPadding()
                 .navigationBarsPadding()
                 .alpha(alpha)
@@ -145,16 +123,16 @@ fun IntroScreen(
                     .size(112.dp)
                     .shadow(
                         elevation = 12.dp,
-                        shape = RoundedCornerShape(28.dp),
+                        shape = RoundedCornerShape(16.dp),
                         ambientColor = Color.Black,
                         spotColor = Color.Black
                     )
-                    .clip(RoundedCornerShape(28.dp))
+                    .clip(RoundedCornerShape(16.dp))
                     .background(NeuBase)
                     .border(
                         width = 1.dp,
-                        brush = Brush.linearGradient(listOf(NeuEdgeLight, NeuEdgeDark)),
-                        shape = RoundedCornerShape(28.dp)
+                        color = ObsidianBorder,
+                        shape = RoundedCornerShape(16.dp)
                     )
                     .padding(14.dp),
                 contentAlignment = Alignment.Center
@@ -166,7 +144,7 @@ fun IntroScreen(
                         .background(NeuSunken)
                         .border(
                             width = 1.dp,
-                            brush = Brush.linearGradient(listOf(NeuEdgeDark, NeuEdgeLight)),
+                            color = ObsidianBorderSubtle,
                             shape = RoundedCornerShape(16.dp)
                         )
                         .padding(8.dp),
@@ -182,7 +160,7 @@ fun IntroScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // ── Live status chip ────────────────────────────────────
             Row(
@@ -204,10 +182,10 @@ fun IntroScreen(
                     text = "Videsh Karmakar Projects",
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 10.sp,
-                    lineHeight = 14.sp,
+                    fontSize = 11.sp,
+                    lineHeight = 16.sp,
                     letterSpacing = 0.2.sp,
-                    color = TextMuted
+                    color = TextMutedZinc
                 )
             }
 
@@ -221,7 +199,7 @@ fun IntroScreen(
                 fontSize = 20.sp,
                 lineHeight = 26.sp,
                 letterSpacing = 3.6.sp,
-                color = TextPrimary,
+                color = TextHighWhite,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Visible
@@ -237,7 +215,7 @@ fun IntroScreen(
                 fontSize = 11.5.sp,
                 lineHeight = 18.sp,
                 letterSpacing = 0.2.sp,
-                color = TextMuted,
+                color = TextMutedZinc,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.widthIn(max = 270.dp)
             )
@@ -256,7 +234,7 @@ fun IntroScreen(
                         append("Crafted by ")
                         withStyle(
                             SpanStyle(
-                                color = TextSoft,
+                                color = TextSoftZinc,
                                 fontWeight = FontWeight.SemiBold,
                                 letterSpacing = 0.3.sp
                             )
@@ -268,15 +246,15 @@ fun IntroScreen(
                     fontWeight = FontWeight.Medium,
                     fontSize = 11.sp,
                     lineHeight = 16.sp,
-                    color = TextMuted,
+                    color = TextMutedZinc,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Icon(
                     imageVector = Icons.Default.Verified,
                     contentDescription = "Verified creator",
-                    tint = TextMuted,
-                    modifier = Modifier.size(13.dp)
+                    tint = TextMutedZinc,
+                    modifier = Modifier.size(18.dp)
                 )
             }
 
@@ -322,22 +300,7 @@ private fun BeginJourneyButton(onClick: () -> Unit) {
                 spotColor = Color.Black
             )
             .clip(shape)
-            .background(Brush.linearGradient(listOf(NeuGradientStart, NeuGradientEnd)))
-            .drawBehind {
-                // Raised top-edge highlight, inset from both ends of the capsule.
-                val inset = 16.dp.toPx()
-                val y = 1.dp.toPx()
-                drawLine(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color.Transparent, Color(0x33FFFFFF), Color.Transparent),
-                        startX = inset,
-                        endX = size.width - inset
-                    ),
-                    start = Offset(inset, y),
-                    end = Offset(size.width - inset, y),
-                    strokeWidth = 1.dp.toPx()
-                )
-            }
+            .background(LocalAppPalette.current.accentDeep)
             .border(1.dp, Color(0xB3373B49), shape)
             .clickable(
                 interactionSource = interactionSource,
@@ -357,7 +320,7 @@ private fun BeginJourneyButton(onClick: () -> Unit) {
             fontSize = 13.sp,
             lineHeight = 18.sp,
             letterSpacing = 1.56.sp,
-            color = TextPrimary,
+            color = TextHighWhite,
             textAlign = TextAlign.Center,
             maxLines = 1,
             modifier = Modifier.weight(1f)
@@ -374,8 +337,8 @@ private fun BeginJourneyButton(onClick: () -> Unit) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
-                tint = TextSoft,
-                modifier = Modifier.size(17.dp)
+                tint = TextSoftZinc,
+                modifier = Modifier.size(18.dp)
             )
         }
     }

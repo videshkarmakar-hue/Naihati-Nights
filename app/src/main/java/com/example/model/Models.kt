@@ -553,8 +553,8 @@ data class AppSettings(
     /** Checks GitHub Releases on launch and shows the update prompt when a newer build exists. */
     val autoUpdateCheck: Boolean = true,
 
-    /** Currently selected app theme; Indigo Night is the launch default. */
-    val themeStyle: ThemeStyle = ThemeStyle.INDIGO_NIGHT
+    /** Currently selected app theme; Dark Red is the launch default. */
+    val themeStyle: ThemeStyle = ThemeStyle.DARK_RED
 )
 
 enum class ThemeStyle(

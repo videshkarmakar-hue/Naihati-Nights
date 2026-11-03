@@ -13,7 +13,7 @@ import com.example.model.ThemeStyle
  */
 @Composable
 fun MyApplicationTheme(
-    themeStyle: ThemeStyle = ThemeStyle.INDIGO_NIGHT,
+    themeStyle: ThemeStyle = ThemeStyle.DARK_RED,
     darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit,

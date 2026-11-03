@@ -131,16 +131,16 @@ class AppLaunchRobolectricTest {
                 composeRule.onNodeWithTag("begin_parikrama_button").performClick()
                 composeRule.waitForIdle()
 
-                // Restaurant section exposes the sidebar through its own header menu.
-                composeRule.onNodeWithTag("nav_restaurant").performClick()
+                // Theme Pandel section exposes the sidebar through its own header menu.
+                composeRule.onNodeWithTag("nav_theme_pandel").performClick()
                 composeRule.waitForIdle()
                 composeRule.onNodeWithTag("header_sidebar_button").performClick()
                 composeRule.waitForIdle()
-                composeRule.onNodeWithTag("sidebar_item_restaurant").assertIsDisplayed()
+                composeRule.onNodeWithTag("sidebar_item_theme_pandel").assertIsDisplayed()
                 composeRule.onNodeWithTag("sleek_sidebar_container").assertIsDisplayed()
 
                 // Dismiss by navigating back into the same section.
-                composeRule.onNodeWithTag("sidebar_item_restaurant").performClick()
+                composeRule.onNodeWithTag("sidebar_item_theme_pandel").performClick()
                 composeRule.waitForIdle()
 
                 // Mid-Night Trains section exposes the sidebar through its header menu too.
@@ -179,7 +179,6 @@ class AppLaunchRobolectricTest {
                 listOf(
                     "Route",
                     "Restaurant",
-                    "Helpline",
                     "App Info & Developer Credit",
                     "Developer Credits",
                     "Settings",

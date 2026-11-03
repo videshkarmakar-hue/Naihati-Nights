@@ -74,7 +74,14 @@ import com.example.data.update.releaseInfo
 import com.example.data.update.releaseNoteLines
 import com.example.ui.components.AppBrandHeader
 import com.example.ui.theme.LocalAppPalette
+import com.example.ui.theme.ObsidianBase
+import com.example.ui.theme.ObsidianHighlight
+import com.example.ui.theme.ObsidianNoir
+import com.example.ui.theme.ObsidianRaised
 import com.example.ui.theme.PlusJakartaSans
+import com.example.ui.theme.TextHighWhite
+import com.example.ui.theme.TextMutedZinc
+import com.example.ui.theme.TextSoftZinc
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -221,28 +228,7 @@ fun CheckUpdatesScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .drawBehind {
-                drawRect(
-                    brush = Brush.verticalGradient(
-                        0f to OtaCanvasTop,
-                        0.45f to OtaCanvasMid,
-                        0.70f to OtaCanvasLow,
-                        0.94f to OtaCanvasSilver,
-                        1f to OtaCanvasMist
-                    )
-                )
-                drawRect(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            Color(0x70FFFFFF),
-                            Color(0x1FC8CDD7),
-                            Color.Transparent
-                        ),
-                        center = Offset(size.width * 0.5f, size.height * 0.9f),
-                        radius = size.width * 1.05f
-                    )
-                )
-            },
+            .background(ObsidianNoir),
         contentAlignment = Alignment.TopCenter
     ) {
         LazyColumn(
@@ -307,7 +293,7 @@ fun CheckUpdatesScreen(
                     Text(
                         text = "OTA",
                         fontFamily = OtaMono,
-                        fontSize = 9.sp,
+                        fontSize = 11.sp,
                         lineHeight = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 1.sp,
@@ -325,9 +311,9 @@ fun CheckUpdatesScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(22.dp))
+                        .clip(RoundedCornerShape(16.dp))
                         .background(OtaCard)
-                        .border(1.dp, Color(0x14FFFFFF), RoundedCornerShape(22.dp))
+                        .border(1.dp, Color(0x14FFFFFF), RoundedCornerShape(16.dp))
                         .padding(horizontal = 18.dp, vertical = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -427,17 +413,9 @@ fun CheckUpdatesScreen(
                             .clip(RoundedCornerShape(14.dp))
                             .background(
                                 if (primaryEnabled) {
-                                    Brush.horizontalGradient(
-                                        listOf(
-                                            palette.accentDeep,
-                                            palette.accentStrong,
-                                            palette.accentDeep
-                                        )
-                                    )
+                                    palette.accentDeep
                                 } else {
-                                    Brush.horizontalGradient(
-                                        listOf(Color(0xFF1A1A24), Color(0xFF1A1A24))
-                                    )
+                                    Color(0xFF1A1A24)
                                 }
                             )
                             .border(
@@ -571,7 +549,7 @@ fun CheckUpdatesScreen(
                         Text(
                             text = "ENGINEERED & ARCHITECTED BY",
                             fontFamily = OtaMono,
-                            fontSize = 8.sp,
+                            fontSize = 10.sp,
                             lineHeight = 11.sp,
                             letterSpacing = 1.sp,
                             color = OtaTextFaint
@@ -580,7 +558,7 @@ fun CheckUpdatesScreen(
                         Text(
                             text = "VIDESH KARMAKAR",
                             fontFamily = OtaMono,
-                            fontSize = 8.sp,
+                            fontSize = 10.sp,
                             lineHeight = 11.sp,
                             fontWeight = FontWeight.SemiBold,
                             letterSpacing = 1.sp,
@@ -620,16 +598,9 @@ private fun OtaEmblem() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(18.dp))
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            palette.accentDeep.copy(alpha = 0.55f),
-                            Color(0xFF12131C)
-                        )
-                    )
-                )
-                .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(18.dp))
+                .clip(RoundedCornerShape(16.dp))
+                .background(ObsidianRaised)
+                .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp))
                 .drawBehind { drawCornerBraces(Color(0x66FFFFFF)) }
         ) {
             Image(
@@ -695,7 +666,7 @@ private fun StatusPill(label: String, tone: Color) {
         Text(
             text = label,
             fontFamily = OtaMono,
-            fontSize = 9.sp,
+            fontSize = 11.sp,
             lineHeight = 12.sp,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.9.sp,
@@ -718,7 +689,7 @@ private fun BuildSpecPill(installedBuild: Int, apkSizeBytes: Long) {
         Text(
             text = "BUILD",
             fontFamily = OtaMono,
-            fontSize = 8.sp,
+            fontSize = 10.sp,
             lineHeight = 11.sp,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.8.sp,
@@ -738,7 +709,7 @@ private fun BuildSpecPill(installedBuild: Int, apkSizeBytes: Long) {
             Text(
                 text = "•",
                 fontFamily = OtaMono,
-                fontSize = 9.sp,
+                fontSize = 11.sp,
                 color = OtaTextFaint
             )
             Spacer(modifier = Modifier.width(6.dp))
@@ -787,9 +758,9 @@ private fun TelemetrySection(packageName: String, runtimeEngine: String) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(18.dp))
+                .clip(RoundedCornerShape(16.dp))
                 .background(Color(0xD90E0F14))
-                .border(1.dp, OtaHairline, RoundedCornerShape(18.dp))
+                .border(1.dp, OtaHairline, RoundedCornerShape(16.dp))
                 .padding(12.dp)
                 .testTag("check_updates_telemetry")
         ) {
@@ -845,7 +816,7 @@ private fun TelemetryTile(
         Text(
             text = label.uppercase(Locale.US),
             fontFamily = OtaMono,
-            fontSize = 9.sp,
+            fontSize = 11.sp,
             lineHeight = 12.sp,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.6.sp,
@@ -872,9 +843,9 @@ private fun NotesCard(info: ReleaseInfo, accent: Color) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(OtaInset)
-            .border(1.dp, OtaHairline, RoundedCornerShape(18.dp))
+            .border(1.dp, OtaHairline, RoundedCornerShape(16.dp))
             .padding(16.dp)
             .testTag("check_updates_notes")
     ) {

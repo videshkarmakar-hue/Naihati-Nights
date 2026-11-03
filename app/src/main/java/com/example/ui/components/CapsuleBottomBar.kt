@@ -21,12 +21,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -36,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
@@ -72,13 +69,6 @@ fun CapsuleBottomBar(
             testTag = "nav_home"
         ),
         NavItemSpec(
-            screen = NavigationScreen.RESTAURANT,
-            label = "Restaurant",
-            activeIcon = Icons.Filled.Restaurant,
-            inactiveIcon = Icons.Outlined.Restaurant,
-            testTag = "nav_restaurant"
-        ),
-        NavItemSpec(
             screen = NavigationScreen.MID_NIGHT_TRAINS,
             label = "Mid-Night Trains",
             activeIcon = Icons.Filled.Train,
@@ -110,7 +100,7 @@ fun CapsuleBottomBar(
     ) {
         Row(
             modifier = Modifier
-                .shadow(elevation = 24.dp, shape = CircleShape, ambientColor = Color.Black, spotColor = LocalAppPalette.current.accentDeep)
+                .shadow(elevation = 16.dp, shape = CircleShape, ambientColor = Color.Black, spotColor = Color.Black)
                 .clip(CircleShape)
                 .background(Color(0xF012111B))
                 .border(width = 1.dp, color = Color(0x2EFFFFFF), shape = CircleShape)
@@ -127,13 +117,8 @@ fun CapsuleBottomBar(
                     Row(
                         modifier = Modifier
                             .height(40.dp)
-                            .shadow(elevation = 8.dp, shape = CircleShape, ambientColor = LocalAppPalette.current.accentDeep)
                             .clip(CircleShape)
-                            .background(
-                                brush = Brush.horizontalGradient(
-                                    colors = listOf(LocalAppPalette.current.accentDeep, LocalAppPalette.current.accentStrong)
-                                )
-                            )
+                            .background(LocalAppPalette.current.accentDeep)
                             .border(width = 1.dp, color = LocalAppPalette.current.accentBorderStrong, shape = CircleShape)
                             .clickable(
                                 interactionSource = interactionSource,
@@ -222,7 +207,7 @@ private fun ThemePandelNewBadge(
         Text(
             text = number.toString(),
             color = Color(0xFF0B0B10),
-            fontSize = 7.sp,
+            fontSize = 8.sp,
             fontWeight = FontWeight.Bold
         )
     }

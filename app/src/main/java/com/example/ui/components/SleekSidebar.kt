@@ -27,7 +27,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AltRoute
 import androidx.compose.material.icons.automirrored.outlined.AltRoute
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restaurant
@@ -35,7 +34,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.material.icons.filled.Verified
-import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
@@ -85,7 +83,6 @@ enum class SidebarNavItem(
 ) {
     ROUTE("Route", Icons.AutoMirrored.Filled.AltRoute, Icons.AutoMirrored.Outlined.AltRoute, "sidebar_item_route"),
     RESTAURANT("Restaurant", Icons.Filled.Restaurant, Icons.Outlined.Restaurant, "sidebar_item_restaurant"),
-    HELPLINE("Helpline", Icons.Filled.Call, Icons.Outlined.Call, "sidebar_item_helpline"),
     THEME_PANDEL("Theme Pandel", Icons.Filled.Palette, Icons.Outlined.Palette, "sidebar_item_theme_pandel"),
     MID_NIGHT_TRAINS("Mid-Night Trains", Icons.Filled.Train, Icons.Outlined.Train, "sidebar_item_mid_night_trains"),
     BORMA_PUJO_SCHEDULE("বড়মা পুজোর নির্ঘণ্ট", Icons.Filled.CalendarMonth, Icons.Outlined.CalendarMonth, "sidebar_item_borma_pujo_schedule"),
@@ -96,7 +93,7 @@ enum class SidebarNavItem(
     SETTINGS("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, "sidebar_item_settings");
 
     companion object {
-        val primaryItems = listOf(ROUTE, RESTAURANT, HELPLINE)
+        val primaryItems = listOf(ROUTE, RESTAURANT)
         val themeItems = listOf(THEME_PANDEL, MID_NIGHT_TRAINS, BORMA_PUJO_SCHEDULE, SPECIAL_NOTICE)
         val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS)
         val developerItems = listOf(DEVELOPER_CREDITS)
@@ -146,11 +143,11 @@ fun SleekSidebar(
     Box(
         modifier = modifier
             .width(animatedWidth)
-            .clip(RoundedCornerShape(26.dp))
+            .clip(RoundedCornerShape(16.dp))
             .background(currentBg)
             .shadow(
                 elevation = 16.dp,
-                shape = RoundedCornerShape(26.dp),
+                shape = RoundedCornerShape(16.dp),
                 ambientColor = Color.Black.copy(alpha = 0.4f),
                 spotColor = Color.Black.copy(alpha = 0.6f)
             )
@@ -322,7 +319,7 @@ private fun ThemePandelCard(
             Text(
                 text = panel.committee.uppercase(),
                 fontFamily = PlusJakartaSans,
-                fontSize = 9.sp,
+                fontSize = 11.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.4.sp,
                 color = LocalAppPalette.current.accentBright,
@@ -490,7 +487,7 @@ private fun SidebarButton(
                             text = newBadgeText,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 8.sp,
+                            fontSize = 10.sp,
                             letterSpacing = 0.4.sp,
                             color = Color(0xFF0B0B10),
                             modifier = Modifier.padding(horizontal = 5.dp)
@@ -503,7 +500,7 @@ private fun SidebarButton(
                         text = "NEW",
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 8.sp,
+                        fontSize = 10.sp,
                         letterSpacing = 0.6.sp,
                         color = LocalAppPalette.current.accentBright,
                         modifier = Modifier

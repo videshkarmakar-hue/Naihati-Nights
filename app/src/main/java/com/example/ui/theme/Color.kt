@@ -7,8 +7,10 @@ val ObsidianNoir = Color(0xFF050505)
 val ObsidianBase = Color(0xFF0E0E12)
 val ObsidianRaised = Color(0xFF16161D)
 val ObsidianHighlight = Color(0xFF1E1E28)
-val ObsidianBorder = Color(0x1FC4B5FD) // rgba(196, 181, 253, 0.12)
-val ObsidianBorderSubtle = Color(0x14C4B5FD) // rgba(196, 181, 253, 0.08)
+// Neutral zinc hairlines (pure white at low alpha) — deliberately untinted so every theme
+// shares the same structural outline instead of picking up a stray brand hue.
+val ObsidianBorder = Color(0x1FFFFFFF) // rgba(255, 255, 255, 0.12)
+val ObsidianBorderSubtle = Color(0x14FFFFFF) // rgba(255, 255, 255, 0.08)
 
 // Regal Electric Violet & Accents
 val RegalElectricViolet = Color(0xFF3A0CA3)
@@ -32,4 +34,5 @@ val StatusEmerald = Color(0xFF10B981)
 // Typography
 val TextHighWhite = Color(0xFFF8FAFC)
 val TextSoftZinc = Color(0xFF94A3B8)
-val TextMutedZinc = Color(0xFF64748B)
+// 5.4:1 against the Obsidian canvas — AA for small text, so genuinely muted copy stays readable.
+val TextMutedZinc = Color(0xFF7C8493)

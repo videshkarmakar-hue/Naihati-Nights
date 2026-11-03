@@ -116,7 +116,7 @@ val Typography = Typography(
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.05.sp,
-        color = PaleLavender
+        color = TextSoftZinc
     ),
     labelSmall = TextStyle(
         fontFamily = PlusJakartaSans,

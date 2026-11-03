@@ -345,7 +345,6 @@ class CoreScreensSmokeTest {
             }
         }
 
-        composeRule.onNodeWithTag("home_routes_micro_header").assertIsDisplayed()
         composeRule.onNodeWithTag("home_directory_header").assertIsDisplayed()
         composeRule.onNodeWithText("7 SECTORS").assertIsDisplayed()
         composeRule.onNodeWithTag("home_expand_all").assertIsDisplayed()
@@ -624,36 +623,37 @@ class CoreScreensSmokeTest {
         }
 
         composeRule.onNodeWithTag("nav_home").assertIsDisplayed()
-        composeRule.onNodeWithTag("nav_restaurant").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_mid_night_trains").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_theme_pandel").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_borma_pujo").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("nav_restaurant").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_feedback").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_settings").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_helpline").assertCountEquals(0)
         composeRule.onAllNodesWithContentDescription("Helpline").assertCountEquals(0)
+        composeRule.onAllNodesWithContentDescription("Restaurant").assertCountEquals(0)
         composeRule.onNodeWithContentDescription("Mid-Night Trains").assertIsDisplayed()
 
         val home = composeRule.onNodeWithTag("nav_home").getUnclippedBoundsInRoot()
-        val restaurant = composeRule.onNodeWithTag("nav_restaurant").getUnclippedBoundsInRoot()
         val midNightTrains = composeRule.onNodeWithTag("nav_mid_night_trains").getUnclippedBoundsInRoot()
         val themePandel = composeRule.onNodeWithTag("nav_theme_pandel").getUnclippedBoundsInRoot()
+        val borma = composeRule.onNodeWithTag("nav_borma_pujo").getUnclippedBoundsInRoot()
         assertTrue(
-            "Home and Restaurant slots should sit close together, home=$home restaurant=$restaurant",
-            restaurant.left - home.right <= 12.dp
-        )
-        assertTrue(
-            "Restaurant and Mid-Night Trains slots should sit close together, restaurant=$restaurant midNightTrains=$midNightTrains",
-            midNightTrains.left - restaurant.right <= 12.dp
+            "Home and Mid-Night Trains slots should sit close together, home=$home midNightTrains=$midNightTrains",
+            midNightTrains.left - home.right <= 12.dp
         )
         assertTrue(
             "Mid-Night Trains and Theme Pandel slots should sit close together, midNightTrains=$midNightTrains themePandel=$themePandel",
             themePandel.left - midNightTrains.right <= 12.dp
         )
+        assertTrue(
+            "Theme Pandel and Boro Maa slots should sit close together, themePandel=$themePandel borma=$borma",
+            borma.left - themePandel.right <= 12.dp
+        )
 
-        composeRule.onNodeWithTag("nav_restaurant").performClick()
+        composeRule.onNodeWithTag("nav_home").performClick()
         composeRule.waitForIdle()
-        assertTrue(navigatedTo == NavigationScreen.RESTAURANT)
+        assertTrue(navigatedTo == NavigationScreen.HOME)
 
         composeRule.onNodeWithTag("nav_mid_night_trains").performClick()
         composeRule.waitForIdle()
@@ -745,7 +745,6 @@ class CoreScreensSmokeTest {
         listOf(
             "sidebar_item_route" to "Route",
             "sidebar_item_restaurant" to "Restaurant",
-            "sidebar_item_helpline" to "Helpline",
             "sidebar_item_theme_pandel" to "Theme Pandel",
             "sidebar_item_mid_night_trains" to "Mid-Night Trains",
             "sidebar_item_borma_pujo_schedule" to "বড়মা পুজোর নির্ঘণ্ট",
@@ -789,10 +788,6 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("sidebar_item_restaurant").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.RESTAURANT, selected)
-
-        composeRule.onNodeWithTag("sidebar_item_helpline").performClick()
-        composeRule.waitForIdle()
-        assertEquals(SidebarNavItem.HELPLINE, selected)
 
         composeRule.onNodeWithTag("sidebar_item_theme_pandel").performClick()
         composeRule.waitForIdle()

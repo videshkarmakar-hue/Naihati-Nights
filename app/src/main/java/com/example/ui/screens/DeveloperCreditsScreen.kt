@@ -38,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -210,9 +209,9 @@ fun DeveloperCreditsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(16.dp))
                     .background(CreditsSurface)
-                    .border(1.dp, CreditsBorder, RoundedCornerShape(20.dp))
+                    .border(1.dp, CreditsBorder, RoundedCornerShape(16.dp))
                     .padding(20.dp)
                     .testTag("dev_credits_hero")
             ) {
@@ -458,9 +457,7 @@ private fun DeveloperAvatar() {
                 .size(112.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(
-                    Brush.linearGradient(
-                        colors = listOf(LocalAppPalette.current.accentSurface, LocalAppPalette.current.accentStrong)
-                    )
+                    LocalAppPalette.current.accentSurface
                 )
                 .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
@@ -495,9 +492,7 @@ private fun AvatarFallback() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.linearGradient(
-                    colors = listOf(LocalAppPalette.current.accentDeep, LocalAppPalette.current.accent)
-                )
+                LocalAppPalette.current.accentDeep
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -604,7 +599,7 @@ private fun DesignFactCard(
         Text(
             text = fact.label.uppercase(),
             fontFamily = PlusJakartaSans,
-            fontSize = 9.sp,
+            fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.7.sp,
             color = CreditsTextMuted,

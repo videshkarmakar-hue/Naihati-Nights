@@ -257,14 +257,14 @@ fun SidebarShowcaseScreen(
 
                     // Active Section Content Preview Card
                     Card(
-                        shape = RoundedCornerShape(26.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = if (isDarkMode) Color(0xFF121218) else Color(0xFFF7F7F9)
                         ),
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
-                            .shadow(10.dp, RoundedCornerShape(26.dp))
+                            .shadow(10.dp, RoundedCornerShape(16.dp))
                     ) {
                         SidebarContentDisplay(
                             selectedItem = selectedItem,
@@ -533,20 +533,6 @@ fun SidebarContentDisplay(
                 )
                 Text(
                     text = "Bhog kitchens, biryani houses, and late-night eateries along the Naihati parikrama corridors.",
-                    fontSize = 11.5.sp,
-                    color = TextSoftZinc,
-                    lineHeight = 16.sp
-                )
-            }
-            SidebarNavItem.HELPLINE -> {
-                Text(
-                    text = "Helpline",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = KumartuliTeal
-                )
-                Text(
-                    text = "Police, medical, lost & found, and volunteer booth contacts for every zone of the route.",
                     fontSize = 11.5.sp,
                     color = TextSoftZinc,
                     lineHeight = 16.sp

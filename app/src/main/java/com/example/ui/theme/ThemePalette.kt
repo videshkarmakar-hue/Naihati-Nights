@@ -54,7 +54,7 @@ data class AppPalette(
 
 /**
  * Regal Violet — the signature Obsidian & Regal Violet identity. No longer the launch default:
- * [ThemeStyle.KUMARTULI_TEAL] is, but this remains the palette for users who saved violet.
+ * [ThemeStyle.DARK_RED] is, but this remains the palette for users who saved violet.
  */
 private val RegalVioletPalette = AppPalette(
     name = "Regal Violet",
@@ -127,7 +127,7 @@ private val AzureSignalPalette = AppPalette(
     textMuted = Color(0xFF94A3B8)
 )
 
-/** Dark Red — deep crimson on blood plum panels (the requested dark red accent). */
+/** Dark Red — deep crimson on blood plum panels. The launch default app theme. */
 private val DarkRedPalette = AppPalette(
     name = "Dark Red",
     accent = Color(0xFFB91C1C),
@@ -238,7 +238,7 @@ val AvailablePalettes: List<ThemeStyle> = ThemeStyle.entries.toList()
  * Active palette, provided by [MyApplicationTheme]. Screens read accent tokens from here so a
  * theme change re-colours the whole app without any per-screen state.
  */
-val LocalAppPalette = staticCompositionLocalOf { KumartuliTealPalette }
+val LocalAppPalette = staticCompositionLocalOf { DarkRedPalette }
 
 /**
  * Material color scheme derived from a palette. The neutral Obsidian surfaces and the three text

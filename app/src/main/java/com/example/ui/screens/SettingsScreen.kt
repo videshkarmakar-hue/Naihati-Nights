@@ -69,7 +69,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -463,13 +462,7 @@ fun SettingsScreen(
                         .width(80.dp)
                         .height(1.dp)
                         .background(
-                            Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    LocalAppPalette.current.accentBorderStrong,
-                                    Color.Transparent
-                                )
-                            )
+                            LocalAppPalette.current.accentBorder
                         )
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -655,11 +648,9 @@ private fun SettingsSwitch(
             .clip(CircleShape)
             .background(
                 if (checked) {
-                    Brush.horizontalGradient(
-                        listOf(LocalAppPalette.current.accentDeep, LocalAppPalette.current.accentStrong)
-                    )
+                    LocalAppPalette.current.accentDeep
                 } else {
-                    SolidColor(SettingsSwitchOff)
+                    SettingsSwitchOff
                 }
             )
             .border(
@@ -1364,13 +1355,7 @@ private fun SettingsAppUpdateCard(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            LocalAppPalette.current.accentSurface,
-                            LocalAppPalette.current.accentSurfaceStrong,
-                            LocalAppPalette.current.accentSurfaceStrong
-                        )
-                    )
+                    LocalAppPalette.current.accentSurface
                 )
                 .border(1.dp, LocalAppPalette.current.accentBorder, RoundedCornerShape(12.dp))
                 .clickable(enabled = !isChecking && !isDownloading) {
@@ -1446,7 +1431,7 @@ private fun SettingsAppUpdateCard(
             Text(
                 text = "REQUIRED",
                 fontFamily = PlusJakartaSans,
-                fontSize = 9.sp,
+                fontSize = 11.sp,
                 lineHeight = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 0.8.sp,
@@ -1570,13 +1555,7 @@ private fun SystemCoreCard(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(
-                        Brush.horizontalGradient(
-                            colors = listOf(
-                                LocalAppPalette.current.accentSurface,
-                                LocalAppPalette.current.accentSurfaceStrong,
-                                LocalAppPalette.current.accentSurfaceStrong
-                            )
-                        )
+                        LocalAppPalette.current.accentSurface
                     )
                     .border(1.dp, LocalAppPalette.current.accentBorder, RoundedCornerShape(12.dp))
                     .clickable(enabled = !isChecking) { onCheckForUpdates() }
