@@ -29,7 +29,6 @@ import androidx.compose.material.icons.automirrored.outlined.AltRoute
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Train
@@ -37,7 +36,6 @@ import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SystemUpdate
 import androidx.compose.material.icons.outlined.Train
@@ -82,7 +80,6 @@ enum class SidebarNavItem(
     val testTag: String
 ) {
     ROUTE("Route", Icons.AutoMirrored.Filled.AltRoute, Icons.AutoMirrored.Outlined.AltRoute, "sidebar_item_route"),
-    RESTAURANT("Restaurant", Icons.Filled.Restaurant, Icons.Outlined.Restaurant, "sidebar_item_restaurant"),
     THEME_PANDEL("Theme Pandel", Icons.Filled.Palette, Icons.Outlined.Palette, "sidebar_item_theme_pandel"),
     MID_NIGHT_TRAINS("Mid-Night Trains", Icons.Filled.Train, Icons.Outlined.Train, "sidebar_item_mid_night_trains"),
     BORMA_PUJO_SCHEDULE("বড়মা পুজোর নির্ঘণ্ট", Icons.Filled.CalendarMonth, Icons.Outlined.CalendarMonth, "sidebar_item_borma_pujo_schedule"),
@@ -93,7 +90,7 @@ enum class SidebarNavItem(
     SETTINGS("Settings", Icons.Filled.Settings, Icons.Outlined.Settings, "sidebar_item_settings");
 
     companion object {
-        val primaryItems = listOf(ROUTE, RESTAURANT)
+        val primaryItems = listOf(ROUTE)
         val themeItems = listOf(THEME_PANDEL, MID_NIGHT_TRAINS, BORMA_PUJO_SCHEDULE, SPECIAL_NOTICE)
         val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS)
         val developerItems = listOf(DEVELOPER_CREDITS)

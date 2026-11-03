@@ -744,7 +744,6 @@ class CoreScreensSmokeTest {
 
         listOf(
             "sidebar_item_route" to "Route",
-            "sidebar_item_restaurant" to "Restaurant",
             "sidebar_item_theme_pandel" to "Theme Pandel",
             "sidebar_item_mid_night_trains" to "Mid-Night Trains",
             "sidebar_item_borma_pujo_schedule" to "বড়মা পুজোর নির্ঘণ্ট",
@@ -784,10 +783,6 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("sidebar_item_route").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.ROUTE, selected)
-
-        composeRule.onNodeWithTag("sidebar_item_restaurant").performClick()
-        composeRule.waitForIdle()
-        assertEquals(SidebarNavItem.RESTAURANT, selected)
 
         composeRule.onNodeWithTag("sidebar_item_theme_pandel").performClick()
         composeRule.waitForIdle()

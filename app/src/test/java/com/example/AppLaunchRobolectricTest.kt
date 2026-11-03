@@ -178,7 +178,6 @@ class AppLaunchRobolectricTest {
 
                 listOf(
                     "Route",
-                    "Restaurant",
                     "App Info & Developer Credit",
                     "Developer Credits",
                     "Settings",

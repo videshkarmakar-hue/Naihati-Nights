@@ -109,7 +109,7 @@ private val KumartuliTealPalette = AppPalette(
     textMuted = Color(0xFF94A3B8)
 )
 
-/** Azure Signal — crisp sky blue over deep ink panels. */
+/** Azure Signal - crisp sky blue over deep ink panels. The launch default app theme. */
 private val AzureSignalPalette = AppPalette(
     name = "Azure Signal",
     accent = Color(0xFF38BDF8),
@@ -127,7 +127,7 @@ private val AzureSignalPalette = AppPalette(
     textMuted = Color(0xFF94A3B8)
 )
 
-/** Dark Red — deep crimson on blood plum panels. The launch default app theme. */
+/** Dark Red — deep crimson on blood plum panels. */
 private val DarkRedPalette = AppPalette(
     name = "Dark Red",
     accent = Color(0xFFB91C1C),
@@ -238,7 +238,7 @@ val AvailablePalettes: List<ThemeStyle> = ThemeStyle.entries.toList()
  * Active palette, provided by [MyApplicationTheme]. Screens read accent tokens from here so a
  * theme change re-colours the whole app without any per-screen state.
  */
-val LocalAppPalette = staticCompositionLocalOf { DarkRedPalette }
+val LocalAppPalette = staticCompositionLocalOf { AzureSignalPalette }
 
 /**
  * Material color scheme derived from a palette. The neutral Obsidian surfaces and the three text

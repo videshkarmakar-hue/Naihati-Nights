@@ -524,20 +524,6 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
-            SidebarNavItem.RESTAURANT -> {
-                Text(
-                    text = "Restaurant",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = SacredGold
-                )
-                Text(
-                    text = "Bhog kitchens, biryani houses, and late-night eateries along the Naihati parikrama corridors.",
-                    fontSize = 11.5.sp,
-                    color = TextSoftZinc,
-                    lineHeight = 16.sp
-                )
-            }
             SidebarNavItem.APP_INFO_CREDIT -> {
                 Text(
                     text = "App Info & Developer Credit",
