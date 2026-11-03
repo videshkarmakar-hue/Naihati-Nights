@@ -5,6 +5,7 @@ enum class NavigationScreen {
     HOME,
     RESTAURANT,
     HELPLINE,
+    MID_NIGHT_TRAINS,
     THEME_PANDEL,
     SETTINGS,
     CHECK_UPDATES,

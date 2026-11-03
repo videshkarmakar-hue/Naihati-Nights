@@ -119,7 +119,7 @@ class AppLaunchRobolectricTest {
     }
 
     @Test
-    fun sidebar_opensFromRestaurantAndHelplineSections() {
+    fun sidebar_opensFromRestaurantAndMidNightTrainsSections() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         runBlocking {
             SettingsDataStore(context).setOnboardingComplete(false)
@@ -143,12 +143,12 @@ class AppLaunchRobolectricTest {
                 composeRule.onNodeWithTag("sidebar_item_restaurant").performClick()
                 composeRule.waitForIdle()
 
-                // Helpline section exposes the sidebar through its header menu too.
-                composeRule.onNodeWithTag("nav_helpline").performClick()
+                // Mid-Night Trains section exposes the sidebar through its header menu too.
+                composeRule.onNodeWithTag("nav_mid_night_trains").performClick()
                 composeRule.waitForIdle()
                 composeRule.onNodeWithTag("header_sidebar_button").performClick()
                 composeRule.waitForIdle()
-                composeRule.onNodeWithTag("sidebar_item_helpline").assertIsDisplayed()
+                composeRule.onNodeWithTag("sidebar_item_mid_night_trains").assertIsDisplayed()
                 composeRule.onNodeWithTag("sleek_sidebar_container").assertIsDisplayed()
             }
         } finally {

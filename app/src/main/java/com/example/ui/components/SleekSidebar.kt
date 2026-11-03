@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material.icons.filled.Train
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -41,6 +42,7 @@ import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SystemUpdate
+import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -85,6 +87,7 @@ enum class SidebarNavItem(
     RESTAURANT("Restaurant", Icons.Filled.Restaurant, Icons.Outlined.Restaurant, "sidebar_item_restaurant"),
     HELPLINE("Helpline", Icons.Filled.Call, Icons.Outlined.Call, "sidebar_item_helpline"),
     THEME_PANDEL("Theme Pandel", Icons.Filled.Palette, Icons.Outlined.Palette, "sidebar_item_theme_pandel"),
+    MID_NIGHT_TRAINS("Mid-Night Trains", Icons.Filled.Train, Icons.Outlined.Train, "sidebar_item_mid_night_trains"),
     BORMA_PUJO_SCHEDULE("বড়মা পুজোর নির্ঘণ্ট", Icons.Filled.CalendarMonth, Icons.Outlined.CalendarMonth, "sidebar_item_borma_pujo_schedule"),
     SPECIAL_NOTICE("বিশেষ ঘোষণা", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_special_notice"),
     APP_INFO_CREDIT("App Info & Developer Credit", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_app_info_credit"),
@@ -94,7 +97,7 @@ enum class SidebarNavItem(
 
     companion object {
         val primaryItems = listOf(ROUTE, RESTAURANT, HELPLINE)
-        val themeItems = listOf(THEME_PANDEL, BORMA_PUJO_SCHEDULE, SPECIAL_NOTICE)
+        val themeItems = listOf(THEME_PANDEL, MID_NIGHT_TRAINS, BORMA_PUJO_SCHEDULE, SPECIAL_NOTICE)
         val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS)
         val developerItems = listOf(DEVELOPER_CREDITS)
     }

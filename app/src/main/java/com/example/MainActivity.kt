@@ -54,6 +54,7 @@ import com.example.ui.screens.DeveloperProfileScreen
 import com.example.ui.screens.HelplineScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.IntroScreen
+import com.example.ui.screens.MidNightTrainsScreen
 import com.example.ui.screens.RestaurantScreen
 import com.example.ui.screens.SettingsScreen
 import com.example.ui.screens.SidebarShowcaseScreen
@@ -155,6 +156,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.BORMA_PUJO_SCHEDULE,
             NavigationScreen.SPECIAL_NOTICE,
             NavigationScreen.HELPLINE,
+            NavigationScreen.MID_NIGHT_TRAINS,
             NavigationScreen.THEME_PANDEL,
             NavigationScreen.RESTAURANT,
             NavigationScreen.DEVELOPER_CREDITS
@@ -169,6 +171,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.HOME -> SidebarNavItem.ROUTE
             NavigationScreen.RESTAURANT -> SidebarNavItem.RESTAURANT
             NavigationScreen.HELPLINE -> SidebarNavItem.HELPLINE
+            NavigationScreen.MID_NIGHT_TRAINS -> SidebarNavItem.MID_NIGHT_TRAINS
             NavigationScreen.THEME_PANDEL -> SidebarNavItem.THEME_PANDEL
             NavigationScreen.APP_DETAILS -> SidebarNavItem.APP_INFO_CREDIT
             NavigationScreen.PROFILE -> SidebarNavItem.APP_INFO_CREDIT
@@ -233,6 +236,14 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                 NavigationScreen.HELPLINE -> {
                     HelplineScreen(
                         content = content,
+                        onBack = { currentScreen = NavigationScreen.HOME },
+                        onOpenSidebar = openSidebar,
+                        onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
+                    )
+                }
+
+                NavigationScreen.MID_NIGHT_TRAINS -> {
+                    MidNightTrainsScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
                         onOpenSidebar = openSidebar,
                         onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
@@ -394,6 +405,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             }
                             SidebarNavItem.HELPLINE -> {
                                 currentScreen = NavigationScreen.HELPLINE
+                                isDrawerOpen = false
+                            }
+                            SidebarNavItem.MID_NIGHT_TRAINS -> {
+                                currentScreen = NavigationScreen.MID_NIGHT_TRAINS
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.APP_INFO_CREDIT -> {

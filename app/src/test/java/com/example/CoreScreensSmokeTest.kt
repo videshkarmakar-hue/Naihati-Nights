@@ -16,8 +16,10 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -44,6 +46,7 @@ import com.example.ui.screens.DeveloperProfileScreen
 import com.example.ui.screens.HelplineScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.IntroScreen
+import com.example.ui.screens.MidNightTrainsScreen
 import com.example.ui.screens.RestaurantScreen
 import com.example.ui.screens.SettingsScreen
 import com.example.ui.screens.SpecialNoticeScreen
@@ -622,32 +625,39 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithTag("nav_home").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_restaurant").assertIsDisplayed()
-        composeRule.onNodeWithTag("nav_helpline").assertIsDisplayed()
+        composeRule.onNodeWithTag("nav_mid_night_trains").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_theme_pandel").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_borma_pujo").assertIsDisplayed()
         composeRule.onAllNodesWithTag("nav_feedback").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_settings").assertCountEquals(0)
+        composeRule.onAllNodesWithTag("nav_helpline").assertCountEquals(0)
+        composeRule.onAllNodesWithContentDescription("Helpline").assertCountEquals(0)
+        composeRule.onNodeWithContentDescription("Mid-Night Trains").assertIsDisplayed()
 
         val home = composeRule.onNodeWithTag("nav_home").getUnclippedBoundsInRoot()
         val restaurant = composeRule.onNodeWithTag("nav_restaurant").getUnclippedBoundsInRoot()
-        val helpline = composeRule.onNodeWithTag("nav_helpline").getUnclippedBoundsInRoot()
+        val midNightTrains = composeRule.onNodeWithTag("nav_mid_night_trains").getUnclippedBoundsInRoot()
         val themePandel = composeRule.onNodeWithTag("nav_theme_pandel").getUnclippedBoundsInRoot()
         assertTrue(
             "Home and Restaurant slots should sit close together, home=$home restaurant=$restaurant",
             restaurant.left - home.right <= 12.dp
         )
         assertTrue(
-            "Restaurant and Helpline slots should sit close together, restaurant=$restaurant helpline=$helpline",
-            helpline.left - restaurant.right <= 12.dp
+            "Restaurant and Mid-Night Trains slots should sit close together, restaurant=$restaurant midNightTrains=$midNightTrains",
+            midNightTrains.left - restaurant.right <= 12.dp
         )
         assertTrue(
-            "Helpline and Theme Pandel slots should sit close together, helpline=$helpline themePandel=$themePandel",
-            themePandel.left - helpline.right <= 12.dp
+            "Mid-Night Trains and Theme Pandel slots should sit close together, midNightTrains=$midNightTrains themePandel=$themePandel",
+            themePandel.left - midNightTrains.right <= 12.dp
         )
 
         composeRule.onNodeWithTag("nav_restaurant").performClick()
         composeRule.waitForIdle()
         assertTrue(navigatedTo == NavigationScreen.RESTAURANT)
+
+        composeRule.onNodeWithTag("nav_mid_night_trains").performClick()
+        composeRule.waitForIdle()
+        assertTrue(navigatedTo == NavigationScreen.MID_NIGHT_TRAINS)
 
         composeRule.onNodeWithTag("nav_theme_pandel").performClick()
         composeRule.waitForIdle()
@@ -737,6 +747,7 @@ class CoreScreensSmokeTest {
             "sidebar_item_restaurant" to "Restaurant",
             "sidebar_item_helpline" to "Helpline",
             "sidebar_item_theme_pandel" to "Theme Pandel",
+            "sidebar_item_mid_night_trains" to "Mid-Night Trains",
             "sidebar_item_borma_pujo_schedule" to "বড়মা পুজোর নির্ঘণ্ট",
             "sidebar_item_special_notice" to "বিশেষ ঘোষণা",
             "sidebar_item_app_info_credit" to "App Info & Developer Credit",
@@ -787,6 +798,10 @@ class CoreScreensSmokeTest {
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.THEME_PANDEL, selected)
 
+        composeRule.onNodeWithTag("sidebar_item_mid_night_trains").performClick()
+        composeRule.waitForIdle()
+        assertEquals(SidebarNavItem.MID_NIGHT_TRAINS, selected)
+
         composeRule.onNodeWithTag("sidebar_item_borma_pujo_schedule").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.BORMA_PUJO_SCHEDULE, selected)
@@ -812,6 +827,47 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("sidebar_item_developer_credits").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.DEVELOPER_CREDITS, selected)
+    }
+
+    @Test
+    fun midNightTrainsScreen_rendersExtraEmuTimetable() {
+        var backPressed = 0
+        composeRule.setContent {
+            MyApplicationTheme {
+                MidNightTrainsScreen(onBack = { backPressed++ })
+            }
+        }
+
+        composeRule.onNodeWithTag("mid_night_trains_screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("mid_night_trains_hero").assertIsDisplayed()
+        composeRule.onNodeWithTag("mid_night_trains_group_up").assertIsDisplayed()
+        composeRule.onNodeWithText("Up EMU Special (Extra For Night)").assertIsDisplayed()
+        composeRule.onNodeWithText("Down EMU Special (Extra For Night)").assertIsDisplayed()
+
+        // Every published midnight EMU special stays verbatim, number to timing.
+        listOf(
+            "Train No. 03161: Sealdah – 23:00 to Dankuni – 23:42 Hrs.",
+            "Train No. 03163: Sealdah – 00:05 to Barasat – 01:35 Hrs.",
+            "Train No. 03165: Barasat – 01:50 to Bongaon – 03:00 Hrs.",
+            "Train No. 03167: Barasat – 01:10 to Hasnabad – 02:36 Hrs.",
+            "Train No. 03169: Sealdah – 00:40 to Ranaghat – 02:30 Hrs.",
+            "Train No. 03171: Barrackpore – 01:25 to Naihati – 02:10 Hrs.",
+            "Train No. 03162: Dankuni – 23:55 to Sealdah – 00:37 Hrs.",
+            "Train No. 03164: Barasat – 01:10 to Sealdah – 01:55 Hrs.",
+            "Train No. 03166: Bongaon – 23:00 to Barasat – 00:10 Hrs.",
+            "Train No. 03168: Hasnabad – 23:30 to Barasat – 00:56 Hrs.",
+            "Train No. 03170: Ranaghat – 23:45 to Sealdah – 01:40 Hrs.",
+            "Train No. 03172: Sealdah – 00:30 to Barrackpore – 01:15 Hrs."
+        ).forEach { line ->
+            composeRule.onNodeWithText(line).performScrollTo().assertIsDisplayed()
+        }
+
+        composeRule.onNodeWithTag("mid_night_train_03161").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("mid_night_train_03172").performScrollTo().assertIsDisplayed()
+
+        composeRule.onNodeWithTag("mid_night_trains_back_button").performClick()
+        composeRule.waitForIdle()
+        assertEquals(1, backPressed)
     }
 
     @Test

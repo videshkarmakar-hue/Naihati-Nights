@@ -18,16 +18,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restaurant
-import androidx.compose.material.icons.outlined.Call
+import androidx.compose.material.icons.filled.Train
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Restaurant
+import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -79,11 +79,11 @@ fun CapsuleBottomBar(
             testTag = "nav_restaurant"
         ),
         NavItemSpec(
-            screen = NavigationScreen.HELPLINE,
-            label = "Helpline",
-            activeIcon = Icons.Filled.Call,
-            inactiveIcon = Icons.Outlined.Call,
-            testTag = "nav_helpline"
+            screen = NavigationScreen.MID_NIGHT_TRAINS,
+            label = "Mid-Night Trains",
+            activeIcon = Icons.Filled.Train,
+            inactiveIcon = Icons.Outlined.Train,
+            testTag = "nav_mid_night_trains"
         ),
         NavItemSpec(
             screen = NavigationScreen.THEME_PANDEL,
