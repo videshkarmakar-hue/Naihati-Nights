@@ -1,5 +1,10 @@
 package com.example.ui.screens
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,16 +23,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -38,15 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.ui.theme.LocalAppPalette
-import com.example.ui.theme.ObsidianNoir
 import com.example.ui.theme.PlusJakartaSans
-import com.example.ui.theme.TextSoftZinc
 
 /**
  * Launch / intro screen. Visual treatment follows the Finesta / Reev Dark reference:
  * an atmospheric fog landscape, a glassmorphic emblem, a tracked display wordmark,
- * a single pill CTA and a verified attribution line. Visual-only; all test anchors
- * (tags, copy) are preserved.
+ * a liquid-metal shimmer CONTINUE button and a verified attribution line.
+ * Visual-only; all test anchors (tags, copy) are preserved.
  */
 @Composable
 fun IntroScreen(
@@ -54,6 +56,21 @@ fun IntroScreen(
     motionReduction: Boolean = false
 ) {
     val palette = LocalAppPalette.current
+
+    // Liquid-metal shimmer for the CONTINUE button.
+    val transition = rememberInfiniteTransition(label = "liquidMetal")
+    val phase by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2400),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "metalPhase"
+    )
+    val metalA = lerp(Color(0xFF5A5A5E), Color(0xFFB8B8BC), phase)
+    val metalB = lerp(Color(0xFFD8D8DC), Color(0xFFFFFFFF), phase)
+    val metalC = lerp(Color(0xFF6E6E72), Color(0xFF9A9A9E), phase)
 
     Box(
         modifier = Modifier
@@ -73,7 +90,7 @@ fun IntroScreen(
             .testTag("intro_screen"),
         contentAlignment = Alignment.Center
     ) {
-        // Atmospheric fog overlays (radial glows) drawn on top of the base gradient.
+        // Atmospheric fog overlays.
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -170,7 +187,7 @@ fun IntroScreen(
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 26.sp,
-                letterSpacing = 5.72.sp, // 0.22em @ 26sp
+                letterSpacing = 5.72.sp,
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(start = 1.dp)
@@ -201,46 +218,26 @@ fun IntroScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // CONTINUE pill
+            // Liquid-metal CONTINUE button
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .width(250.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
+                    .width(260.dp)
+                    .clip(RoundedCornerShape(999.dp))
+                    .background(Brush.linearGradient(colors = listOf(metalA, metalB, metalC, metalB, metalA)))
                     .clickable { onBeginExperience() }
-                    .padding(start = 20.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .padding(vertical = 12.dp, horizontal = 24.dp)
                     .testTag("begin_parikrama_button"),
-                contentAlignment = Alignment.CenterStart
+                contentAlignment = Alignment.Center
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "CONTINUE",
-                        fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 12.sp,
-                        letterSpacing = 2.4.sp, // 0.2em @ 12sp
-                        color = Color.Black
-                    )
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(CircleShape)
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = "Continue",
-                            tint = Color.White,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
+                Text(
+                    text = "CONTINUE",
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    letterSpacing = 2.sp,
+                    color = Color.Black
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -255,14 +252,14 @@ fun IntroScreen(
                     fontWeight = FontWeight.Normal,
                     fontSize = 8.5.sp,
                     letterSpacing = 1.5.sp,
-                    color = Color.White.copy(alpha = 0.4f),
+                    color = palette.accentBright,
                     textAlign = TextAlign.Center
                 )
                 Box(
                     modifier = Modifier
                         .size(8.dp)
                         .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.7f))
+                        .background(palette.accentBright)
                 )
             }
         }
