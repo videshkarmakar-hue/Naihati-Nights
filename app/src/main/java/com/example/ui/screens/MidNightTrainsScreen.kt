@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.SpanStyle
@@ -43,7 +44,6 @@ import com.example.ui.components.AppBrandHeader
 import com.example.ui.components.SectionCreditFooter
 import com.example.ui.theme.EmergencyRose
 import com.example.ui.theme.LocalAppPalette
-import com.example.ui.theme.ObsidianNoir
 import com.example.ui.theme.PlusJakartaSans
 
 private val TrainCard = Color(0xFF101018)
@@ -99,7 +99,16 @@ fun MidNightTrainsScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(ObsidianNoir),
+            .background(
+                Brush.linearGradient(
+                    colorStops = arrayOf(
+                        0.00f to Color(0xFF0B0C0E),
+                        0.45f to Color(0xFF101216),
+                        0.80f to Color(0xFF15181E),
+                        1.00f to Color(0xFF0D0E11)
+                    )
+                )
+            ),
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
