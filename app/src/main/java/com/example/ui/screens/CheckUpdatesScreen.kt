@@ -32,7 +32,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Article
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Sync
@@ -449,37 +449,6 @@ fun CheckUpdatesScreen(
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
-                            .background(Color(0xCC1B1C26))
-                            .border(1.dp, Color(0x0FFFFFFF), RoundedCornerShape(14.dp))
-                            .clickable(onClick = onOpenRelease)
-                            .padding(vertical = 11.dp)
-                            .testTag("check_updates_release_notes"),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Article,
-                            contentDescription = null,
-                            tint = palette.accentBright,
-                            modifier = Modifier.size(15.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "View Detailed Release Notes",
-                            fontFamily = PlusJakartaSans,
-                            fontSize = 12.sp,
-                            lineHeight = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            letterSpacing = 0.1.sp,
-                            color = OtaTextBody,
-                            maxLines = 1
-                        )
-                    }
 
                     Spacer(modifier = Modifier.height(12.dp))
 

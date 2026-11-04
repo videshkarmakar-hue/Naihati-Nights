@@ -992,7 +992,6 @@ class CoreScreensSmokeTest {
 
         composeRule.onNodeWithText("You're up to date").assertIsDisplayed()
         composeRule.onNodeWithText("CHECK FOR UPDATES").assertIsDisplayed()
-        composeRule.onNodeWithText("View Detailed Release Notes").assertIsDisplayed()
 
         composeRule.onNodeWithTag("check_updates_button").performClick()
         composeRule.waitForIdle()
