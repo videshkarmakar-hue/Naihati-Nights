@@ -588,7 +588,7 @@ fun SidebarContentDisplay(
                     color = LocalAppPalette.current.accentBright
                 )
                 Text(
-                    text = "Share the Naihati Nights app link with friends and family so they can join the parikrama.",
+                    text = "Share your app with friends and others effortlessly. Send your app through your preferred sharing apps and let others download, install, and experience it with ease.\n\nhttps://naihatinights.pages.dev/\n\n\"Spread the experience. Share with everyone.\"",
                     fontSize = 11.5.sp,
                     color = TextSoftZinc,
                     lineHeight = 16.sp

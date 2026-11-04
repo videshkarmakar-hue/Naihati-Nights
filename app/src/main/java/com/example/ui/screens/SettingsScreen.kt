@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -13,6 +14,8 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +37,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -163,6 +167,10 @@ fun SettingsScreen(
     var locationEnabled by remember { mutableStateOf(true) }
     var showPassword by remember { mutableStateOf(false) }
     var permissionsEnabled by remember { mutableStateOf(true) }
+    var locationPermissionGranted by remember { mutableStateOf(false) }
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted -> locationPermissionGranted = granted }
 
     val resetRotation by animateFloatAsState(
         targetValue = resetTurns * 360f,
@@ -457,6 +465,40 @@ fun SettingsScreen(
                 iconBackground = Color(0x0AFFFFFF),
                 iconBorder = Color(0x1AFFFFFF)
             ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "Share your app with friends and others effortlessly. Send your app through your preferred sharing apps and let others download, install, and experience it with ease.",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.sp,
+                        lineHeight = 19.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = SettingsText
+                    )
+                    Text(
+                        text = "https://naihatinights.pages.dev/",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 13.sp,
+                        lineHeight = 19.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = SettingsAccent
+                    )
+                    Text(
+                        text = "\"Spread the experience. Share with everyone.\"",
+                        fontFamily = PlusJakartaSans,
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = SettingsMutedDeep,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                SettingsHairlineLine()
                 SettingsAdvanceRow(
                     label = "Share Naihati Nights",
                     testTag = "settings_share_app",
@@ -471,6 +513,23 @@ fun SettingsScreen(
                         } catch (e: ActivityNotFoundException) {
                             // no-op
                         }
+                    }
+                )
+            }
+        }
+
+        item(key = "settings_locations_permissions") {
+            SettingsGroupCard(
+                title = "LOCATIONS PERMISSIONS",
+                icon = Icons.Filled.LocationOn,
+                iconBackground = Color(0x0AFFFFFF),
+                iconBorder = Color(0x1AFFFFFF)
+            ) {
+                SettingsAdvanceRow(
+                    label = if (locationPermissionGranted) "Location Access Granted" else "Enable Location Access",
+                    testTag = "settings_locations_permissions",
+                    onClick = {
+                        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
                 )
             }

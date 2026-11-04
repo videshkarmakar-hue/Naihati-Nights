@@ -253,13 +253,6 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                                         openSidebarState.value()
                                         handled = true
                                     }
-                                    // Right-to-left anywhere: open the Developer Credits section.
-                                    edgeSwipeState.value && !isDrawerOpen && totalDx < 0f &&
-                                        currentScreen != NavigationScreen.DEVELOPER_CREDITS -> {
-                                        currentScreen = NavigationScreen.DEVELOPER_CREDITS
-                                        activeSidebarItem = SidebarNavItem.DEVELOPER_CREDITS
-                                        handled = true
-                                    }
                                     // Right-to-left while the Sidebar is open: close it.
                                     edgeSwipeState.value && isDrawerOpen && totalDx < 0f -> {
                                         isDrawerOpen = false

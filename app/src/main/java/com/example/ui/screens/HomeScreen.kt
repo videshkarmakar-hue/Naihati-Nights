@@ -130,8 +130,6 @@ fun HomeScreen(
         if (query.isBlank()) routes else routes.filter { it.matchesQuery(query) }
     }
     val searchAutoExpands = query.length > 1
-    val allRoutesExpanded = visibleRoutes.isNotEmpty() &&
-        visibleRoutes.all { it.id in expandedRouteIds }
 
     LazyColumn(
         modifier = modifier
@@ -161,19 +159,7 @@ fun HomeScreen(
         }
 
         if (visibleRoutes.isNotEmpty()) {
-            item(key = "home_directory_header") {
-                RoutesDirectoryHeader(
-                    sectorCount = visibleRoutes.size,
-                    allExpanded = allRoutesExpanded,
-                    onToggleAll = {
-                        expandedRouteIds = if (allRoutesExpanded) {
-                            emptySet()
-                        } else {
-                            expandedRouteIds + visibleRoutes.map { it.id }
-                        }
-                    }
-                )
-            }
+            // (directory header removed per request)
         }
 
         if (visibleRoutes.isEmpty()) {
@@ -205,65 +191,6 @@ fun HomeScreen(
             HomeFooter()
         }
     }
-}
-
-@Composable
-private fun RoutesDirectoryHeader(
-    sectorCount: Int,
-    allExpanded: Boolean,
-    onToggleAll: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 2.dp)
-            .testTag("home_directory_header"),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "DIRECTION DIRECTORY",
-                color = TextSoftZinc,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = FontFamily.Monospace,
-                letterSpacing = 1.6.sp
-            )
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Color(0x0FFFFFFF))
-                    .padding(horizontal = 7.dp, vertical = 2.dp)
-            ) {
-                Text(
-                    text = "$sectorCount SECTORS",
-                    color = TextHighWhite,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontFamily = FontFamily.Monospace
-                )
-            }
-        }
-
-        Text(
-            text = if (allExpanded) "COLLAPSE ALL" else "EXPAND ALL",
-            color = TextSoftZinc,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Medium,
-            fontFamily = FontFamily.Monospace,
-            letterSpacing = 1.sp,
-            modifier = Modifier
-                .clip(RoundedCornerShape(6.dp))
-                .clickable { onToggleAll() }
-                .padding(horizontal = 6.dp, vertical = 3.dp)
-                .testTag("home_expand_all")
-        )
-    }
-    Spacer(modifier = Modifier.height(10.dp))
 }
 
 @Composable
