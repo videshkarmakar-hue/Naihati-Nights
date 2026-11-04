@@ -316,6 +316,18 @@ object ThemePandelData {
             pandal = "Mangolchitre Mahakali",
             pandalBengali = "মঙ্গলচিত্রে মহাকালী",
             deity = "Mangolchitre Mahakali"
+        ),
+        ThemePandel(
+            id = "theme_17",
+            edition = "8th Year",
+            committee = "Naihati Alo Sangha Committee",
+            committeeBengali = "নৈহাটি আলো সংঘ কমিটি",
+            pandal = "Malaysia (Twin Tower)",
+            pandalBengali = "মালয়েশিয়ার (টুইন টাওয়ার)",
+            deity = "Malaysia (Twin Tower)",
+            specialAttraction = "সাথে থাকছে চন্দনগরের আলোকসজ্জা",
+            specialAttractionStyle = "amber",
+            cardAccent = "amber"
         )
     )
 
