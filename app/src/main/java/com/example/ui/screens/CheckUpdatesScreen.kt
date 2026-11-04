@@ -74,9 +74,7 @@ import com.example.data.update.releaseInfo
 import com.example.data.update.releaseNoteLines
 import com.example.ui.components.AppBrandHeader
 import com.example.ui.theme.LocalAppPalette
-import com.example.ui.theme.ObsidianBase
 import com.example.ui.theme.ObsidianHighlight
-import com.example.ui.theme.ObsidianNoir
 import com.example.ui.theme.ObsidianRaised
 import com.example.ui.theme.PlusJakartaSans
 import com.example.ui.theme.TextHighWhite
@@ -228,7 +226,16 @@ fun CheckUpdatesScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(ObsidianNoir),
+            .background(
+                Brush.verticalGradient(
+                    colorStops = arrayOf(
+                        0.00f to Color(0xFF151518),
+                        0.45f to Color(0xFF0D0D10),
+                        0.70f to Color(0xFF18191F),
+                        1.00f to Color(0xFF0A0A0C)
+                    )
+                )
+            ),
         contentAlignment = Alignment.TopCenter
     ) {
         LazyColumn(
