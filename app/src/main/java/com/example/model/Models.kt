@@ -328,6 +328,19 @@ object ThemePandelData {
             specialAttraction = "সাথে থাকছে চন্দনগরের আলোকসজ্জা",
             specialAttractionStyle = "amber",
             cardAccent = "amber"
+        ),
+        ThemePandel(
+            id = "theme_18",
+            edition = "13th Year",
+            committee = "Ma Shankari Kali Puja Committee",
+            committeeBengali = "মা শঙ্করী কালী পূজা কমিটি",
+            pandal = "Nishir Ratrer Bari",
+            pandalBengali = "নিশির রাতের বাড়ি",
+            deity = "Ma Shankari Kali",
+            specialAttraction = "বিসর্জনে মা এর নৃত্য, ঠিকানা : ৩ নং বিজয়নগর নৈহাটি",
+            locationNote = "৩ নং বিজয়নগর নৈহাটি",
+            specialAttractionStyle = "amber",
+            cardAccent = "amber"
         )
     )
 
