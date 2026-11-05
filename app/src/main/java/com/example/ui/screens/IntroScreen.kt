@@ -1,9 +1,9 @@
 package com.example.ui.screens
 
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
@@ -58,17 +59,10 @@ fun IntroScreen(
     onBeginExperience: () -> Unit,
     motionReduction: Boolean = false
 ) {
-    // Subtle aurora phase for the cosmic backdrop.
-    val transition = rememberInfiniteTransition(label = "aurora")
-    val phase by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 8000),
-            repeatMode = androidx.compose.animation.core.RepeatMode.Restart
-        ),
-        label = "auroraPhase"
-    )
+    val splashAlpha = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        splashAlpha.animateTo(1f, animationSpec = tween(700, easing = FastOutSlowInEasing))
+    }
 
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -81,6 +75,7 @@ fun IntroScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .alpha(splashAlpha.value)
             .background(Color(0xFF02030A))
             .testTag("intro_screen"),
         contentAlignment = Alignment.Center
@@ -110,7 +105,7 @@ fun IntroScreen(
                             Color(0x551A3A5C),
                             Color.Transparent
                         ),
-                        center = androidx.compose.ui.geometry.Offset(0.3f + phase * 0.4f, 0.6f),
+                        center = androidx.compose.ui.geometry.Offset(0.5f, 0.6f),
                         radius = 900f
                     )
                 )
@@ -124,7 +119,7 @@ fun IntroScreen(
                             Color(0x442A1A4A),
                             Color.Transparent
                         ),
-                        center = androidx.compose.ui.geometry.Offset(0.7f - phase * 0.3f, 0.7f),
+                        center = androidx.compose.ui.geometry.Offset(0.5f, 0.7f),
                         radius = 800f
                     )
                 )
