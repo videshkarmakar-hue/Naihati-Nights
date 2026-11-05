@@ -287,6 +287,7 @@ private fun EmuSpecialRow(
     showDivider: Boolean
 ) {
     val palette = LocalAppPalette.current
+    val isPrime = train.number == "03169"
 
     Column(
         modifier = Modifier
@@ -298,7 +299,12 @@ private fun EmuSpecialRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(if (isPrimary) palette.accentSoft else Color.Transparent)
+                .background(if (isPrime) Color(0x0AFFFFFF) else if (isPrimary) palette.accentSoft else Color.Transparent)
+                .border(
+                    1.dp,
+                    if (isPrime) Color(0x24FFFFFF) else Color.Transparent,
+                    RoundedCornerShape(12.dp)
+                )
                 .padding(horizontal = 6.dp, vertical = 11.dp),
             verticalAlignment = Alignment.Top
         ) {
@@ -306,7 +312,7 @@ private fun EmuSpecialRow(
                 modifier = Modifier
                     .size(22.dp)
                     .clip(CircleShape)
-                    .background(if (isPrimary) palette.accentDeep else Color(0xFF1E1E28)),
+                    .background(if (isPrime) Color.White else if (isPrimary) palette.accentDeep else Color(0xFF1E1E28)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -314,7 +320,7 @@ private fun EmuSpecialRow(
                     fontFamily = PlusJakartaSans,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (isPrimary) Color.White else TrainMuted
+                    color = if (isPrime) Color.Black else if (isPrimary) Color.White else TrainMuted
                 )
             }
             Spacer(modifier = Modifier.width(10.dp))
@@ -323,7 +329,7 @@ private fun EmuSpecialRow(
                     append("Train No. ")
                     withStyle(
                         SpanStyle(
-                            color = if (isPrimary) palette.accentBright else TrainText,
+                            color = if (isPrime) Color.White else if (isPrimary) palette.accentBright else TrainText,
                             fontWeight = FontWeight.SemiBold
                         )
                     ) {
