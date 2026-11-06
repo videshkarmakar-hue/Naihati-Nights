@@ -272,7 +272,7 @@ private fun EmuSpecialGroup(
             EmuSpecialRow(
                 train = train,
                 position = index + 1,
-                isPrimary = index == 0,
+                isPrimary = train.number in setOf("03169", "03170"),
                 showDivider = index != trains.lastIndex
             )
         }
@@ -299,7 +299,7 @@ private fun EmuSpecialRow(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(if (isPrimary) Color(0x0AFFFFFF) else Color(0x05FFFFFF))
-                .border(1.dp, Color(0x0FFFFFFF), RoundedCornerShape(12.dp))
+                .border(1.dp, if (isPrimary) Color(0x24FFFFFF) else Color(0x0FFFFFFF), RoundedCornerShape(12.dp))
                 .padding(horizontal = 10.dp, vertical = 11.dp),
             verticalAlignment = Alignment.Top
         ) {
@@ -307,7 +307,7 @@ private fun EmuSpecialRow(
                 modifier = Modifier
                     .size(22.dp)
                     .clip(CircleShape)
-                    .background(if (isPrimary) palette.accentDeep else Color(0xFF1E1E28)),
+                    .background(if (isPrimary) Color.White else Color(0xFF1E1E28)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -315,7 +315,7 @@ private fun EmuSpecialRow(
                     fontFamily = PlusJakartaSans,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (isPrimary) Color.White else TrainMuted
+                    color = if (isPrimary) Color.Black else TrainMuted
                 )
             }
             Spacer(modifier = Modifier.width(10.dp))
@@ -337,6 +337,17 @@ private fun EmuSpecialRow(
                 lineHeight = 17.sp,
                 color = TrainBody,
                 modifier = Modifier.weight(1f)
+            )
+        }
+
+        if (isPrimary) {
+            Text(
+                text = "VIA NAIHATI JN",
+                fontFamily = PlusJakartaSans,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFFFCD34D),
+                modifier = Modifier.padding(start = 32.dp, top = 2.dp, bottom = 4.dp)
             )
         }
 
