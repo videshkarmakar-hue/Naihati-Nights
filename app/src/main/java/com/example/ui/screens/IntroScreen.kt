@@ -446,19 +446,39 @@ fun IntroScreen(
                         scaleIn(tween(1000, delayMillis = 1150, easing = fastOutSlowIn), initialScale = 0.96f) +
                         slideInVertically(tween(1000, delayMillis = 1150, easing = fastOutSlowIn)) { it / 10 }
             ) {
-                Row(
-                    modifier = Modifier
-                        .background(Color(0x66000000))
-                        .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(12.dp))
-                        .padding(horizontal = 8.dp, vertical = 6.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    SocialFlipCard(letter = "W", url = "https://videshkarmakar.carrd.co/", backColor = Color(0xFF191B21))
-                    SocialFlipCard(letter = "S", url = "https://open.spotify.com/artist/2eJEzi0mzJB60zVJf0OjWP", backColor = Color(0xFF0E1F14), iconTint = Color(0xFF10B981))
-                    SocialFlipCard(letter = "I", url = "https://www.instagram.com/code.red_videsh/", backColor = Color(0xFF23121D), iconTint = Color(0xFFEC4899))
-                    SocialFlipCard(letter = "Y", url = "https://www.youtube.com/@videshkarmakar2000", backColor = Color(0xFF241010), iconTint = Color(0xFFEF4444))
-                    SocialFlipCard(letter = "F", url = "https://www.facebook.com/gfx.videsh", backColor = Color(0xFF0D182B), iconTint = Color(0xFF3B82F6))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Box(modifier = Modifier.width(12.dp).height(1.dp).background(Color.White.copy(alpha = 0.2f)))
+                        Text(
+                            text = "Connect to Developer",
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 10.sp,
+                            letterSpacing = 2.sp,
+                            color = Color.White.copy(alpha = 0.4f)
+                        )
+                        Box(modifier = Modifier.width(12.dp).height(1.dp).background(Color.White.copy(alpha = 0.2f)))
+                    }
+                    Row(
+                        modifier = Modifier
+                            .background(Color(0x66000000))
+                            .border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(999.dp))
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        SocialFlipCard(letter = "W", url = "https://videshkarmakar.carrd.co/", backColor = Color(0xFF191B21))
+                        SocialFlipCard(letter = "S", url = "https://open.spotify.com/artist/2eJEzi0mzJB60zVJf0OjWP", backColor = Color(0xFF0E1F14), iconTint = Color(0xFF1DB954))
+                        SocialFlipCard(letter = "I", url = "https://www.instagram.com/code.red_videsh/", backColor = Color(0xFF23121D), iconTint = Color(0xFFE1306C))
+                        SocialFlipCard(letter = "Y", url = "https://www.youtube.com/@videshkarmakar2000", backColor = Color(0xFF241010), iconTint = Color(0xFFFF0000))
+                        SocialFlipCard(letter = "F", url = "https://www.facebook.com/gfx.videsh", backColor = Color(0xFF0D182B), iconTint = Color(0xFF1877F2))
+                    }
                 }
             }
         }
