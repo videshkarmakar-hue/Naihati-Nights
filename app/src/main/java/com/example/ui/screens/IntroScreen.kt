@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
@@ -118,6 +119,24 @@ fun IntroScreen(
     )
 
     // Spring press for the CONTINUE button.
+    // Cinematic exit.
+    var exiting by remember { mutableStateOf(false) }
+    val exitScale by animateFloatAsState(
+        targetValue = if (exiting) 1.04f else 1f,
+        animationSpec = tween(1100, easing = FastOutSlowInEasing),
+        label = "exitScale"
+    )
+    val exitAlpha by animateFloatAsState(
+        targetValue = if (exiting) 0f else 1f,
+        animationSpec = tween(1100, easing = FastOutSlowInEasing),
+        label = "exitAlpha"
+    )
+    val curtainAlpha by animateFloatAsState(
+        targetValue = if (exiting) 1f else 0f,
+        animationSpec = tween(1000, easing = FastOutSlowInEasing),
+        label = "curtainAlpha"
+    )
+
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val pressScale by animateFloatAsState(
@@ -210,7 +229,10 @@ fun IntroScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 24.dp)
+                .scale(exitScale)
+                .alpha(exitAlpha)
+                .blur(if (exiting) 10.dp else 0.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -366,7 +388,7 @@ fun IntroScreen(
                         .clickable(
                             interactionSource = interactionSource,
                             indication = null
-                        ) { onBeginExperience() }
+                        ) { exiting = true; onBeginExperience() }
                         .padding(vertical = 10.dp, horizontal = 24.dp)
                         .testTag("begin_parikrama_button"),
                     contentAlignment = Alignment.Center
@@ -440,6 +462,22 @@ fun IntroScreen(
                 }
             }
         }
+
+        // Cinematic exit curtain.
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(curtainAlpha)
+                .background(
+                    Brush.verticalGradient(
+                        colorStops = arrayOf(
+                            0.00f to Color.Black,
+                            0.50f to Color(0xFF06070A),
+                            1.00f to Color(0xFF040406)
+                        )
+                    )
+                )
+        )
 
         // Bottom home indicator.
         Box(
