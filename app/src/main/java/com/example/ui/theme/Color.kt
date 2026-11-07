@@ -2,13 +2,12 @@ package com.example.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Obsidian & Noir Canvas
-val ObsidianNoir = Color(0xFF050505)
-val ObsidianBase = Color(0xFF0E0E12)
-val ObsidianRaised = Color(0xFF16161D)
-val ObsidianHighlight = Color(0xFF1E1E28)
-// Neutral zinc hairlines (pure white at low alpha) — deliberately untinted so every theme
-// shares the same structural outline instead of picking up a stray brand hue.
+// Obsidian & Noir Canvas (Apple dark-mode neutral surfaces)
+val ObsidianNoir = Color(0xFF000000)
+val ObsidianBase = Color(0xFF1C1C1E)
+val ObsidianRaised = Color(0xFF2C2C2E)
+val ObsidianHighlight = Color(0xFF3A3A3C)
+// Neutral hairlines (pure white at low alpha) — untinted, shared across themes.
 val ObsidianBorder = Color(0x1FFFFFFF) // rgba(255, 255, 255, 0.12)
 val ObsidianBorderSubtle = Color(0x14FFFFFF) // rgba(255, 255, 255, 0.08)
 
@@ -31,8 +30,8 @@ val EmergencyRose = Color(0xFFF43F5E)
 val EmergencyRoseBg = Color(0x33F43F5E)
 val StatusEmerald = Color(0xFF10B981)
 
-// Typography
-val TextHighWhite = Color(0xFFF8FAFC)
-val TextSoftZinc = Color(0xFF94A3B8)
-// 5.4:1 against the Obsidian canvas — AA for small text, so genuinely muted copy stays readable.
-val TextMutedZinc = Color(0xFF7C8493)
+// Typography (Apple-style label tones)
+val TextHighWhite = Color(0xFFF5F5F7)
+val TextSoftZinc = Color(0xFF98989D)
+// 4.6:1 against the #000000 canvas — AA for small text.
+val TextMutedZinc = Color(0xFF8E8E93)

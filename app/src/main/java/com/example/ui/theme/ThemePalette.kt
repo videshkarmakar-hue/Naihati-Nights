@@ -70,7 +70,7 @@ private val RegalVioletPalette = AppPalette(
     onAccent = Color(0xFFF8FAFC),
     textBg = Color(0xFF050505),
     text = Color(0xFFF4F4F5),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Sacred Gold — warm gold ramp over deep amber panels. */
@@ -88,7 +88,7 @@ private val SacredGoldPalette = AppPalette(
     onAccent = Color(0xFF1C1204),
     textBg = Color(0xFF050505),
     text = Color(0xFFF4F4F5),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Kumartuli Teal — sea-glass teal over deep pine panels. */
@@ -106,7 +106,7 @@ private val KumartuliTealPalette = AppPalette(
     onAccent = Color(0xFF04211F),
     textBg = Color(0xFF04211F),
     text = Color(0xFFCCFBE6),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Azure Signal - crisp sky blue over deep ink panels. The launch default app theme. */
@@ -124,7 +124,7 @@ private val AzureSignalPalette = AppPalette(
     onAccent = Color(0xFF04202E),
     textBg = Color(0xFF04202E),
     text = Color(0xFFB8E4FD),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Dark Red — deep crimson on blood plum panels. */
@@ -142,7 +142,7 @@ private val DarkRedPalette = AppPalette(
     onAccent = Color(0xFFF8FAFC),
     textBg = Color(0xFF050505),
     text = Color(0xFFF4F4F5),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Forest Green — deep forest green on pine ink panels. */
@@ -160,7 +160,7 @@ private val ForestGreenPalette = AppPalette(
     onAccent = Color(0xFFF0FDF4),
     textBg = Color(0xFF050505),
     text = Color(0xFFF4F4F5),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Indigo Night — deep indigo on night plum panels. */
@@ -178,7 +178,7 @@ private val IndigoNightPalette = AppPalette(
     onAccent = Color(0xFFF5F5FF),
     textBg = Color(0xFF050505),
     text = Color(0xFFF4F4F5),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Royal Amber — burnt amber on deep bronze panels. */
@@ -196,7 +196,7 @@ private val RoyalAmberPalette = AppPalette(
     onAccent = Color(0xFF1C1204),
     textBg = Color(0xFF050505),
     text = Color(0xFFF4F4F5),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** Plum Noir — muted plum on ink plum panels. */
@@ -214,7 +214,7 @@ private val PlumNoirPalette = AppPalette(
     onAccent = Color(0xFFFAF5FF),
     textBg = Color(0xFF050505),
     text = Color(0xFFF4F4F5),
-    textMuted = Color(0xFF94A3B8)
+    textMuted = Color(0xFF98989D)
 )
 
 /** The palette backing the currently selected [ThemeStyle]. */
