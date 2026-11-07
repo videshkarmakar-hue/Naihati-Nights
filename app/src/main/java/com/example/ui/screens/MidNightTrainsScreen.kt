@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -46,13 +47,13 @@ import com.example.ui.theme.EmergencyRose
 import com.example.ui.theme.LocalAppPalette
 import com.example.ui.theme.PlusJakartaSans
 
-private val TrainCard = Color(0xFF101018)
-private val TrainInset = Color(0xFF15151D)
-private val TrainText = Color(0xFFF4F4F5)
-private val TrainBody = Color(0xFFD4D4D8)
-private val TrainMuted = Color(0xFFA1A1AA)
-private val TrainFaint = Color(0xFF71717A)
-private val TrainHairline = Color(0x14FFFFFF)
+private val TrainCard = Color(0xFF1A1C22)
+private val TrainInset = Color(0xFF121316)
+private val TrainText = Color(0xFFF3F4F6)
+private val TrainBody = Color(0xFF9CA3AF)
+private val TrainMuted = Color(0xFF6B7280)
+private val TrainFaint = Color(0xFF6B7280)
+private val TrainHairline = Color(0x0FFFFFFF)
 
 /** One midnight EMU special: train number plus the exact origin and destination timing. */
 private data class MidNightEmuSpecial(
@@ -238,8 +239,14 @@ private fun EmuSpecialGroup(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(Color(0x05FFFFFF))
-            .border(1.dp, Color(0x0FFFFFFF), RoundedCornerShape(12.dp))
+            .background(TrainInset)
+            .border(1.dp, TrainHairline, RoundedCornerShape(12.dp))
+            .shadow(
+                elevation = 6.dp,
+                shape = RoundedCornerShape(12.dp),
+                ambientColor = Color.White.copy(alpha = 0.04f),
+                spotColor = Color.Black.copy(alpha = 0.65f)
+            )
             .padding(vertical = 4.dp)
             .testTag(testTag)
     ) {
@@ -298,8 +305,14 @@ private fun EmuSpecialRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(if (isPrimary) Color(0x0AFFFFFF) else Color(0x05FFFFFF))
-                .border(1.dp, if (isPrimary) Color(0x24FFFFFF) else Color(0x0FFFFFFF), RoundedCornerShape(12.dp))
+                .background(if (isPrimary) TrainInset else TrainCard)
+                .border(1.dp, TrainHairline, RoundedCornerShape(12.dp))
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(12.dp),
+                    ambientColor = Color.White.copy(alpha = 0.03f),
+                    spotColor = Color.Black.copy(alpha = 0.55f)
+                )
                 .padding(horizontal = 10.dp, vertical = 11.dp),
             verticalAlignment = Alignment.Top
         ) {
