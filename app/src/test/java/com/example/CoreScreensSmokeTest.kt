@@ -609,28 +609,23 @@ class CoreScreensSmokeTest {
         }
 
         composeRule.onNodeWithTag("nav_home").assertIsDisplayed()
-        composeRule.onNodeWithTag("nav_mid_night_trains").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_theme_pandel").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_borma_pujo").assertIsDisplayed()
         composeRule.onAllNodesWithTag("nav_restaurant").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_feedback").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_settings").assertCountEquals(0)
         composeRule.onAllNodesWithTag("nav_helpline").assertCountEquals(0)
+        composeRule.onAllNodesWithTag("nav_mid_night_trains").assertCountEquals(0)
         composeRule.onAllNodesWithContentDescription("Helpline").assertCountEquals(0)
         composeRule.onAllNodesWithContentDescription("Restaurant").assertCountEquals(0)
-        composeRule.onNodeWithContentDescription("Mid-Night Trains").assertIsDisplayed()
+        composeRule.onAllNodesWithContentDescription("Mid-Night Trains").assertCountEquals(0)
 
         val home = composeRule.onNodeWithTag("nav_home").getUnclippedBoundsInRoot()
-        val midNightTrains = composeRule.onNodeWithTag("nav_mid_night_trains").getUnclippedBoundsInRoot()
         val themePandel = composeRule.onNodeWithTag("nav_theme_pandel").getUnclippedBoundsInRoot()
         val borma = composeRule.onNodeWithTag("nav_borma_pujo").getUnclippedBoundsInRoot()
         assertTrue(
-            "Home and Mid-Night Trains slots should sit close together, home=$home midNightTrains=$midNightTrains",
-            midNightTrains.left - home.right <= 12.dp
-        )
-        assertTrue(
-            "Mid-Night Trains and Theme Pandel slots should sit close together, midNightTrains=$midNightTrains themePandel=$themePandel",
-            themePandel.left - midNightTrains.right <= 12.dp
+            "Home and Theme Pandel slots should sit close together, home=$home themePandel=$themePandel",
+            themePandel.left - home.right <= 12.dp
         )
         assertTrue(
             "Theme Pandel and Boro Maa slots should sit close together, themePandel=$themePandel borma=$borma",
@@ -640,10 +635,6 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("nav_home").performClick()
         composeRule.waitForIdle()
         assertTrue(navigatedTo == NavigationScreen.HOME)
-
-        composeRule.onNodeWithTag("nav_mid_night_trains").performClick()
-        composeRule.waitForIdle()
-        assertTrue(navigatedTo == NavigationScreen.MID_NIGHT_TRAINS)
 
         composeRule.onNodeWithTag("nav_theme_pandel").performClick()
         composeRule.waitForIdle()
@@ -731,7 +722,6 @@ class CoreScreensSmokeTest {
         listOf(
             "sidebar_item_route" to "Route",
             "sidebar_item_theme_pandel" to "Theme Pandel",
-            "sidebar_item_mid_night_trains" to "Mid-Night Trains",
             "sidebar_item_borma_pujo_schedule" to "বড়মা পুজোর নির্ঘণ্ট",
             "sidebar_item_special_notice" to "বিশেষ ঘোষণা",
             "sidebar_item_app_info_credit" to "App Info & Developer Credit",
@@ -773,10 +763,6 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("sidebar_item_theme_pandel").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.THEME_PANDEL, selected)
-
-        composeRule.onNodeWithTag("sidebar_item_mid_night_trains").performClick()
-        composeRule.waitForIdle()
-        assertEquals(SidebarNavItem.MID_NIGHT_TRAINS, selected)
 
         composeRule.onNodeWithTag("sidebar_item_borma_pujo_schedule").performClick()
         composeRule.waitForIdle()
@@ -1250,18 +1236,18 @@ class CoreScreensSmokeTest {
     }
 
     @Test
-    fun bottomBar_staysWithinScreenWithMidNightTrainsLabel() {
+    fun bottomBar_staysWithinScreen() {
         composeRule.setContent {
             MyApplicationTheme {
                 CapsuleBottomBar(
-                    currentScreen = NavigationScreen.MID_NIGHT_TRAINS,
+                    currentScreen = NavigationScreen.HOME,
                     onNavigate = { }
                 )
             }
         }
 
         val home = composeRule.onNodeWithTag("nav_home").getUnclippedBoundsInRoot()
-        val midNightTrains = composeRule.onNodeWithTag("nav_mid_night_trains").getUnclippedBoundsInRoot()
+        val themePandel = composeRule.onNodeWithTag("nav_theme_pandel").getUnclippedBoundsInRoot()
         val borma = composeRule.onNodeWithTag("nav_borma_pujo").getUnclippedBoundsInRoot()
 
         assertTrue(
@@ -1269,12 +1255,12 @@ class CoreScreensSmokeTest {
             home.left >= 0.dp
         )
         assertTrue(
-            "Dock should not overflow the screen width with the Mid-Night Trains label, borma=$borma",
+            "Dock should not overflow the screen width, borma=$borma",
             borma.right <= 350.dp
         )
         assertTrue(
-            "Mid-Night Trains slot should keep its label inside the dock, midNightTrains=$midNightTrains",
-            midNightTrains.right <= borma.left
+            "Theme Pandel slot should keep its label inside the dock, themePandel=$themePandel",
+            themePandel.right <= borma.left
         )
     }
 

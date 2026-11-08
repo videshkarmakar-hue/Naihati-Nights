@@ -21,11 +21,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Train
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.Train
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,13 +65,6 @@ fun CapsuleBottomBar(
             activeIcon = Icons.Filled.Home,
             inactiveIcon = Icons.Outlined.Home,
             testTag = "nav_home"
-        ),
-        NavItemSpec(
-            screen = NavigationScreen.MID_NIGHT_TRAINS,
-            label = "Mid-Night Trains",
-            activeIcon = Icons.Filled.Train,
-            inactiveIcon = Icons.Outlined.Train,
-            testTag = "nav_mid_night_trains"
         ),
         NavItemSpec(
             screen = NavigationScreen.THEME_PANDEL,

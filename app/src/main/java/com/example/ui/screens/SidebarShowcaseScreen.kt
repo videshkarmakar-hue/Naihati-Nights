@@ -482,20 +482,6 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
-            SidebarNavItem.MID_NIGHT_TRAINS -> {
-                Text(
-                    text = "Mid-Night Trains",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = KumartuliTeal
-                )
-                Text(
-                    text = "Extra midnight EMU specials for the Naihati parikrama route: six Up and six Down night trains with their exact origin and destination times.",
-                    fontSize = 11.5.sp,
-                    color = TextSoftZinc,
-                    lineHeight = 16.sp
-                )
-            }
             SidebarNavItem.BORMA_PUJO_SCHEDULE -> {
                 Text(
                     text = "বড়মা পুজোর নির্ঘণ্ট",
