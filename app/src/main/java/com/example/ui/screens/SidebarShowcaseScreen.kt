@@ -524,6 +524,20 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
+            SidebarNavItem.ROAD_MAP -> {
+                Text(
+                    text = "Road Map",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = SacredGold
+                )
+                Text(
+                    text = "A high-level map of the Naihati parikrama route and the app's sections.",
+                    fontSize = 11.5.sp,
+                    color = TextSoftZinc,
+                    lineHeight = 16.sp
+                )
+            }
             SidebarNavItem.APP_INFO_CREDIT -> {
                 Text(
                     text = "App Info & Developer Credit",

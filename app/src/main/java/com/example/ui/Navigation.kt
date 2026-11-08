@@ -11,6 +11,7 @@ enum class NavigationScreen {
     CHECK_UPDATES,
     BORMA_PUJO_SCHEDULE,
     SPECIAL_NOTICE,
+    ROAD_MAP,
     PROFILE,
     APP_DETAILS,
     DEVELOPER_CREDITS,

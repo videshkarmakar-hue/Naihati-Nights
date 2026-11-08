@@ -734,6 +734,7 @@ class CoreScreensSmokeTest {
             "sidebar_item_theme_pandel" to "Theme Pandel",
             "sidebar_item_borma_pujo_schedule" to "বড়মা পুজোর নির্ঘণ্ট",
             "sidebar_item_special_notice" to "বিশেষ ঘোষণা",
+            "sidebar_item_road_map" to "Road Map",
             "sidebar_item_app_info_credit" to "App Info & Developer Credit",
             "sidebar_item_check_updates" to "Check Updates",
             "sidebar_item_settings" to "Settings"
@@ -785,6 +786,10 @@ class CoreScreensSmokeTest {
         composeRule.onNodeWithTag("sidebar_item_special_notice").performClick()
         composeRule.waitForIdle()
         assertEquals(SidebarNavItem.SPECIAL_NOTICE, selected)
+
+        composeRule.onNodeWithTag("sidebar_item_road_map").performClick()
+        composeRule.waitForIdle()
+        assertEquals(SidebarNavItem.ROAD_MAP, selected)
 
         composeRule.onNodeWithTag("sidebar_item_app_info_credit").performClick()
         composeRule.waitForIdle()

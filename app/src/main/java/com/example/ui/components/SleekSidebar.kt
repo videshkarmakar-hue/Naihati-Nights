@@ -29,6 +29,7 @@ import androidx.compose.material.icons.automirrored.outlined.AltRoute
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Train
@@ -36,6 +37,7 @@ import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.SystemUpdate
@@ -85,6 +87,7 @@ enum class SidebarNavItem(
     MID_NIGHT_TRAINS("Mid-Night Trains", Icons.Filled.Train, Icons.Outlined.Train, "sidebar_item_mid_night_trains"),
     BORMA_PUJO_SCHEDULE("বড়মা পুজোর নির্ঘণ্ট", Icons.Filled.CalendarMonth, Icons.Outlined.CalendarMonth, "sidebar_item_borma_pujo_schedule"),
     SPECIAL_NOTICE("বিশেষ ঘোষণা", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_special_notice"),
+    ROAD_MAP("Road Map", Icons.Filled.Place, Icons.Outlined.Place, "sidebar_item_road_map"),
     APP_INFO_CREDIT("App Info & Developer Credit", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_app_info_credit"),
     CHECK_UPDATES("Check Updates", Icons.Filled.SystemUpdate, Icons.Outlined.SystemUpdate, "sidebar_item_check_updates"),
     DEVELOPER_CREDITS("Developer Credits", Icons.Filled.Verified, Icons.Outlined.Verified, "sidebar_item_developer_credits"),
@@ -96,6 +99,7 @@ enum class SidebarNavItem(
         val themeItems = listOf(THEME_PANDEL, MID_NIGHT_TRAINS, BORMA_PUJO_SCHEDULE, SPECIAL_NOTICE)
         val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS)
         val developerItems = listOf(DEVELOPER_CREDITS)
+        val mapItems = listOf(ROAD_MAP)
         val shareItems = listOf(SHARE_APP)
     }
 }
@@ -291,6 +295,30 @@ fun SleekSidebar(
             // Share App
             SidebarItemGroup(
                 items = SidebarNavItem.shareItems,
+                isExpanded = isExpanded,
+                selectedItem = selectedItem,
+                activePillBg = activePillBg,
+                activeContentColor = activeContentColor,
+                unselectedColor = unselectedColor,
+                onSelectItem = onSelectItem
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Divider before road map
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = if (isExpanded) 8.dp else 12.dp)
+                    .height(1.dp)
+                    .background(unselectedColor.copy(alpha = 0.18f))
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Road Map
+            SidebarItemGroup(
+                items = SidebarNavItem.mapItems,
                 isExpanded = isExpanded,
                 selectedItem = selectedItem,
                 activePillBg = activePillBg,

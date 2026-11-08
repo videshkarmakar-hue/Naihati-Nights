@@ -62,6 +62,7 @@ import com.example.ui.screens.HelplineScreen
 import com.example.ui.screens.HomeScreen
 import com.example.ui.screens.IntroScreen
 import com.example.ui.screens.MidNightTrainsScreen
+import com.example.ui.screens.RoadMapScreen
 import com.example.ui.screens.RestaurantScreen
 import com.example.ui.screens.SettingsScreen
 import com.example.ui.screens.SidebarShowcaseScreen
@@ -163,6 +164,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.BORMA_PUJO_SCHEDULE,
             NavigationScreen.SPECIAL_NOTICE,
             NavigationScreen.HELPLINE,
+            NavigationScreen.ROAD_MAP,
             NavigationScreen.MID_NIGHT_TRAINS,
             NavigationScreen.THEME_PANDEL,
             NavigationScreen.RESTAURANT,
@@ -176,6 +178,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     val openSidebar: () -> Unit = {
         activeSidebarItem = when (currentScreen) {
             NavigationScreen.HOME -> SidebarNavItem.ROUTE
+            NavigationScreen.ROAD_MAP -> SidebarNavItem.ROAD_MAP
             NavigationScreen.MID_NIGHT_TRAINS -> SidebarNavItem.MID_NIGHT_TRAINS
             NavigationScreen.THEME_PANDEL -> SidebarNavItem.THEME_PANDEL
             NavigationScreen.APP_DETAILS -> SidebarNavItem.APP_INFO_CREDIT
@@ -306,6 +309,14 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
 
                 NavigationScreen.MID_NIGHT_TRAINS -> {
                     MidNightTrainsScreen(
+                        onBack = { currentScreen = NavigationScreen.HOME },
+                        onOpenSidebar = openSidebar,
+                        onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
+                    )
+                }
+
+                NavigationScreen.ROAD_MAP -> {
+                    RoadMapScreen(
                         onBack = { currentScreen = NavigationScreen.HOME },
                         onOpenSidebar = openSidebar,
                         onOpenDeveloperCredits = { currentScreen = NavigationScreen.DEVELOPER_CREDITS }
@@ -464,6 +475,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             SidebarNavItem.APP_INFO_CREDIT -> {
                                 appDetailsBackTarget = NavigationScreen.HOME
                                 currentScreen = NavigationScreen.APP_DETAILS
+                                isDrawerOpen = false
+                            }
+                            SidebarNavItem.ROAD_MAP -> {
+                                currentScreen = NavigationScreen.ROAD_MAP
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.MID_NIGHT_TRAINS -> {
