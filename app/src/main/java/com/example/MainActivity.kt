@@ -163,6 +163,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             NavigationScreen.BORMA_PUJO_SCHEDULE,
             NavigationScreen.SPECIAL_NOTICE,
             NavigationScreen.HELPLINE,
+            NavigationScreen.MID_NIGHT_TRAINS,
             NavigationScreen.THEME_PANDEL,
             NavigationScreen.RESTAURANT,
             NavigationScreen.DEVELOPER_CREDITS
@@ -175,6 +176,7 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     val openSidebar: () -> Unit = {
         activeSidebarItem = when (currentScreen) {
             NavigationScreen.HOME -> SidebarNavItem.ROUTE
+            NavigationScreen.MID_NIGHT_TRAINS -> SidebarNavItem.MID_NIGHT_TRAINS
             NavigationScreen.THEME_PANDEL -> SidebarNavItem.THEME_PANDEL
             NavigationScreen.APP_DETAILS -> SidebarNavItem.APP_INFO_CREDIT
             NavigationScreen.PROFILE -> SidebarNavItem.APP_INFO_CREDIT
@@ -462,6 +464,10 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
                             SidebarNavItem.APP_INFO_CREDIT -> {
                                 appDetailsBackTarget = NavigationScreen.HOME
                                 currentScreen = NavigationScreen.APP_DETAILS
+                                isDrawerOpen = false
+                            }
+                            SidebarNavItem.MID_NIGHT_TRAINS -> {
+                                currentScreen = NavigationScreen.MID_NIGHT_TRAINS
                                 isDrawerOpen = false
                             }
                             SidebarNavItem.DEVELOPER_CREDITS -> {

@@ -143,6 +143,13 @@ class AppLaunchRobolectricTest {
                 composeRule.onNodeWithTag("sidebar_item_theme_pandel").performClick()
                 composeRule.waitForIdle()
 
+                // Mid-Night Trains section exposes the sidebar through its header menu too.
+                composeRule.onNodeWithTag("nav_mid_night_trains").performClick()
+                composeRule.waitForIdle()
+                composeRule.onNodeWithTag("header_sidebar_button").performClick()
+                composeRule.waitForIdle()
+                composeRule.onNodeWithTag("sidebar_item_mid_night_trains").assertIsDisplayed()
+                composeRule.onNodeWithTag("sleek_sidebar_container").assertIsDisplayed()
             }
         } finally {
             runBlocking {
