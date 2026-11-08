@@ -29,7 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -112,6 +116,21 @@ fun RoadMapScreen(
                         color = Color(0xFF9CA3AF)
                     )
                 }
+            }
+
+            item(key = "road_map_image") {
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("https://cdn.phototourl.com/member/2026-11-08-4d519aaa-ddc3-47dc-94a7-b48498331714.jpg")
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "Road Map",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .border(1.dp, Color(0x14FFFFFF), RoundedCornerShape(16.dp))
+                )
             }
 
             item(key = "road_map_footer") {
