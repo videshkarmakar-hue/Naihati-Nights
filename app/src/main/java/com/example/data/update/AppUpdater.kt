@@ -67,9 +67,23 @@ class AppUpdater(context: Context) {
             .header("User-Agent", "NaihatiNights-Android")
             .build()
 
-        downloadClient.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Download failed (HTTP ${response.code})")
-            val body = response.body ?: throw IOException("The update server sent an empty download")
+        val response = run {
+            var lastError: IOException? = null
+            repeat(2) { attempt ->
+                try {
+                    val r = downloadClient.newCall(request).execute()
+                    if (r.isSuccessful) return@run r
+                    r.close()
+                    lastError = IOException("Download failed (HTTP ${r.code})")
+                } catch (e: IOException) {
+                    lastError = e
+                }
+                if (attempt == 0) Thread.sleep(1500)
+            }
+            throw lastError ?: IOException("Download failed")
+        }
+        response.use { resp ->
+            val body = resp.body ?: throw IOException("The update server sent an empty download")
             val total = body.contentLength().takeIf { it > 0L } ?: info.apkSizeBytes
 
             body.byteStream().use { input ->
@@ -85,6 +99,7 @@ class AppUpdater(context: Context) {
                         onProgress(downloaded, total)
                     }
                     output.flush()
+                    output.fd.sync()
                 }
             }
         }
@@ -94,8 +109,34 @@ class AppUpdater(context: Context) {
             throw IOException("The downloaded update was empty")
         }
         if (target.exists()) target.delete()
-        if (!partial.renameTo(target)) {
+        // Prefer Files.move over File.renameTo: renameTo is unreliable on some Android
+        // versions / storage configurations and silently returns false, which previously
+        // surfaced as a "Could not save the downloaded update" failure + Retry Update.
+        var moved = false
+        try {
+            java.nio.file.Files.move(
+                partial.toPath(),
+                target.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                java.nio.file.StandardCopyOption.ATOMIC_MOVE
+            )
+            moved = true
+        } catch (_: Throwable) {
+            moved = false
+        }
+        if (!moved) {
+            // Fallback: stream-copy then delete the partial.
+            partial.inputStream().use { input ->
+                FileOutputStream(target).use { output ->
+                    input.copyTo(output)
+                    output.flush()
+                    output.fd.sync()
+                }
+            }
             partial.delete()
+        }
+        if (!target.exists() || target.length() <= 0L) {
+            target.delete()
             throw IOException("Could not save the downloaded update")
         }
         target
@@ -120,21 +161,29 @@ class AppUpdater(context: Context) {
     /** Opens the system package installer for the downloaded APK. Returns false if nothing handles it. */
     fun installApk(apkFile: File): Boolean {
         if (!apkFile.exists()) return false
-        return try {
-            val uri = FileProvider.getUriForFile(
-                appContext,
-                "${appContext.packageName}.fileprovider",
-                apkFile
-            )
-            open(
-                Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(uri, "application/vnd.android.package-archive")
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-            )
-        } catch (_: Throwable) {
-            false
+        val uri = FileProvider.getUriForFile(
+            appContext,
+            "${appContext.packageName}.fileprovider",
+            apkFile
+        )
+        // Prefer ACTION_INSTALL_PACKAGE (the documented action for installing an APK) over the
+        // generic ACTION_VIEW, which some OEM installers don't resolve for the package-archive
+        // MIME type and which previously left the user stuck on "Retry Update".
+        val intents = listOf(
+            Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+                data = uri
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                putExtra(Intent.EXTRA_RETURN_RESULT, false)
+            },
+            Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/vnd.android.package-archive")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+        )
+        for (intent in intents) {
+            if (open(intent)) return true
         }
+        return false
     }
 
     fun openReleasesPage(url: String = releasesPageUrl): Boolean =
