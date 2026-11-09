@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Train
@@ -88,6 +89,7 @@ enum class SidebarNavItem(
     BORMA_PUJO_SCHEDULE("বড়মা পুজোর নির্ঘণ্ট", Icons.Filled.CalendarMonth, Icons.Outlined.CalendarMonth, "sidebar_item_borma_pujo_schedule"),
     SPECIAL_NOTICE("বিশেষ ঘোষণা", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_special_notice"),
     ROAD_MAP("Road Map", Icons.Filled.Place, Icons.Outlined.Place, "sidebar_item_road_map"),
+    BORO_MAA_SAJ_BHOG("বড়মার সাজ ও ভোগ", Icons.Filled.StarBorder, Icons.Filled.StarBorder, "sidebar_item_boro_maa_saj_bhog"),
     APP_INFO_CREDIT("App Info & Developer Credit", Icons.Filled.Info, Icons.Outlined.Info, "sidebar_item_app_info_credit"),
     CHECK_UPDATES("Check Updates", Icons.Filled.SystemUpdate, Icons.Outlined.SystemUpdate, "sidebar_item_check_updates"),
     DEVELOPER_CREDITS("Developer Credits", Icons.Filled.Verified, Icons.Outlined.Verified, "sidebar_item_developer_credits"),
@@ -100,6 +102,7 @@ enum class SidebarNavItem(
         val utilityItems = listOf(APP_INFO_CREDIT, CHECK_UPDATES, SETTINGS)
         val developerItems = listOf(DEVELOPER_CREDITS)
         val mapItems = listOf(ROAD_MAP)
+        val boroMaaItems = listOf(BORO_MAA_SAJ_BHOG)
         val shareItems = listOf(SHARE_APP)
     }
 }
@@ -319,6 +322,30 @@ fun SleekSidebar(
             // Road Map
             SidebarItemGroup(
                 items = SidebarNavItem.mapItems,
+                isExpanded = isExpanded,
+                selectedItem = selectedItem,
+                activePillBg = activePillBg,
+                activeContentColor = activeContentColor,
+                unselectedColor = unselectedColor,
+                onSelectItem = onSelectItem
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Divider before boro maa saj bhog
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = if (isExpanded) 8.dp else 12.dp)
+                    .height(1.dp)
+                    .background(unselectedColor.copy(alpha = 0.18f))
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Boro Maa Saj & Bhog
+            SidebarItemGroup(
+                items = SidebarNavItem.boroMaaItems,
                 isExpanded = isExpanded,
                 selectedItem = selectedItem,
                 activePillBg = activePillBg,

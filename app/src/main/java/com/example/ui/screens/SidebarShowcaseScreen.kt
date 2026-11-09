@@ -608,6 +608,20 @@ fun SidebarContentDisplay(
                     lineHeight = 16.sp
                 )
             }
+            SidebarNavItem.BORO_MAA_SAJ_BHOG -> {
+                Text(
+                    text = "বড়মার সাজ ও ভোগ",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = LocalAppPalette.current.accentBright
+                )
+                Text(
+                    text = "বড়মার সাজ ও ভোগের তালিকা: সাজে হীরের টিপ থেকে ১১০ কেজি সোনা-রুপোর গয়না, সোনার মুকুট, নেকলেস, জিভ, চোখ, হাতের বালা, চুড়ি, পায়ের মল, চাঁদমালা, হীরের টিপ; ভোগে খিচুড়ি, পাঁচমিশালি তরকারি, পোলাও, আলুর দম, সাদা ভাত, লুচি, রসগোল্লা, সরপুরিয়া, নাড়ু।",
+                    fontSize = 11.5.sp,
+                    color = TextSoftZinc,
+                    lineHeight = 16.sp
+                )
+            }
             
         }
         Spacer(modifier = Modifier.height(4.dp))

@@ -12,6 +12,7 @@ enum class NavigationScreen {
     BORMA_PUJO_SCHEDULE,
     SPECIAL_NOTICE,
     ROAD_MAP,
+    BORO_MAA_SAJ_BHOG,
     PROFILE,
     APP_DETAILS,
     DEVELOPER_CREDITS,
