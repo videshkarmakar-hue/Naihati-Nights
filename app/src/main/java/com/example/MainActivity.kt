@@ -53,6 +53,7 @@ import com.example.ui.components.AppUpdateDialog
 import com.example.ui.components.CapsuleBottomBar
 import com.example.ui.components.SidebarNavItem
 import com.example.ui.components.SleekSidebar
+import com.example.ui.components.VideoPopup
 import com.example.ui.screens.AppDetailsScreen
 import com.example.ui.screens.BormaPujoScheduleScreen
 import com.example.ui.screens.CheckUpdatesScreen
@@ -139,6 +140,9 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
     // The branded Continue gate is the entry point for every fresh launch.
     // It is saveable only so a configuration change doesn't replay the splash.
     var currentScreen by rememberSaveable { mutableStateOf(NavigationScreen.INTRO) }
+
+    // Launch video popup (shown on every cold start in release builds).
+    var showVideoPopup by rememberSaveable { mutableStateOf(!BuildConfig.DEBUG) }
 
     // Quick overlay drawer state
     var isDrawerOpen by remember { mutableStateOf(false) }
@@ -549,6 +553,14 @@ fun NaihatiNightsApp(viewModel: AppViewModel) {
             onUpdateNow = viewModel::downloadAndInstallUpdate,
             onOpenRelease = viewModel::openReleasesPage
         )
+
+        if (showVideoPopup) {
+            VideoPopup(
+                videoUrl = "https://www.image2url.com/r2/default/videos/1794456241068-b5eff2a5-d789-47b5-b211-8c73fad13730.mp4",
+                title = "বড়মা নিরঞ্জনের বার্তা",
+                onDismiss = { showVideoPopup = false }
+            )
+        }
     }
     }
 }
