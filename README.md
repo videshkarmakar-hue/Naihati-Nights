@@ -1,143 +1,88 @@
 # Naihati Nights
 
-Your Ultimate Naihati Kali Puja Pandal Hopping & Navigation Guide.
+### Explore the Lights. Discover the Pandals. Experience Naihati.
 
-# What is Naihati Nights?
+**Naihati Nights** is a dedicated travel and navigation guide designed to make exploring Naihati Kali Puja pandals easier, smarter, and more enjoyable.
 
-Naihati Nights is a dedicated Kali Puja Pandal Hopping & Navigation Guide designed to make exploring the famous Kali Puja pandals of Naihati easier, more organized, and less stressful.
+The app helps visitors discover popular Kali Puja pandals, explore different locations, and navigate between destinations with convenient route and map guidance.
 
-The app brings together Kali Puja pandal information, Google Maps navigation, station-based planning, pandal discovery, and essential visitor information in one convenient place.
+Built to make your Naihati Kali Puja experience more organized, accessible, and memorable.
 
-Whether you're a local resident, a first-time visitor, a group of friends, a family, or a Kali Puja enthusiast, Naihati Nights helps you discover pandals, plan your route, and make the most of your festive night.
+---
 
-The name “Naihati Nights” captures the spirit of Naihati during Kali Puja — a time when the town comes alive with spectacular pandals, creative themes, dazzling lights, vibrant decorations, and the excitement of late-night pandal hopping.
+## About Naihati Nights
 
-# Why Naihati Nights?
+Naihati Nights aims to make Kali Puja pandal hopping a smoother and more convenient experience.
 
-Pandal hopping made easier — Discover Naihati's Kali Puja pandals without having to search for every destination individually.
+Whether you're a local resident or visiting Naihati to experience its famous Kali Puja celebrations, the app helps you discover pandals and plan your journey with ease.
 
-Google Maps guidance — Open supported pandal locations in Google Maps to find directions and navigate to your selected destination.
+With location-focused information, route guidance, and map navigation, exploring Naihati becomes simpler and more enjoyable.
 
-Station-based planning — Discover pandals based on nearby railway stations and plan your visit according to your arrival point.
+**Discover. Navigate. Celebrate.**
 
-Organized pandal discovery — Explore listed Kali Puja destinations through dedicated sections instead of navigating one long, unorganized list.
+## Highlights
 
-Night-time exploration — Plan your Kali Puja outing and discover destinations across Naihati during the festive season.
+- **Pandal Discovery** — Explore popular Naihati Kali Puja pandals and discover festive destinations.
+- **Route Navigation** — Find convenient routes to reach your selected pandal.
+- **Google Maps Integration** — Navigate to destinations with Google Maps guidance.
+- **Travel Planning** — Make your pandal-hopping journey easier with location-based guidance.
+- **Explore Naihati** — Discover different areas and experience the city's Kali Puja celebrations.
+- **User-Friendly Design** — A clean and simple interface for a smooth experience.
+- **Convenient Exploration** — Spend less time searching and more time celebrating.
 
-A convenient visitor guide — Keep useful pandal information and location guidance together in one place.
+## App Information
 
-Simple and accessible navigation — Find your destination and continue your journey through Google Maps.
+| **Details** | **Information** |
+|---|---|
+| Application | Naihati Nights |
+| Version | 1.0.0 |
+| Build | 100 |
+| Platform | Android |
+| iOS | Coming Soon |
+| Developer | Videsh Karmakar |
+| UI/UX Design | Figma & Stitch |
 
-# Features
+## Development & Design
 
-Railway Station-Wise Pandal Guide
+**Developed & Designed By:** Videsh Karmakar
 
-Explore Kali Puja pandals organized around nearby railway stations.
+**UI/UX & Product Design:** Figma & Stitch
 
-Browse pandal destinations associated with selected railway stations.
+Naihati Nights is built around the idea of combining convenient navigation, thoughtful design, and location-based discovery to create a better Kali Puja travelling experience.
 
-Discover suitable destinations based on your arrival or travel station.
+## Installation
 
-Open supported locations in Google Maps.
+1. Visit the project's GitHub repository.
+2. Open the **Releases** section.
+3. Download the latest available Android release.
+4. Install the APK on your compatible Android device.
 
-Plan a more convenient pandal-hopping journey using railway connectivity.
+*Installation availability depends on published releases.*
 
-Helpful for visitors arriving by train or using suburban railway services.
+## Updates
 
-Naihati Kali Puja Pandal Guide
+Check the GitHub Releases section for the latest versions, new features, improvements, and bug fixes.
 
-Discover Kali Puja destinations across Naihati through a dedicated pandal guide.
+Stay updated and never miss an improved way to explore Naihati.
 
-Explore listed Kali Puja pandals in one convenient place.
+## Developer
 
-Find individual pandal locations.
+**Videsh Karmakar**  
+Founder · Developer · UI/UX Designer
 
-Access available destination information.
+- Official Website: [https://videshkarmakar.carrd.co](https://videshkarmakar.carrd.co)
+- Instagram: [@code.red_videsh](https://instagram.com/code.red_videsh)
+- YouTube: [@videshkarmakar2000](https://youtube.com/@videshkarmakar2000)
+- Spotify: Videsh Karmakar
 
-Open supported locations in Google Maps.
+## Project Status
 
-Organize your visit around the pandals you want to explore.
+Naihati Nights is an evolving project dedicated to making Naihati Kali Puja exploration easier and more accessible.
 
-Google Maps Integration
+More features, improvements, and refinements may arrive in future releases.
 
-Naihati Nights uses Google Maps as the navigation layer for supported destinations.
+---
 
-Users can:
-
-Open a selected pandal location in Google Maps.
-
-Get directions to the destination.
-
-Use available navigation options to plan their journey.
-
-Navigate between selected Puja destinations.
-
-Find nearby facilities using Google Maps where available.
-
-The app focuses on helping users find their destinations, while Google Maps handles the actual navigation experience.
-
-Organized for Pandal Hopping
-
-Instead of searching for every pandal separately, Naihati Nights brings destination discovery and navigation together.
-
-The app's core concept is simple:
-
-Railway Station → Pandal
-
-Pandal List → Destination
-
-Selected Pandal → Google Maps
-
-Pandal Hopping → Planned Journey
-
-This organized approach helps visitors decide where to go and how to reach their chosen destinations more easily.
-
-Experience Naihati During Kali Puja
-
-Kali Puja is a special time to explore Naihati's festive atmosphere, creative pandal decorations, artistic presentations, and illuminated streets.
-
-Naihati Nights is designed to help visitors organize their exploration so they can focus more on experiencing the celebration and less on searching for locations.
-
-Whether you are planning a short visit or a longer pandal-hopping outing, the app provides a convenient starting point for discovering listed destinations.
-
-# Privacy & Permissions
-
-Naihati Nights is designed with simplicity and privacy in mind.
-
-The app aims to avoid unnecessary phone permissions and does not require access to personal information such as:
-
-Contacts
-
-SMS
-
-Phone calls
-
-Camera
-
-Microphone
-
-Personal photos or media
-
-Device files
-
-Supported destinations can be opened through Google Maps for navigation.
-
-Note: Any specific permission requirements depend on the app's actual implementation and the external services it uses.
-
-Designed for Kali Puja Pandal Hopping
-
-Naihati Nights is designed for anyone who wants to explore Naihati's Kali Puja celebrations with a more organized approach.
-
-Whether you're visiting with friends, exploring with family, arriving by train, or discovering Naihati's Kali Puja pandals for the first time, the app aims to make destination discovery more convenient.
-
-From finding a listed pandal to opening its location in Google Maps, everything revolves around one simple goal:
-
-Discover your pandal. Plan your journey. Open the map. Start exploring.
-
-Naihati Nights
-
-Your Naihati Kali Puja Pandal Hopping & Navigation Guide.
-
-Explore More. Navigate Smarter. Experience the Night.
-
-Celebrate Kali Puja. Discover Naihati. Make Every Stop Count.
+**Naihati Nights**  
+Explore the Lights. Discover the Pandals.  
+Crafted with ❤️ by Videsh Karmakar.
